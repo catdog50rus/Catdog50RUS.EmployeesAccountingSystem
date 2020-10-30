@@ -29,7 +29,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
 
         public override string ToString()
         {
-            return $"{IdPerson}, {NamePerson}, {SurnamePerson}, {Department}, {Positions}, {BaseSalary}";
+            return $"{IdPerson},{NamePerson},{SurnamePerson},{Department},{Positions},{BaseSalary}";
         }
     }
 }

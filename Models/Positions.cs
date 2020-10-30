@@ -1,4 +1,4 @@
-﻿namespace Models
+﻿namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
     public enum Positions
     {

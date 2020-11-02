@@ -10,80 +10,42 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.Controllers
 {
     public class PersonsController
     {
-        private readonly string fileName = "persons.txt";
-
-        public IEnumerable<Person> Persons { get; set; }
-        public Person Person { get; set; }
-        public IPersonRepository PersonRepository { get; set; }
+        private readonly IPersonRepository _personRepository;
 
         public PersonsController()
         {
-            PersonRepository = new FilePersonRepository(fileName);
-            
-        }
-
-
-        public async Task ShowPersonsListAsync()
-        {
-            Console.Clear();
-            Console.WriteLine("Список сотрудников: ");
-            var collection = await GetAllPersonsAsync();
-            foreach (var item in collection)
-            {
-                ShowPerson(item);
-            }
+            _personRepository = new FilePersonRepository();
         }
 
         public async Task<Person> Authorization(string name)
         {
             if (!string.IsNullOrEmpty(name))
             {
-                var person = await PersonRepository.GetPersonByNameAsync(name);
+                var person = await _personRepository.GetPersonByNameAsync(name);
                 if (person != null)
                     return person;
             }
             return null;
         }
 
-        public async Task InsertPersonAsync(Person person)
+        public async Task<bool> InsertPersonAsync(Person person)
         {
-            Console.Clear();
             if (person != null)
             {
-                var result = await PersonRepository.InsertPerson(person);
-                if(result != null)
-                {
-                    Console.Clear();
-                    Console.WriteLine($"Добавлен новый сотрудник: {result}");
-                    Console.WriteLine("Для продолжения нажмите любую клавишу");
-                    Console.ReadLine();
-                }
+                var result = await _personRepository.InsertPerson(person);
+                if (result != null)
+                    return true;
                 else
-                {
-                    Console.WriteLine();
-                    Console.WriteLine($"Ошибка добавления сотрудника: {person}");
-                    Console.WriteLine("Для продолжения нажмите любую клавишу");
-                    Console.ReadLine();
-                }
+                    return false;
             }
-            else 
-                Console.WriteLine("Сотрудник не определен");
+            else
+                return false;
         }
 
-
-
-
-        private async Task<List<Person>> GetAllPersonsAsync()
+        public async Task<List<Person>> GetAllPersonsAsync()
         {
-            var persons = await PersonRepository.GetPersonsListAsync();
+            var persons = await _personRepository.GetPersonsListAsync();
             return persons.ToList();
         }
-        
-        private void ShowPerson(Person person)
-        {
-            Console.WriteLine(person.ToString());
-            Console.WriteLine();
-        }
-
     }
 }

@@ -1,5 +1,4 @@
-﻿using Models;
-using System;
+﻿using System;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
@@ -12,10 +11,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
         public Positions Positions { get; set; }
         public decimal BaseSalary { get; set; }
 
-        public Person()
-        {
-
-        }
+        public Person() { }
 
         public Person(string name, string surname, Departments dep, Positions pos, decimal baseSalary)
         {
@@ -27,7 +23,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
             BaseSalary = baseSalary;
         }
 
-        public override string ToString()
+        public string ToDisplay()
+        {
+            return $"Id: {IdPerson}, Сотрудник: {SurnamePerson} {NamePerson}, Отдел: {Department}, Должность: {Positions}, Оклад: {BaseSalary}";
+        }
+
+        public string ToFile()
         {
             return $"{IdPerson},{NamePerson},{SurnamePerson},{Department},{Positions},{BaseSalary}";
         }

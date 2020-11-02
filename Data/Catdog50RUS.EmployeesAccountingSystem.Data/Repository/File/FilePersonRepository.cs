@@ -1,5 +1,4 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
-using Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,20 +10,23 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
 {
     public class FilePersonRepository : FileBase, IPersonRepository
     {
-        private readonly string _path;
+        /// <summary>
+        /// Хранилище данных о сотрудниках
+        /// </summary>
+        private static readonly string fileName = "persons.txt";
+        /// <summary>
+        /// Конструктор используем конструктор базового класса
+        /// </summary>
+        public FilePersonRepository() : base(fileName) { }
 
-        public FilePersonRepository(string fileName) : base(fileName)
-        {
-            _path = path;
-
-        }
+        #region Interface
 
         public async Task<IEnumerable<Person>> GetPersonsListAsync()
         {
             List<Person> result = new List<Person>();
             try
             {
-                using (StreamReader sr = new StreamReader(_path, Encoding.Default))
+                using (StreamReader sr = new StreamReader(path, Encoding.Default))
                 {
                     string line = null;
                     while ((line = await sr.ReadLineAsync()) != null)
@@ -39,7 +41,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
                             Positions = (Positions)Enum.Parse(typeof(Positions), personModel[4]),
                             BaseSalary = decimal.Parse(personModel[5])
                         };
-                        result.Add(person);
+                        if (person != null)
+                            result.Add(person);
                         personModel = default;
                     }
                 }
@@ -49,11 +52,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
 
                 throw;
             }
-            
+
             return result;
 
         }
 
+        //Не реализован
         public Person DeletePerson(string name)
         {
             throw new NotImplementedException();
@@ -69,16 +73,19 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
         {
             if (person != null)
             {
-                using (StreamWriter sw = new StreamWriter(_path, true))
+                using (StreamWriter sw = new StreamWriter(path, true))
                 {
-                    string line = person.ToString();
+                    string line = person.ToFile();
                     await sw.WriteLineAsync(line);
                 }
                 return person;
             }
             else return null;
 
-            
+
         }
+
+        #endregion
+
     }
 }

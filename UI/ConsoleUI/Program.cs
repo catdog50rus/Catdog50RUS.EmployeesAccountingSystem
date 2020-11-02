@@ -1,7 +1,4 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.Controllers;
-using Catdog50RUS.EmployeesAccountingSystem.Models;
-using Models;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
@@ -17,8 +14,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         {
             Console.WriteLine("Добро пожаловать!");
 
-            var menu = new MainMenu();
-            await menu.Intro();
+            var enter = new FirstMenu();
+            await enter.Intro();
 
         }
 

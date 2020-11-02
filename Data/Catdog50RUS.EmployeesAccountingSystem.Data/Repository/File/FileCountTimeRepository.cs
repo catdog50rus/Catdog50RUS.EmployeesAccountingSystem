@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
 {
@@ -12,6 +14,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
         /// Хранилище данных о затраченном времени на выполнение задач
         /// </summary>
         private static readonly string fileName = "countertimes.txt";
+
+        private static readonly IPersonRepository personRepository = new FilePersonRepository();
+
         /// <summary>
         /// Конструктор используем конструктор базового класса
         /// </summary>
@@ -20,9 +25,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
 
         #region Interface
 
-        public async Task AddWorkingTime(Person person, DateTime date, double time, string taskName)
+        public async Task AddWorkingTime(CounterTimes counter)
         {
-            var counter = new CounterTimes(person, date, time, taskName);
             if (counter != null)
             {
                 using (StreamWriter sw = new StreamWriter(path, true))
@@ -35,10 +39,52 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
                 return;
         }
 
-        public async Task<IEnumerable<CounterTimes>> GetCountTimesList(DateTime beginDate, DateTime lastDate)
+        public async Task<IEnumerable<CounterTimes>> GetCountTimesList()
         {
-            throw new NotImplementedException();
+            List<CounterTimes> result = new List<CounterTimes>();
+            try
+            {
+                using (StreamReader sr = new StreamReader(path, Encoding.Default))
+                {
+                    string line = null;
+                    while ((line = await sr.ReadLineAsync()) != null)
+                    {
+                        var model = line.Split(';');
+                        var id = Guid.Parse(model[2]);
+                        Person person = await personRepository.GetPersonByIdAsync(id);
+                        CounterTimes task = new CounterTimes()
+                        {
+                            IdCounter = Guid.Parse(model[0]),
+                            Date = DateTime.Parse(model[1]),
+                            Person = person,
+                            Time = double.Parse(model[3]),
+                            TaskName = model[4],
+                        };
+
+                        if (task != null)
+                            result.Add(task);
+                        model = default;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return result;
         }
+
+        public async Task<IEnumerable<CounterTimes>> GetPersonsTaskListAsync(Person person, DateTime beginDate, DateTime lastDate)
+        {
+            var tasksList = await GetCountTimesList();
+            var result = tasksList.Where(p => p.Person.IdPerson == person.IdPerson);
+            result = result.Where(d => d.Date >= beginDate && d.Date < lastDate);
+            return result;
+        }
+
+        
 
         #endregion
 

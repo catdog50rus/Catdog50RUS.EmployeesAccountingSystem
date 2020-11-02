@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 {
-    class ShowPersonsList
+    class ShowOnConsole
     {
         public static void ShowPersons(IEnumerable<Person> collection)
         {
@@ -18,9 +18,25 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             }
         }
 
+        public static void ShowPersonTasks(IEnumerable<CounterTimes> collection, (DateTime, DateTime) period)
+        {
+            Console.Clear();
+            Console.WriteLine($"Перечень выполненных задач в период с {period.Item1} по {period.Item2}: ");
+            foreach (var item in collection)
+            {
+                ShowTask(item);
+            }
+        }
+
         private static void ShowPerson(Person person)
         {
             Console.WriteLine(person.ToDisplay());
+            Console.WriteLine();
+        }
+
+        private static void ShowTask(CounterTimes counter)
+        {
+            Console.WriteLine(counter.ToDisplay());
             Console.WriteLine();
         }
     }

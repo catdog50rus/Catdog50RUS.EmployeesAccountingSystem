@@ -8,11 +8,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
     class MainMenu
     {
         private readonly PersonsController _personsController;
+        private readonly CounterTimesController _counterTimesController;
         private readonly Person _person;
 
         public MainMenu(Person person)
         {
             _personsController = new PersonsController();
+            _counterTimesController = new CounterTimesController();
             _person = person;
         }
 
@@ -28,9 +30,16 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                 {
                     case '1':
                         var personsList = await _personsController.GetAllPersonsAsync();
-                        ShowPersonsList.ShowPersons(personsList);
+                        ShowOnConsole.ShowPersons(personsList);
                         break;
                     case '2':
+                        var counterTimes = CreateCounterTimes.CreatNewCounter(_person);
+                        await _counterTimesController.AddNewTask(counterTimes);
+                        break;
+                    case '3':
+                        var period = InputParameters.GetPeriod();
+                        var tasksList = await _counterTimesController.GetPersonTask(_person, period.Item1, period.Item2);
+                        ShowOnConsole.ShowPersonTasks(tasksList, period);
                         break;
                     case '9':
                         await InsertNewPerson();
@@ -50,14 +59,15 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             Console.WriteLine();
             Console.WriteLine("Выберите дальнейшие действия:");
             Console.WriteLine("1 - Вывести на экран список сотрудников");
-            Console.WriteLine("2 - Добавить рабочее время");
+            Console.WriteLine("2 - Добавить выполненную задачу");
+            Console.WriteLine("3 - Посмотреть список моих выполненных задач");
             Console.WriteLine("9 - Добавить сотрудника");
             Console.WriteLine("0 - Выйти из профиля");
         }
 
         private bool Exit()
         {
-            Console.WriteLine($"{_person.NamePerson} До свидания!");
+            Console.WriteLine($"{_person} До свидания!");
             Console.WriteLine();
             Console.WriteLine("Для продолжения нажмите любую клавишу!");
             Console.ReadKey();

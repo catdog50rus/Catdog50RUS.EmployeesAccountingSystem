@@ -19,19 +19,19 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             while (string.IsNullOrEmpty(name))
             {
                 Console.WriteLine("Введите имя");
-                name = InputStringParametr();
+                name = InputParameters.InputStringParameter();
             }
             while (string.IsNullOrEmpty(surname))
             {
                 Console.WriteLine("Введите фамилию");
-                surname = InputStringParametr();
+                surname = InputParameters.InputStringParameter();
             }
             dep = InputDepartment();
             pos = InputPosition();
             while (baseSalary <= 0)
             {
                 Console.WriteLine("Введите базовую ставку сотрудника");
-                var salary = InputStringParametr();
+                var salary = InputParameters.InputStringParameter();
                 decimal.TryParse(salary, out baseSalary);
 
             }
@@ -47,17 +47,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             return person;
         }
 
-        private static string InputStringParametr()
-        {
-            var res = Console.ReadLine();
-            if (string.IsNullOrEmpty(res) || string.IsNullOrWhiteSpace(res))
-            {
-                Console.WriteLine("Некорректный ввод!");
-                Console.WriteLine("Попробуйте еще раз!");
-                return "";
-            }
-            else return res;
-        }
 
         private static Enum InputDepartment()
         {

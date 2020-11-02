@@ -7,7 +7,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository
 {
     public interface ICountTimeRepository
     {
-        Task AddWorkingTime(Person person, DateTime date, double time, string taskName);
-        Task<IEnumerable<CounterTimes>> GetCountTimesList(DateTime beginDate, DateTime lastDate);
+        Task AddWorkingTime(CounterTimes counter);
+        Task<IEnumerable<CounterTimes>> GetCountTimesList();
+
+        Task<IEnumerable<CounterTimes>> GetPersonsTaskListAsync(Person person, DateTime beginDate, DateTime lastDate);
     }
 }

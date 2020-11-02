@@ -31,7 +31,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
                     string line = null;
                     while ((line = await sr.ReadLineAsync()) != null)
                     {
-                        var personModel = line.Split(',');
+                        var personModel = line.Split(';');
                         Person person = new Person()
                         {
                             IdPerson = Guid.Parse(personModel[0]),
@@ -83,6 +83,16 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
             else return null;
 
 
+        }
+
+        public async Task<Person> GetPersonByIdAsync(Guid id)
+        {
+            var list = await GetPersonsListAsync();
+            Person person = list.FirstOrDefault(p => p.IdPerson == id);
+            if(person != null)
+                return person;
+            else
+                return null;
         }
 
         #endregion

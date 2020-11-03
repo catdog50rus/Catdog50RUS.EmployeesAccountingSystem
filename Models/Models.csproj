@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Catdog50RUS.EmployeesAccountingSystem.Models</AssemblyName>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
 </Project>

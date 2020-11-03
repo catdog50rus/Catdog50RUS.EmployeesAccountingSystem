@@ -9,7 +9,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository
     {
         Task<IEnumerable<Person>> GetPersonsListAsync();
         Task<Person> InsertPerson(Person person);
-        Person DeletePerson(string name);
+        Task<Person> DeletePerson(Guid id);
         Task<Person> GetPersonByNameAsync(string name);
         Task<Person> GetPersonByIdAsync(Guid name);
     }

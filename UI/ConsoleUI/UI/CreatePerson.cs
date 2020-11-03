@@ -1,7 +1,5 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 {
@@ -10,47 +8,24 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         public static Person CreateNewPerson()
         {
             Console.Clear();
-            string name = "", surname = "";
-            Enum dep, pos;
-            decimal baseSalary = 0M;
 
             Console.WriteLine("Добавление нового пользователя");
-            Console.WriteLine("");
-            while (string.IsNullOrEmpty(name))
-            {
-                Console.WriteLine("Введите имя");
-                name = InputParameters.InputStringParameter();
-            }
-            while (string.IsNullOrEmpty(surname))
-            {
-                Console.WriteLine("Введите фамилию");
-                surname = InputParameters.InputStringParameter();
-            }
-            dep = InputDepartment();
-            pos = InputPosition();
-            while (baseSalary <= 0)
-            {
-                Console.WriteLine("Введите базовую ставку сотрудника");
-                var salary = InputParameters.InputStringParameter();
-                decimal.TryParse(salary, out baseSalary);
+            Console.WriteLine();
+            string name = InputParameters.InputStringParameter("Введите имя сотрудника");
+            string surname = InputParameters.InputStringParameter("Введите фамилию сотрудника");
+            Departments dep = InputDepartment();
+            Positions pos = InputPosition();
+            decimal baseSalary = InputParameters.InputDecimlParameter("Введите базовую ставку сотрудника");
 
-            }
-            Person person = new Person()
-            {
-                IdPerson = Guid.NewGuid(),
-                NamePerson = name,
-                SurnamePerson = surname,
-                Department = (Departments)dep,
-                Positions = (Positions)pos,
-                BaseSalary = baseSalary
-            };
-            return person;
+            return new Person(name, surname, dep, pos, baseSalary);
+
         }
 
 
-        private static Enum InputDepartment()
+        private static Departments InputDepartment()
         {
             Departments dep = default;
+            Console.WriteLine();
             Console.WriteLine("Выберите отдел сотрудника:");
             Console.WriteLine("1 - Управление компанией");
             Console.WriteLine("2 - IT отдел");
@@ -72,9 +47,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
         }
 
-        private static Enum InputPosition()
+        private static Positions InputPosition()
         {
             Positions pos = default;
+            Console.WriteLine();
             Console.WriteLine("Выберите должность сотрудника:");
             Console.WriteLine("1 - Директор");
             Console.WriteLine("2 - Разработчик в штате");

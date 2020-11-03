@@ -6,7 +6,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
     class Program
     {
         static void Main()
-
         {
             MainAsync().GetAwaiter().GetResult();
         }

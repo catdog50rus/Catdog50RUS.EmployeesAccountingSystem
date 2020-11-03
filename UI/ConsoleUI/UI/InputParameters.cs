@@ -1,27 +1,60 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using System.Globalization;
-using System.Text;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 {
     static class InputParameters
     {
-        public static string InputStringParameter()
+        public static string InputStringParameter(string text)
         {
+            ShowText(text);
             var res = Console.ReadLine();
-            if (string.IsNullOrEmpty(res) || string.IsNullOrWhiteSpace(res))
+            while (string.IsNullOrEmpty(res) || string.IsNullOrWhiteSpace(res))
             {
                 Console.WriteLine("Некорректный ввод!");
                 Console.WriteLine("Попробуйте еще раз!");
-                return "";
+                res = Console.ReadLine();
             }
-            else return res;
+            return res;
         }
 
-        public static DateTime InputDateParameter()
+        public static double InputDoubleParameter(string text)
         {
+            ShowText(text);
+            double res = 0;
+            while (res <= 0)
+            {
+                var input = Console.ReadLine();
+                if(!double.TryParse(input, out res))
+                {
+                    Console.WriteLine("Некорректный ввод!");
+                    Console.WriteLine("Попробуйте еще раз!");
+                    Console.WriteLine();
+                }
+            }
+            return res;
+        }
+
+        public static decimal InputDecimlParameter(string text)
+        {
+            ShowText(text);
+            decimal res = 0;
+            while (res <= 0)
+            {
+                var input = Console.ReadLine();
+                if (!decimal.TryParse(input, out res))
+                {
+                    Console.WriteLine("Некорректный ввод!");
+                    Console.WriteLine("Попробуйте еще раз!");
+                    Console.WriteLine();
+                }
+            }
+            return res;
+        }
+
+        public static DateTime InputDateParameter(string text)
+        {
+            ShowText(text);
             DateTime date = default;
             bool exitWhile = false;
             while(!exitWhile)
@@ -32,6 +65,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                 {
                     Console.WriteLine("Некорректный ввод!");
                     Console.WriteLine("Попробуйте еще раз!");
+                    Console.WriteLine();
                 }
 
             }
@@ -42,19 +76,22 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         {
             DateTime start, end = default;
             Console.Clear();
-            Console.WriteLine("Введите начальную дату");
-            Console.WriteLine();
-            start = InputDateParameter();
+            start = InputDateParameter("Введите начальную дату");
 
             while(end <= start)
             {
-                Console.WriteLine();
-                Console.WriteLine("Введите конечную дату");
-                Console.WriteLine();
-                end = InputDateParameter();
+                end = InputDateParameter($"Введите конечную дату (дата должна быть старше чем {start:dd.MM.yyyy})");
             }
 
             return (start, end);
+        }
+
+
+        private static void ShowText(string text)
+        {
+            Console.WriteLine();
+            Console.WriteLine(text);
+            Console.WriteLine();
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
-    public class CounterTimes
+    public class CompletedTask
     {
         public Guid IdCounter { get; set; }
         public Person Person { get; set; }
@@ -12,14 +12,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
         public double Time { get; set; }
         public string TaskName { get; set; }
 
-        public CounterTimes() { }
+        public CompletedTask() { }
 
-        public CounterTimes(Guid id, string date, double time, string task) : this(date, time, task)
+        public CompletedTask(Guid id, string date, double time, string task) : this(date, time, task)
         {
             IdCounter = id;
         }
 
-        public CounterTimes(string date, double time, string task)
+        public CompletedTask(string date, double time, string task)
         {
             IdCounter = Guid.NewGuid();
 
@@ -35,10 +35,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
             TaskName = (!string.IsNullOrEmpty(task)) ? task : throw new ArgumentException("Ошибка в наименовании задачи");
         }
 
-        public CounterTimes(Person person, string date, double time, string task) : this(date, time, task)
+        public CompletedTask(Person person, string date, double time, string task) : this(date, time, task)
         {
             Person = person ?? throw new ArgumentNullException(person.ToString(), "Ошибка сотрудника");
         }
+
+
+
 
         public string ToFile()
         {
@@ -48,6 +51,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
         public string ToDisplay()
         {
             return $"Дата: {Date:dd.MM.yyyy}, Затраченное время {Time} часов: {TaskName}";
+        }
+
+        public string ToInsert()
+        {
+            return $"Добавлена выполненная задача: {TaskName} /n, Дата выполнения: {Date:dd.MM.yyyy} /n , Время выполнения:{Time} часов";
         }
 
     }

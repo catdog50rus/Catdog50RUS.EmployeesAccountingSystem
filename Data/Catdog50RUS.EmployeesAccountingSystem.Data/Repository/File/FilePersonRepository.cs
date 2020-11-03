@@ -26,25 +26,23 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
             List<Person> result = new List<Person>();
             try
             {
-                using (StreamReader sr = new StreamReader(path, Encoding.Default))
+                using StreamReader sr = new StreamReader(path, Encoding.Default);
+                string line = null;
+                while ((line = await sr.ReadLineAsync()) != null)
                 {
-                    string line = null;
-                    while ((line = await sr.ReadLineAsync()) != null)
+                    var personModel = line.Split(';');
+                    Person person = new Person()
                     {
-                        var personModel = line.Split(';');
-                        Person person = new Person()
-                        {
-                            IdPerson = Guid.Parse(personModel[0]),
-                            NamePerson = personModel[1],
-                            SurnamePerson = personModel[2],
-                            Department = (Departments)Enum.Parse(typeof(Departments), personModel[3]),
-                            Positions = (Positions)Enum.Parse(typeof(Positions), personModel[4]),
-                            BaseSalary = decimal.Parse(personModel[5])
-                        };
-                        if (person != null)
-                            result.Add(person);
-                        personModel = default;
-                    }
+                        IdPerson = Guid.Parse(personModel[0]),
+                        NamePerson = personModel[1],
+                        SurnamePerson = personModel[2],
+                        Department = (Departments)Enum.Parse(typeof(Departments), personModel[3]),
+                        Positions = (Positions)Enum.Parse(typeof(Positions), personModel[4]),
+                        BaseSalary = decimal.Parse(personModel[5])
+                    };
+                    if (person != null)
+                        result.Add(person);
+                    personModel = default;
                 }
             }
             catch (Exception)
@@ -57,10 +55,32 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
 
         }
 
-        //Не реализован
-        public Person DeletePerson(string name)
+        public async Task<Person> DeletePerson(Guid id)
         {
-            throw new NotImplementedException();
+            var personslist = await GetPersonsListAsync();
+            List<Person> resultlist = personslist.ToList();
+            var deletePerson = personslist.FirstOrDefault(p => p.IdPerson == id);
+            if(deletePerson != null)
+            {
+                resultlist.Remove(deletePerson);
+                try
+                {
+                    new FileInfo(path).Delete();
+                    foreach (var item in resultlist)
+                    {
+                        await InsertPerson(item);
+                    }
+                    return deletePerson;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                
+            }
+
+            return null;
         }
 
         public async Task<Person> GetPersonByNameAsync(string name)

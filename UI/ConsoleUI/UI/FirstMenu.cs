@@ -1,20 +1,18 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.Controllers;
+﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 {
     internal class FirstMenu
     {
-        private readonly PersonsController _personsController;
+        private readonly PersonsService _personsService;
         private Person _person;
 
         public FirstMenu()
         {
-            _personsController = new PersonsController();
+            _personsService = new PersonsService();
             _person = default;
         }
 
@@ -23,28 +21,23 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             bool exit = default;
             while (!exit)
             {
-                Console.WriteLine();
-                Console.WriteLine("Для начала работы необходимо авторизоваться!");
-                Console.WriteLine();
-                Console.WriteLine("Выберите дальнейшие действия:");
-                Console.WriteLine("1 - Авторизоваться");
-                Console.WriteLine("0 - Выйти из программы");
+                ShowText();
 
                 var key = Console.ReadKey().KeyChar;
                 Console.Clear();
                 switch (key)
                 {
                     case '1':
-                        string name = GetNameParametr();
-                        await Autorezation(name);
-                        if(_person != null)
+                        await Autorezation();
+                        if (_person != null)
                         {
                             var mainmenu = new MainMenu(_person);
                             await mainmenu.Intro();
-                        }                    
+                        }
                         break;
                     case '0':
                         Console.WriteLine("Работа программы завершена");
+                        ShowOnConsole.ShowContinue();
                         exit = true;
                         break;
                     default:
@@ -54,33 +47,32 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
         }
 
-        private async Task Autorezation(string name)
+        private static void ShowText()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Для начала работы необходимо авторизоваться!");
+            Console.WriteLine();
+            Console.WriteLine("Выберите дальнейшие действия:");
+            Console.WriteLine("1 - Авторизоваться");
+            Console.WriteLine("0 - Выйти из программы");
+        }
+
+        private async Task Autorezation()
         {
             Console.Clear();
-            var person = await _personsController.Authorization(name);
+            string name = InputParameters.InputStringParameter("Введите имя пользователя");
+            var person = await _personsService.Authorization(name);
             if (person != null)
             {
                 _person = person;
-                Console.WriteLine($"Пользователь {_person.NamePerson} {_person.SurnamePerson} успешно авторизован!");
+                ShowOnConsole.ShowError($"Пользователь {_person} успешно авторизован!");  
             }
             else
             {
-                Console.WriteLine($"Пользователь с именем {name} не найден!");
-
+                ShowOnConsole.ShowError($"Пользователь с именем {name} не найден!");
             }
-            Console.WriteLine();
+            ShowOnConsole.ShowContinue();
         }
 
-        private string GetNameParametr()
-        {
-            Console.Clear();
-            string name = "";
-            while (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
-            {
-                Console.WriteLine("Введите имя пользователя");
-                name = Console.ReadLine();
-            }
-            return name;
-        }
     }
 }

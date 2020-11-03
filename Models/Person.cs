@@ -25,16 +25,36 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
 
         public string ToDisplay()
         {
-            return $"Id: {IdPerson}, Сотрудник: {SurnamePerson} {NamePerson}, Отдел: {Department}, Должность: {Positions}, Оклад: {BaseSalary}";
+            return AddCurrency($"Сотрудник: {SurnamePerson} {NamePerson}, Отдел: {Department}, Должность: {Positions}, Оклад: {BaseSalary} рублей ");
         }
 
         public string ToFile()
         {
             return $"{IdPerson};{NamePerson};{SurnamePerson};{Department};{Positions};{BaseSalary}";
         }
+
+        public string ToInsert()
+        {
+            return AddCurrency($"Добавлен новый сотрудник: \n {SurnamePerson} {NamePerson} \n в отдел: {Department}, \n на должность: {Positions}, \n с окладом {BaseSalary} рублей ");
+        }
+
+        public string ToDelete()
+        {
+            return $"Удален сотрудник: \n {SurnamePerson} {NamePerson} \n из отдела: {Department}, \n с должности: {Positions}";
+        }
+
         public override string ToString()
         {
             return $"{NamePerson} {SurnamePerson}";
+        }
+
+        private string AddCurrency(string text)
+        {
+            if (Positions.Equals(Positions.Freelance))
+                text += "в час";
+            else
+                text += "в месяц";
+            return text;
         }
     }
 }

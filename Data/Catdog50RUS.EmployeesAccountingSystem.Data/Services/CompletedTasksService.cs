@@ -3,18 +3,26 @@ using Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
 {
+    /// <summary>
+    /// Реализация бизнес логики
+    /// Получение списка задач
+    /// </summary>
     public class CompletedTasksService
     {
-        private readonly ICompletedTaskRepository _counterRepository;
-
+        /// <summary>
+        /// Внедрение зависимости через интерфейс
+        /// </summary>
+        private ICompletedTaskRepository TasksRepository { get; }
+        /// <summary>
+        /// Конструктор
+        /// </summary>
         public CompletedTasksService()
         {
-            _counterRepository = new FileCompletedTaskRepository();
+            TasksRepository = new FileCompletedTaskRepository();
         }
 
         #region Interface
@@ -26,9 +34,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// <returns></returns>
         public async Task<bool> AddNewTask(CompletedTask task)
         {
+            //Проверяем входные параметры на null
             if (task != null)
             {
-                var result = await _counterRepository.AddCompletedTask(task);
+                //Пытаемся добавить задачу в хранилище, 
+                //если результат не null возвращаем true, иначе false
+                var result = await TasksRepository.AddCompletedTask(task);
                 if (result != null)
                     return true;
                 else
@@ -46,16 +57,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// <returns></returns>
         public async Task<IEnumerable<CompletedTask>> GetPersonTask(Person person, DateTime firstDate, DateTime lastDate)
         {
-            var result = await _counterRepository.GetPersonsTaskListAsync(person, firstDate, lastDate);
-            if(result != null)
-                return result;
-            else
-                return null;
+             return await TasksRepository.GetPersonsTaskListAsync(person, firstDate, lastDate);
         }
         #endregion
-
-
-
         
     }
 }

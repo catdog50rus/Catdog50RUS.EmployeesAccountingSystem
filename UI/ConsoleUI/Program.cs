@@ -7,6 +7,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
     {
         static void Main()
         {
+            //Активируем асинхронный режим
             MainAsync().GetAwaiter().GetResult();
         }
         private static async Task MainAsync()

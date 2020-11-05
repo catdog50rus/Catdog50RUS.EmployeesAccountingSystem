@@ -7,43 +7,81 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 {
     class MainMenu
     {
-        private readonly PersonsService _personsService;
-        private readonly CompletedTasksService _completedTasksService;
-        private readonly Person _person;
+        //Поля
+        //TODO реализовать внедрение через интерфейс
+        /// <summary>
+        /// Внедрение сервиса работы с данными сотрудника
+        /// </summary>
+        private PersonsService PersonsService { get; }
+        /// <summary>
+        /// Внедрение сервиса работы с задачами
+        /// </summary>
+        private CompletedTasksService CompletedTasksService { get; }
+        /// <summary>
+        /// Внедрение сервиса отчетов
+        /// </summary>
+        private ReportService ReportService { get; set; }
+        /// <summary>
+        /// Поле сотрудник
+        /// </summary>
+        private Person Person { get; }
 
+        /// <summary>
+        /// Конструктор
+        /// Принимает сотрудника
+        /// </summary>
+        /// <param name="person"></param>
         public MainMenu(Person person)
         {
-            _personsService = new PersonsService();
-            _completedTasksService = new CompletedTasksService();
-            _person = person;
+            //Инициализация полей
+            PersonsService = new PersonsService();
+            CompletedTasksService = new CompletedTasksService();
+            Person = person;
         }
 
+        /// <summary>
+        /// Отображение главного меню
+        /// </summary>
+        /// <returns></returns>
         public async Task Intro()
         {
+            //Флаг выхода из главного меню
             bool exit = default;
+
+            //Запускаем цикл ожидающий выбора элементов меню
             while (!exit)
             {
-                ShowText(_person.Positions);
+                //Отображение элементов меню
+                ShowText(Person.Positions);
+                //Получаем символ нажатой клавиши
                 var key = Console.ReadKey().KeyChar;
                 Console.Clear();
+
+                //Проверяем какая клавиша нажата
                 switch (key)
                 { 
                     case '1':
+                        //Добавляем задачу в хранилище
                         await AddNewTask();
                         break;
                     case '2':
+                        //Получаем отчет по сотруднику
                         await CreatePersonReport();
                         break;
                     case '3':
+                        //Получаем список сотрудников
                         await CreatePersonsList();
                         break;
                     case '8':
+                        //Добавляем сотрудника
                         await InsertNewPerson();
                         break;
                     case '9':
+                        //Удаляем сотрудника
                         await DeletePerson();
                         break;
                     case '0':
+                        //Выход из профиля и возврат к начальному меню
                         exit = Exit();
                         break;
                     default:
@@ -53,14 +91,17 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
         }
 
-        
+        #region Реализация
 
+        //Отображение элементов меню
         private static void ShowText(Positions positions)
         {
+            //Вывод общих элементов меню
             Console.WriteLine();
             Console.WriteLine("Выберите дальнейшие действия:");
             Console.WriteLine("1 - Добавить выполненную задачу");
             Console.WriteLine("2 - Посмотреть список моих выполненных задач");
+            //Вывод элементов меню доступных только руководителю
             if (positions.Equals(Positions.Director))
             {
                 Console.WriteLine("3 - Вывести на экран список сотрудников");
@@ -74,12 +115,19 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         }
 
         //1
+        /// <summary>
+        /// Добавить новую задачу
+        /// </summary>
+        /// <returns></returns>
         private async Task AddNewTask()
         {
-            var task = CreateCompletedTask.CreatNewTask(_person);
+            //Создаем новую задачу в отдельном компоненте UI
+            //И проверяем результат на null
+            var task = CreateCompletedTask.CreatNewTask(Person);
             if(task != null)
             {
-                var result =  await _completedTasksService.AddNewTask(task);
+                //Добавляем задачу в хранилище и проверяем результат операции
+                var result =  await CompletedTasksService.AddNewTask(task);
                 if (result)
                 {
                     ShowOnConsole.ShowNewTask(task);
@@ -93,15 +141,23 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         }
 
         //2
+        /// <summary>
+        /// Получаем отчет по сотруднику
+        /// </summary>
+        /// <returns></returns>
         private async Task CreatePersonReport()
         {
+            //Получаем период
             var period = InputParameters.GetPeriod();
-            var tasksList = await _completedTasksService.GetPersonTask(_person, period.Item1, period.Item2);
-            if(tasksList != null)
+            //Передаем в конструктор сервиса Сотрудника и период
+            ReportService = new ReportService(Person, period);
+            //Получаем отчет и проверяем его на null и валидность числовых параметров
+            //Выводим результат
+            var personReport = await ReportService.GetPersonReport();
+            if(personReport.Item3 != null)
             {
-                var personReport = new ReportService(_person, tasksList).GetPersonReport();
                 if(personReport.Item1 >= 0 && personReport.Item2 >= 0)
-                    ShowOnConsole.ShowPersonTasks(_person, tasksList, period, personReport);
+                    ShowOnConsole.ShowPersonTasks(Person, period, personReport);
             }
             else
             {
@@ -112,9 +168,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         }
 
         //3
+        /// <summary>
+        /// Получить список сотрудников
+        /// </summary>
+        /// <returns></returns>
         private async Task CreatePersonsList()
         {
-            var personsList = await _personsService.GetAllPersonsAsync();
+            //Получаем список сотрудников и проверяем результат на Null
+            var personsList = await PersonsService.GetAllPersonsAsync();
             if (personsList != null)
                 ShowOnConsole.ShowPersons(personsList);
             else
@@ -123,12 +184,19 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         }
 
         //8
+        /// <summary>
+        /// Добавление нового сотрудника
+        /// </summary>
+        /// <returns></returns>
         private async Task InsertNewPerson()
         {
+            //Создаем нового сотрудника в отдельном компоненте UI
+            //И проверяем результат на null
             var newPerson = CreatePerson.CreateNewPerson();
             if (newPerson != null)
             {
-                var result = await _personsService.InsertPersonAsync(newPerson);
+                //Добавляем сотрудника в хранилище и проверяем результат операции
+                var result = await PersonsService.InsertPersonAsync(newPerson);
                 if (result)
                 {
                     ShowOnConsole.ShowNewPerson(newPerson);
@@ -139,18 +207,27 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             ShowOnConsole.ShowContinue();
 
         }
+
         //9
+        /// <summary>
+        /// Удаление сотрудника
+        /// </summary>
+        /// <returns></returns>
         private async Task DeletePerson()
         {
             Console.Clear();
+            //Получаем имя удаляемого сотрудника
             var name = InputParameters.InputStringParameter("Введите имя удаляемого сотрудника");
-            Person person = await _personsService.GetPersonByName(name);
+            //Получаем сотрудника по имени
+            //И проверяем результат
+            Person person = await PersonsService.GetPersonByName(name);
             if(person != null)
             {
-                var result = await _personsService.DeletePersonAsync(person.IdPerson);
+                //Удаляем сотрудника из хранилища и проверяем результат операции
+                var result = await PersonsService.DeletePersonAsync(person.IdPerson);
                 if (result)
                 {
-                    ShowOnConsole.ShowNewPerson(person);
+                    ShowOnConsole.ShowDeletePerson(person);
                 }
                 else
                 {
@@ -161,13 +238,20 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                 ShowOnConsole.ShowError($"Сотрудник с именем {name} не найден!");
             ShowOnConsole.ShowContinue(); ;
         }
+
         //0
+        /// <summary>
+        /// Выходим из главного меню
+        /// </summary>
+        /// <returns></returns>
         private bool Exit()
         {
-            Console.WriteLine($"{_person} До свидания!");
+            Console.WriteLine($"{Person} До свидания!");
             ShowOnConsole.ShowContinue();
             return true;
         }
+
+        #endregion
 
     }
 }

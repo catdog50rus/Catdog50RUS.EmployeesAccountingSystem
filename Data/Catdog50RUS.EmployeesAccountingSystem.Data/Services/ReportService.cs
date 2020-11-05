@@ -3,97 +3,180 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
 {
+    /// <summary>
+    /// Реализация бизнес логики
+    /// Формирование отчетов
+    /// </summary>
     public class ReportService
     {
-        private readonly List<CompletedTask> _completedTasks;
-        private readonly Positions _position;
-        private readonly decimal _baseSalary;
-        private readonly int _month;
+        //TODO константы вынести в файл с настройками
+        /// <summary>
+        /// Месячная норма часов
+        /// </summary>
+        private const int normTimeInMonth = 160;
+        /// <summary>
+        /// Бонус директора
+        /// </summary>
+        private const decimal bonusDirector = 20000;
+        /// <summary>
+        /// Коэффициент переработки сотрудника на зарплате
+        /// </summary>
+        private const decimal bonusCoefficient = 2;
 
-        public ReportService(Person person, IEnumerable<CompletedTask> completedTasks)
+        //Поля
+        /// <summary>
+        /// Внедрение сервиса работы с задачами
+        /// </summary>
+        private CompletedTasksService CompletedTasksService { get; } = new CompletedTasksService();
+
+        /// <summary>
+        /// Должность сотрудника
+        /// </summary>
+        private Positions Position { get; }
+        /// <summary>
+        /// Базовая ставка сотрудника
+        /// </summary>
+        private decimal BaseSalary { get; }
+        /// <summary>
+        /// Начальная дата отчета
+        /// </summary>
+        private DateTime FirstDate { get; }
+        /// <summary>
+        /// Конечная дата отчета
+        /// </summary>
+        private DateTime LastDate { get; }
+        /// <summary>
+        /// Сотрудника
+        /// </summary>
+        private Person Person { get; }
+
+        /// <summary>
+        /// Конструктор для отчета Сотрудника
+        /// </summary>
+        /// <param name="person">СОтрудник</param>
+        /// <param name="completedTasks">Список задач</param>
+        public ReportService(Person person, (DateTime, DateTime) period)
         {
-            _position = person.Positions;
-            _baseSalary = person.BaseSalary;
-            _completedTasks = completedTasks.ToList();
-            _month = GetFullMonth(completedTasks);
+            //Инициализация полей
+            Person = person;
+            Position = person.Positions;
+            BaseSalary = person.BaseSalary;
+            FirstDate = period.Item1;
+            LastDate = period.Item2;
         }
 
-        public (double, decimal) GetPersonReport()
+        #region Interface
+
+        /// <summary>
+        /// Получить отчет по сотруднику
+        /// Возвращает кортеж с количеством рабочих часов и заработком
+        /// </summary>
+        /// <returns></returns>
+        public async Task<(double, decimal, List<CompletedTask>)> GetPersonReport()
         {
-            double time = default;
-            decimal salary = default;
-            if (_position.Equals(Positions.Freelance))
+            var personTasks = await GetPersonTasksList();
+            if(personTasks != null)
             {
-                time = GetSumTime();
-                salary = GetSalaryFreelance(time);
-            }
-            else
-            {
-                if (_month == 0)
+                double time = GetSumTime(personTasks);
+                decimal salary = default;
+
+                //Если сотрудник фрилансер просто возвращаем сумму часов и сумму оплаты
+                switch (Position)
                 {
-                    time = GetSumTime();
-                    salary = GetSalary(time);
+                    case Positions.Freelance:
+                        salary = GetSalaryFreelance(time);
+                        break;
+                    case Positions.Director:
+                        salary = GetSalaryDirector(time);
+                        break;
+                    case Positions.Developer:
+                        salary = GetSalaryPerson(time);
+                        break;
                 }
-            }
-            return (time, salary);
 
+                return (time, salary, personTasks);
+            }
+            return (0, 0, null);
         }
+
+        #endregion
 
 
         #region Реализация
 
-        private int GetFullMonth(IEnumerable<CompletedTask> tasks)
+        /// <summary>
+        /// Получить список выполненных задач
+        /// </summary>
+        /// <returns></returns>
+        private async Task<List<CompletedTask>> GetPersonTasksList()
         {
-            var list = tasks.ToList();
-            var firstmonth = list[0].Date.Month;
-            var lasttmonth = list[list.Count - 1].Date.Month;
-            return lasttmonth - firstmonth;
+            var result = await CompletedTasksService.GetPersonTask(Person, FirstDate, LastDate);
+            if (result != null)
+                return result.ToList();
+            else
+                return null;
         }
 
-        private double GetSumTime()
+        /// <summary>
+        /// Возвращаем общее количество отработанных часов
+        /// </summary>
+        /// <returns></returns>
+        private double GetSumTime(List<CompletedTask> tasks)
         {
-            double sumTime = 0;
-
-            foreach (var item in _completedTasks)
-            {
-                sumTime += item.Time;
-            }
-
-            return sumTime;
+            return tasks.Sum(t=>t.Time);
         }
-
-        private decimal GetSalary(double time)
+        
+        //TODO Методы рассчитывает переработку за количество часов сверх месячной нормы. Учитывая наличие месячной нормы считаю этот принцип единственно возможным
+        /// <summary>
+        /// Возвращаем заработную плату сотрудника
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        private decimal GetSalaryPerson(double time)
         {
-            decimal _time = (decimal)time, salary = default;
+            decimal _time = (decimal)time, salary;
 
-            if (time <= 160)
+            if (time <= normTimeInMonth)
             {
-                salary = _baseSalary * _time / 160;
+                salary = BaseSalary * _time / normTimeInMonth;
             }
             else
             {
-                switch (_position)
-                {
-                    case Positions.Developer:
-                        salary = _baseSalary * (1 + 2 * (_time - 160) / 160);
-                        break;
-                    case Positions.Director:
-                        salary = _baseSalary + 20000 * (_time - 160) / 160;
-                        break;
-                }
-
+                salary = BaseSalary * (1 + bonusCoefficient * (_time - normTimeInMonth) / normTimeInMonth);
             }
             return salary;
         }
+        /// <summary>
+        /// Возвращаем заработную плату руководителя
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        private decimal GetSalaryDirector(double time)
+        {
+            decimal _time = (decimal)time, salary;
 
+            if (time <= normTimeInMonth)
+            {
+                salary = BaseSalary * _time / normTimeInMonth;
+            }
+            else
+            {
+                salary = BaseSalary + bonusDirector * (_time - normTimeInMonth) / normTimeInMonth;
+            }
+            return salary;
+        }
+        /// <summary>
+        /// Возвращаем зарплату фрилансера
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
         private decimal GetSalaryFreelance(double time)
         {
-            decimal _time = (decimal)time;
-
-            return _baseSalary * _time;
+            return BaseSalary * (decimal)time;
         }
 
         #endregion

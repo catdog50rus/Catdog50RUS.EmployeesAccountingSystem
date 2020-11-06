@@ -95,7 +95,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
                     //Заполняем модель
                     CompletedTask task = new CompletedTask()
                     {
-                        IdCounter = Guid.Parse(model[0]),
+                        IdTask = Guid.Parse(model[0]),
                         Date = DateTime.Parse(model[1]),
                         Person = person,
                         Time = double.Parse(model[3]),

@@ -1,5 +1,8 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
+﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components;
+using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
+using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
+using Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports;
 using System;
 using System.Threading.Tasks;
 
@@ -20,7 +23,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         /// <summary>
         /// Внедрение сервиса отчетов
         /// </summary>
-        private ReportService ReportService { get; set; }
+        private SalaryReport Report { get; set; }
         /// <summary>
         /// Поле сотрудник
         /// </summary>
@@ -123,7 +126,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         {
             //Создаем новую задачу в отдельном компоненте UI
             //И проверяем результат на null
-            var task = CreateCompletedTask.CreatNewTask(Person);
+            var task = CreateTask.CreatNewTask(Person);
             if(task != null)
             {
                 //Добавляем задачу в хранилище и проверяем результат операции
@@ -150,10 +153,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             //Получаем период
             var period = InputParameters.GetPeriod();
             //Передаем в конструктор сервиса Сотрудника и период
-            ReportService = new ReportService(Person, period);
+            Report = new SalaryReport(Person, period);
             //Получаем отчет и проверяем его на null и валидность числовых параметров
             //Выводим результат
-            var personReport = await ReportService.GetPersonReport();
+            var personReport = await Report.GetPersonReport();
             if(personReport.Item3 != null)
             {
                 if(personReport.Item1 >= 0 && personReport.Item2 >= 0)

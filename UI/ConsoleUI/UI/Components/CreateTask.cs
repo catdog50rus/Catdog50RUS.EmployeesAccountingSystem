@@ -1,13 +1,14 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
+﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
+using Catdog50RUS.EmployeesAccountingSystem.Models;
 using System;
 
-namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
+namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
 {
     /// <summary>
     /// Компонент UI
     /// Получаем новую задачу
     /// </summary>
-    class CreateCompletedTask
+    class CreateTask
     {
         public static CompletedTask CreatNewTask(Person person)
         {

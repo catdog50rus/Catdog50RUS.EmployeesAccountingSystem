@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
+namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
 {
     /// <summary>
     /// Реализация вывода данных на консоль

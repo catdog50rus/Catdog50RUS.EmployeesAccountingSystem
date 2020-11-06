@@ -1,4 +1,5 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
+﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components;
+using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -6,12 +7,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 {
     internal class FirstMenu
     {
-        //Поля
-        //TODO реализовать внедрение через интерфейс
-        /// <summary>
-        /// Внедрение бизнес логики
-        /// </summary>
-        private PersonsService PersonsService { get; } = new PersonsService();
         
         /// <summary>
         /// Отображение начального меню
@@ -35,7 +30,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                 {
                     case '1':
                         //Выполняем авторизацию
-                        await Autorezation();
+                        await AuthorizeUser();
                         break;
                     case '0':
                         //Выходим из приложения
@@ -52,6 +47,19 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
         #region Реализация
 
+        private async Task AuthorizeUser() 
+        {
+            //Создаем экземпляр класса авторизации и получаем авторизованного пользователя 
+            var auth = new Authorization();
+            var person = await auth.AutorezationUser();
+            if(person != null)
+            {
+                //Переходим в главное меню и передаем в него сотрудника
+                var mainmenu = new MainMenu(person);
+                await mainmenu.Intro();
+            } 
+        }
+
         /// <summary>
         /// Отображение элементов меню
         /// </summary>
@@ -65,31 +73,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             Console.WriteLine("0 - Выйти из программы");
         }
 
-        /// <summary>
-        /// Авторизация пользователя
-        /// </summary>
-        /// <returns></returns>
-        private async Task Autorezation()
-        {
-            Console.Clear();
-            //Получаем имя сотрудника
-            string name = InputParameters.InputStringParameter("Введите имя пользователя");
-            //Получаем из хранилища сотрудника по имени и проверяем, если ли сотрудник с таким именем
-            var person = await PersonsService.Authorization(name);
-            if (person != null)
-            {
-                ShowOnConsole.ShowError($"Пользователь {person} успешно авторизован!");
-                //Переходим в главное меню и передаем в него сотрудника
-                var mainmenu = new MainMenu(person);
-                await mainmenu.Intro();
-            }
-            else
-            {
-                ShowOnConsole.ShowError($"Пользователь с именем {name} не найден!");
-                ShowOnConsole.ShowContinue();
-            }
-            
-        }
+        
 
         #endregion
 

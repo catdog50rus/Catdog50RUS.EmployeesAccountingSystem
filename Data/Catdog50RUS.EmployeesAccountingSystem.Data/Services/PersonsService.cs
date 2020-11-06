@@ -29,25 +29,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         #region Interface
 
         /// <summary>
-        /// Авторизация по имени
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public async Task<Person> Authorization(string name)
-        {
-            //Проверяем входные параметры на null
-            if (!string.IsNullOrEmpty(name))
-            {
-                //Получаем сотрудника из хранилища
-                //Если такой сотрудник существует, возвращаем его
-                var person = await PersonRepository.GetPersonByNameAsync(name);
-                if (person != null)
-                    return person;
-            }
-            return null;
-        }
-
-        /// <summary>
         /// Добавить сотрудника
         /// </summary>
         /// <param name="person"></param>
@@ -87,6 +68,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         {
             return await PersonRepository.GetPersonByNameAsync(name);
         }
+
         /// <summary>
         /// Удалить сотрудника
         /// </summary>

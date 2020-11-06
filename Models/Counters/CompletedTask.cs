@@ -6,7 +6,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
     public class CompletedTask
     {
-        public Guid IdCounter { get; set; }
+        public Guid IdTask { get; set; }
         public Person Person { get; set; }
         public DateTime Date { get; set; }
         public double Time { get; set; }
@@ -16,12 +16,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
 
         public CompletedTask(Guid id, string date, double time, string task) : this(date, time, task)
         {
-            IdCounter = id;
+            IdTask = id;
         }
 
         public CompletedTask(string date, double time, string task)
         {
-            IdCounter = Guid.NewGuid();
+            IdTask = Guid.NewGuid();
 
             if (!string.IsNullOrEmpty(date))
             {
@@ -42,10 +42,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
 
 
 
-
         public string ToFile()
         {
-            return $"{IdCounter};{Date};{Person.IdPerson};{Time};{TaskName}";
+            return $"{IdTask};{Date};{Person.IdPerson};{Time};{TaskName}";
         }
 
         public string ToDisplay()

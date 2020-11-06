@@ -1,17 +1,18 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
+﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
+using Catdog50RUS.EmployeesAccountingSystem.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
+namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
 {
     /// <summary>
     /// Реализация бизнес логики
     /// Формирование отчетов
     /// </summary>
-    public class ReportService
+    public class SalaryReport
     {
         //TODO константы вынести в файл с настройками
         /// <summary>
@@ -59,7 +60,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// </summary>
         /// <param name="person">СОтрудник</param>
         /// <param name="completedTasks">Список задач</param>
-        public ReportService(Person person, (DateTime, DateTime) period)
+        public SalaryReport(Person person, (DateTime, DateTime) period)
         {
             //Инициализация полей
             Person = person;
@@ -79,7 +80,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         public async Task<(double, decimal, List<CompletedTask>)> GetPersonReport()
         {
             var personTasks = await GetPersonTasksList();
-            if(personTasks != null)
+            if (personTasks != null)
             {
                 double time = GetSumTime(personTasks);
                 decimal salary = default;
@@ -127,9 +128,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// <returns></returns>
         private double GetSumTime(List<CompletedTask> tasks)
         {
-            return tasks.Sum(t=>t.Time);
+            return tasks.Sum(t => t.Time);
         }
-        
+
         //TODO Методы рассчитывает переработку за количество часов сверх месячной нормы. Учитывая наличие месячной нормы считаю этот принцип единственно возможным
         /// <summary>
         /// Возвращаем заработную плату сотрудника
@@ -150,6 +151,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
             }
             return salary;
         }
+
         /// <summary>
         /// Возвращаем заработную плату руководителя
         /// </summary>
@@ -169,6 +171,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
             }
             return salary;
         }
+
         /// <summary>
         /// Возвращаем зарплату фрилансера
         /// </summary>
@@ -180,9 +183,5 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         }
 
         #endregion
-
-
-
-
     }
 }

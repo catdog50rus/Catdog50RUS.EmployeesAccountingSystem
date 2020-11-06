@@ -2,7 +2,7 @@
 using System;
 using System.Globalization;
 
-namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
+namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
 {
     /// <summary>
     /// Класс компонентов UI 

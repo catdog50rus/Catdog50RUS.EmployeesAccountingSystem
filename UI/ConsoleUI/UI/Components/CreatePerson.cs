@@ -1,7 +1,8 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
+﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
+using Catdog50RUS.EmployeesAccountingSystem.Models;
 using System;
 
-namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
+namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
 {
     /// <summary>
     /// Компонент UI

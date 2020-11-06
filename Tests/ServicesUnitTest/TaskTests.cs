@@ -15,8 +15,8 @@ namespace ServicesUnitTest
         CompletedTasksService service;
         Guid id = Guid.Parse("8cfca3cc-e79b-43be-881f-91d3a7ddf27f");
         Guid idTask = Guid.Parse("8cfca3cc-e79b-4444-881f-91d3a7ddf27f");
-        double time = 180;
-        decimal baseSalary = 200000;
+        readonly double time = 180;
+        readonly decimal baseSalary = 200000;
         (DateTime, DateTime) period = (DateTime.Today, DateTime.Today.AddDays(1));
 
         [TestInitialize]

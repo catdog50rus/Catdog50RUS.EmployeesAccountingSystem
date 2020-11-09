@@ -20,7 +20,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
             string name = InputParameters.InputStringParameter("Введите имя сотрудника");
             string surname = InputParameters.InputStringParameter("Введите фамилию сотрудника");
             Departments dep = InputParameters.InputDepartment();
-            Positions pos = InputParameters.InputPosition();
+            Positions pos = InputParameters.InputPosition(dep);
             decimal baseSalary = InputParameters.InputDecimlParameter("Введите базовую ставку сотрудника");
             //Возвращаем нового сотрудника
             return new Person(name, surname, dep, pos, baseSalary);

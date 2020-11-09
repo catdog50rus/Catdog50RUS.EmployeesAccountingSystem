@@ -142,14 +142,18 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         /// Получение параметр Positions
         /// </summary>
         /// <returns></returns>
-        public static Positions InputPosition()
+        public static Positions InputPosition(Departments dep)
         {
             Positions pos = default;
             Console.WriteLine();
             Console.WriteLine("Выберите должность сотрудника:");
-            Console.WriteLine("1 - Директор");
-            Console.WriteLine("2 - Разработчик в штате");
-            Console.WriteLine("3 - Разработчик вне штата");
+            if(dep == Departments.Managment)
+                Console.WriteLine("1 - Директор");
+            else
+            {
+                Console.WriteLine("2 - Разработчик в штате");
+                Console.WriteLine("3 - Разработчик вне штата");
+            }
             Console.WriteLine();
             var key = Console.ReadKey().KeyChar;
             switch (key)
@@ -164,7 +168,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
                     pos = Positions.Freelance;
                     break;
                 default:
-                    InputPosition();
+                    InputPosition(dep);
                     break;
             }
             return pos;

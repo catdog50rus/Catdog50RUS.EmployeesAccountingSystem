@@ -64,6 +64,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
             {
                 try
                 {
+                    //Если настройки были удаляем их
+                    var file = new FileInfo(FileName);
+                    if(file.Exists)
+                        file.Delete();
                     //Преобразуем задачу в строку используя модель
                     string line = settings.ToFile();
                     //Создаем экземпляр класса StreamWriter, 

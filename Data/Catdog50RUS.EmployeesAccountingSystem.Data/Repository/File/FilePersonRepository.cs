@@ -13,16 +13,15 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
     /// </summary>
     public class FilePersonRepository : FileBase, IPersonRepository
     {
-        //TODO вынести в файл настроек
         /// <summary>
         /// Хранилище данных о сотрудниках
         /// </summary>
-        const string fileName = "persons.txt";
+        private static readonly string filename = FileSettings.PERSONSFILENAME;
         /// <summary>
         /// Используем конструктор базового класса
         /// В конструктор базового класса передаем имя файла с данными
         /// </summary>
-        public FilePersonRepository() : base(fileName) { }
+        public FilePersonRepository() : base(filename) { }
 
         #region Interface
 

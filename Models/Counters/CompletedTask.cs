@@ -54,7 +54,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
 
         public string ToInsert()
         {
-            return $"Добавлена выполненная задача: {TaskName} /n, Дата выполнения: {Date:dd.MM.yyyy} /n , Время выполнения:{Time} часов";
+            return $"Добавлена выполненная задача: {TaskName} \n, Дата выполнения: {Date:dd.MM.yyyy} \n , Время выполнения:{Time} часов";
         }
 
     }

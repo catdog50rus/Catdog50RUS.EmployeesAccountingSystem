@@ -79,11 +79,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         /// <summary>
         /// Вывод сообщения
         /// </summary>
-        /// <param name="err"></param>
-        public static void ShowError(string err)
+        /// <param name="mes"></param>
+        public static void ShowMessage(string mes)
         {
             Console.Clear();
-            Console.WriteLine(err);
+            Console.WriteLine(mes);
         }
         
         /// <summary>

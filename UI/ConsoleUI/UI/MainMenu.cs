@@ -1,5 +1,8 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components;
+﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI;
+using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components;
 using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
+using Catdog50RUS.EmployeesAccountingSystem.Data.Repository;
+using Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File;
 using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
 using Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports;
@@ -11,15 +14,17 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
     class MainMenu
     {
         //Поля
-        //TODO реализовать внедрение через интерфейс
         /// <summary>
         /// Внедрение сервиса работы с данными сотрудника
         /// </summary>
-        private PersonsService PersonsService { get; }
+        private IPersons PersonsService { get; }
         /// <summary>
         /// Внедрение сервиса работы с задачами
         /// </summary>
-        private CompletedTasksService CompletedTasksService { get; }
+        private ICompletedTask CompletedTasksService { get; } = new CompletedTasksService();
+
+        private ISettingsRepository Settings { get; } = new ReportSettingsService();
+
         /// <summary>
         /// Внедрение сервиса отчетов
         /// </summary>
@@ -38,7 +43,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         {
             //Инициализация полей
             PersonsService = new PersonsService();
-            CompletedTasksService = new CompletedTasksService();
+            //CompletedTasksService = new CompletedTasksService();
             Person = person;
         }
 
@@ -83,6 +88,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                         //Удаляем сотрудника
                         await DeletePerson();
                         break;
+                    case 's':
+                        //Создать настройки
+                        await SetSettings();
+                        break;
                     case '0':
                         //Выход из профиля и возврат к начальному меню
                         exit = Exit();
@@ -93,6 +102,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             }
 
         }
+
+        
 
         #region Реализация
 
@@ -113,6 +124,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                 Console.WriteLine("6 - Вывести на экран отчет по работе отдела за месяц (не реализовано)");
                 Console.WriteLine("8 - Добавить сотрудника");
                 Console.WriteLine("9 - Удалить сотрудника");
+                Console.WriteLine("s - Ввести данные для расчета");
             }
             Console.WriteLine("0 - Выйти из профиля");
         }
@@ -138,7 +150,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             }
             else
             {
-                ShowOnConsole.ShowError($"Ошибка добавления задачи");
+                ShowOnConsole.ShowMessage($"Ошибка добавления задачи");
             }
             ShowOnConsole.ShowContinue();
         }
@@ -152,8 +164,16 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         {
             //Получаем период
             var period = InputParameters.GetPeriod();
+            //Получаем настройки отчета
+            var settings = await Settings.GetSettings();
+            if(settings == null)
+            {
+                ShowOnConsole.ShowMessage("Настройки для отчета не найдены");
+                ShowOnConsole.ShowMessage("Для получения отчета необходимо установить данные для расчета");
+                return;
+            }
             //Передаем в конструктор сервиса Сотрудника и период
-            Report = new SalaryReport(Person, period);
+            Report = new SalaryReport(Person, period, settings);
             //Получаем отчет и проверяем его на null и валидность числовых параметров
             //Выводим результат
             var personReport = await Report.GetPersonReport();
@@ -164,7 +184,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             }
             else
             {
-                ShowOnConsole.ShowError("Ошибка получения отчета!");
+                ShowOnConsole.ShowMessage("Ошибка получения отчета!");
             }
             ShowOnConsole.ShowContinue();
             
@@ -182,7 +202,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             if (personsList != null)
                 ShowOnConsole.ShowPersons(personsList);
             else
-                ShowOnConsole.ShowError("Не удалось сформировать список сотрудников!");
+                ShowOnConsole.ShowMessage("Не удалось сформировать список сотрудников!");
             ShowOnConsole.ShowContinue();
         }
 
@@ -206,7 +226,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                 }
             }
             else
-                ShowOnConsole.ShowError("Ошибка добавления сотрудника");
+                ShowOnConsole.ShowMessage("Ошибка добавления сотрудника");
             ShowOnConsole.ShowContinue();
 
         }
@@ -234,12 +254,29 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                 }
                 else
                 {
-                    ShowOnConsole.ShowError($"Ошибка удаления сотрудника: {person}");
+                    ShowOnConsole.ShowMessage($"Ошибка удаления сотрудника: {person}");
                 }
             }
             else
-                ShowOnConsole.ShowError($"Сотрудник с именем {name} не найден!");
+                ShowOnConsole.ShowMessage($"Сотрудник с именем {name} не найден!");
             ShowOnConsole.ShowContinue(); ;
+        }
+
+        //s
+        private async Task SetSettings()
+        {
+            var settings = SetNewSettings.CreateNewSettings();
+            if(settings != null)
+            {
+                var res = await Settings.SaveSettings(settings);
+                if (res) 
+                    ShowOnConsole.ShowMessage("Настройки обновлены!");
+                else
+                    ShowOnConsole.ShowMessage("Ошибка обновления настроек!");
+            }
+            else
+                ShowOnConsole.ShowMessage("Ошибка обновления настроек!");
+            ShowOnConsole.ShowContinue();
         }
 
         //0

@@ -12,7 +12,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
     /// Реализация бизнес логики
     /// Работа хранилищем сотрудников
     /// </summary>
-    public class PersonsService
+    public class PersonsService : IPersons
     {
         /// <summary>
         /// Внедрение зависимости через интерфейс

@@ -2,6 +2,7 @@ using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
 using Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Models.Settings;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -14,10 +15,12 @@ namespace ReportsUnitTest
         SalaryReport reportDirector, reportDeveloper, reportFreelancer;
         Person testPerson1, testPerson2, testPerson3;
         CompletedTask task1, task2, task3, task4, task5, task6, task7, task8, task9;
+        ReportSettings settings;
 
         double time1, time2, time3;
         readonly PersonsService personsService = new PersonsService();
         readonly CompletedTasksService completedTasksService = new CompletedTasksService();
+
 
         (DateTime, DateTime) period = (DateTime.Parse("02.11.2020"), DateTime.Parse("07.11.2020"));
 
@@ -142,10 +145,11 @@ namespace ReportsUnitTest
             await completedTasksService.AddNewTask(task8);
             await completedTasksService.AddNewTask(task9);
 
+            settings = new ReportSettings(160, 20000, 2);
 
-            reportDirector = new SalaryReport(testPerson1, period);
-            reportDeveloper = new SalaryReport(testPerson2, period);
-            reportFreelancer = new SalaryReport(testPerson3, period);
+            reportDirector = new SalaryReport(testPerson1, period, settings);
+            reportDeveloper = new SalaryReport(testPerson2, period, settings);
+            reportFreelancer = new SalaryReport(testPerson3, period, settings);
 
             time1 = task1.Time + task2.Time + task3.Time;
             time2 = task4.Time + task5.Time + task6.Time;
@@ -164,12 +168,12 @@ namespace ReportsUnitTest
         public async Task B_ReturnDirectorSalarySummTest()
         {
             decimal testSalary;
-            if (time1 > 160)
+            if (time1 > settings.NormTimeInMonth)
             {
-                testSalary = testPerson1.BaseSalary + 20000 * (decimal)(time1 - 160) / 160;
+                testSalary = testPerson1.BaseSalary + settings.BonusDirector * (decimal)(time1 - settings.NormTimeInMonth) / settings.NormTimeInMonth;
             }
             else
-                testSalary = testPerson1.BaseSalary + 20000 * (decimal)(time1 - 160) / 160;
+                testSalary = testPerson1.BaseSalary + settings.BonusDirector * (decimal)(time1 - settings.NormTimeInMonth) / settings.NormTimeInMonth;
 
 
             var res = await reportDirector.GetPersonReport();
@@ -189,12 +193,12 @@ namespace ReportsUnitTest
         public async Task D_ReturnDeveloperSalarySummTest()
         {
             decimal testSalary;
-            if(time2 > 160)
+            if(time2 > settings.NormTimeInMonth)
             {
-                testSalary = testPerson2.BaseSalary + 2 * testPerson2.BaseSalary * (decimal)(time2 - 160) / 160;
+                testSalary = testPerson2.BaseSalary + settings.BonusCoefficient * testPerson2.BaseSalary * (decimal)(time2 - settings.NormTimeInMonth) / settings.NormTimeInMonth;
             }
             else
-                 testSalary = testPerson2.BaseSalary * (decimal)(time2) / 160;
+                 testSalary = testPerson2.BaseSalary * (decimal)(time2) / settings.NormTimeInMonth;
 
             var res = await reportDeveloper.GetPersonReport();
 

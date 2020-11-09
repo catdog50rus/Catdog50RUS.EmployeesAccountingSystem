@@ -13,11 +13,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
     /// </summary>
     public class FileCompletedTaskRepository : FileBase, ICompletedTaskRepository
     {
-        //TODO вынести в файл настроек
         /// <summary>
         /// Хранилище данных о затраченном времени на выполнение задач
         /// </summary>
-        const string fileName = "completedtasks.txt";
+        private static readonly string filename = FileSettings.TASKSFLIENAME;
         /// <summary>
         /// Внедряем репозиторий с данными сотрудников через интерфейс
         /// </summary>
@@ -27,7 +26,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
         /// Используем конструктор базового класса
         /// В конструктор базового класса передаем имя файла с данными
         /// </summary>
-        public FileCompletedTaskRepository() : base(fileName) { }
+        public FileCompletedTaskRepository() : base(filename) { }
 
 
         #region Interface

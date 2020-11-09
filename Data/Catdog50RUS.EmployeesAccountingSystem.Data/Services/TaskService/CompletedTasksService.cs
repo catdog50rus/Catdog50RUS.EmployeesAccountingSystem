@@ -11,7 +11,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
     /// Реализация бизнес логики
     /// Получение списка задач
     /// </summary>
-    public class CompletedTasksService
+    public class CompletedTasksService : ICompletedTask
     {
         /// <summary>
         /// Внедрение зависимости через интерфейс

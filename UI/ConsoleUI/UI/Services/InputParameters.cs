@@ -49,6 +49,27 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
             return res;
         }
         /// <summary>
+        /// Получение параметра Integer
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static int InputIntegerParameter(string text)
+        {
+            ShowText(text);
+            int res = 0;
+            while (res <= 0)
+            {
+                var input = Console.ReadLine();
+                if (!int.TryParse(input, out res))
+                {
+                    Console.WriteLine("Некорректный ввод!");
+                    Console.WriteLine("Попробуйте еще раз!");
+                    Console.WriteLine();
+                }
+            }
+            return res;
+        }
+        /// <summary>
         /// Получение параметра Decimal
         /// </summary>
         /// <param name="text"></param>

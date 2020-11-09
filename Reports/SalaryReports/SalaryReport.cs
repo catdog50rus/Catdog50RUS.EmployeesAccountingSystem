@@ -1,9 +1,9 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
+using Models.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
@@ -18,21 +18,21 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         /// <summary>
         /// Месячная норма часов
         /// </summary>
-        private const int normTimeInMonth = 160;
+        private readonly int _normTimeInMonth = 160;
         /// <summary>
         /// Бонус директора
         /// </summary>
-        private const decimal bonusDirector = 20000;
+        private readonly decimal _bonusDirector = 20000;
         /// <summary>
         /// Коэффициент переработки сотрудника на зарплате
         /// </summary>
-        private const decimal bonusCoefficient = 2;
+        private readonly decimal _bonusCoefficient = 2;
 
         //Поля
         /// <summary>
         /// Внедрение сервиса работы с задачами
         /// </summary>
-        private CompletedTasksService CompletedTasksService { get; } = new CompletedTasksService();
+        private ICompletedTask CompletedTasksService { get; } = new CompletedTasksService();
 
         /// <summary>
         /// Должность сотрудника
@@ -60,7 +60,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         /// </summary>
         /// <param name="person">СОтрудник</param>
         /// <param name="completedTasks">Список задач</param>
-        public SalaryReport(Person person, (DateTime, DateTime) period)
+        public SalaryReport(Person person, (DateTime, DateTime) period, ReportSettings settings)
         {
             //Инициализация полей
             Person = person;
@@ -68,6 +68,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
             BaseSalary = person.BaseSalary;
             FirstDate = period.Item1;
             LastDate = period.Item2;
+            //Настройки
+            _normTimeInMonth = settings.NormTimeInMonth;
+            _bonusDirector = settings.BonusDirector;
+            _bonusCoefficient = settings.BonusCoefficient;
         }
 
         #region Interface
@@ -141,13 +145,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         {
             decimal _time = (decimal)time, salary;
 
-            if (time <= normTimeInMonth)
+            if (time <= _normTimeInMonth)
             {
-                salary = BaseSalary * _time / normTimeInMonth;
+                salary = BaseSalary * _time / _normTimeInMonth;
             }
             else
             {
-                salary = BaseSalary * (1 + bonusCoefficient * (_time - normTimeInMonth) / normTimeInMonth);
+                salary = BaseSalary * (1 + _bonusCoefficient * (_time - _normTimeInMonth) / _normTimeInMonth);
             }
             return salary;
         }
@@ -161,13 +165,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         {
             decimal _time = (decimal)time, salary;
 
-            if (time <= normTimeInMonth)
+            if (time <= _normTimeInMonth)
             {
-                salary = BaseSalary * _time / normTimeInMonth;
+                salary = BaseSalary * _time / _normTimeInMonth;
             }
             else
             {
-                salary = BaseSalary + bonusDirector * (_time - normTimeInMonth) / normTimeInMonth;
+                salary = BaseSalary + _bonusDirector * (_time - _normTimeInMonth) / _normTimeInMonth;
             }
             return salary;
         }

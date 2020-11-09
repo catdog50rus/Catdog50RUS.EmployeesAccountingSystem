@@ -11,12 +11,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
     public class Authorization
     {
         //Поля
-        //TODO реализовать внедрение через интерфейс
 
         /// <summary>
         /// Внедрение бизнес логики
         /// </summary>
-        private PersonsService PersonsService { get; }
+        private IPersons PersonsService { get; }
 
         public Authorization()
         {
@@ -37,14 +36,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
             var person = await PersonsService.GetPersonByName(name);
             if (person != null)
             {
-                ShowOnConsole.ShowError($"Пользователь {person} успешно авторизован!");
+                ShowOnConsole.ShowMessage($"Пользователь {person} успешно авторизован!");
                 ShowOnConsole.ShowContinue();
                 return person;
                 
             }
             else
             {
-                ShowOnConsole.ShowError($"Пользователь с именем {name} не найден!");
+                ShowOnConsole.ShowMessage($"Пользователь с именем {name} не найден!");
                 ShowOnConsole.ShowContinue();
                 return null;
             }

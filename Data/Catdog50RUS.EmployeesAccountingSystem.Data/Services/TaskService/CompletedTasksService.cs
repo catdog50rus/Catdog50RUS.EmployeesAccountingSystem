@@ -3,6 +3,7 @@ using Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
@@ -55,11 +56,18 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// <param name="firstDate"></param>
         /// <param name="lastDate"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<CompletedTask>> GetPersonTask(Person person, DateTime firstDate, DateTime lastDate)
+        public async Task<IEnumerable<CompletedTask>> GetPersonTask(Guid personID, DateTime firstDate, DateTime lastDate)
         {
-             return await TasksRepository.GetPersonsTaskListAsync(person, firstDate, lastDate);
+             return await TasksRepository.GetPersonsTaskListAsync(personID, firstDate, lastDate);
         }
+       
+        public async Task<IEnumerable<CompletedTask>> GetCompletedTask(DateTime firstDate, DateTime lastDate)
+        {
+            return await TasksRepository.GetCompletedTasksListInPeriodAsync(firstDate, lastDate);
+
+        }
+
         #endregion
-        
+
     }
 }

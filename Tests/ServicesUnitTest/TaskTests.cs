@@ -54,8 +54,8 @@ namespace ServicesUnitTest
         [TestMethod]
         public async Task B_GetPersonTaskPersonTest()
         {
-            var res = await service.GetPersonTask(testPerson, period.Item1, period.Item2);
-            var task = res.FirstOrDefault(p => p.Person.IdPerson == id);
+            var res = await service.GetPersonTask(testPerson.IdPerson, period.Item1, period.Item2);
+            var task = res.FirstOrDefault(p => p.IdTask == testTask.IdTask);
 
             Assert.AreEqual(idTask, task.IdTask);
         }
@@ -63,7 +63,7 @@ namespace ServicesUnitTest
         [TestMethod]
         public async Task C_GetPersonTaskPeriodTest()
         {
-            var res = await service.GetPersonTask(testPerson, period.Item1, period.Item2);
+            var res = await service.GetPersonTask(testPerson.IdPerson, period.Item1, period.Item2);
             var task = res.FirstOrDefault(p => p.Date >= DateTime.Today);
 
             Assert.AreEqual(idTask, task.IdTask);

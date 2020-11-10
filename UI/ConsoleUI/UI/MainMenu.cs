@@ -2,7 +2,6 @@
 using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components;
 using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Data.Repository;
-using Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File;
 using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
 using Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports;
@@ -28,7 +27,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         /// <summary>
         /// Внедрение сервиса отчетов
         /// </summary>
-        private SalaryReport Report { get; set; }
+        //private SalaryReport Report { get; set; }
         /// <summary>
         /// Поле сотрудник
         /// </summary>
@@ -80,6 +79,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                         //Получаем список сотрудников
                         await CreatePersonsList();
                         break;
+                    case '4':
+                        
+                        await GetReportByPerson();
+                        break;
+                    case '5':
+
+                        await GetReportByAllPersons();
+                        break;
                     case '8':
                         //Добавляем сотрудника
                         await InsertNewPerson();
@@ -119,8 +126,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             if (positions.Equals(Positions.Director))
             {
                 Console.WriteLine("3 - Вывести на экран список сотрудников");
-                Console.WriteLine("4 - Вывести на экран отчет по сотруднику за месяц (не реализовано)");
-                Console.WriteLine("5 - Вывести на экран отчет по всем сотрудникам за месяц (не реализовано)");
+                Console.WriteLine("4 - Вывести на экран отчет по сотруднику за месяц");
+                Console.WriteLine("5 - Вывести на экран отчет по всем сотрудникам за месяц");
                 Console.WriteLine("6 - Вывести на экран отчет по работе отдела за месяц (не реализовано)");
                 Console.WriteLine("8 - Добавить сотрудника");
                 Console.WriteLine("9 - Удалить сотрудника");
@@ -164,30 +171,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         {
             //Получаем период
             var period = InputParameters.GetPeriod();
-            //Получаем настройки отчета
-            var settings = await Settings.GetSettings();
-            if(settings == null)
-            {
-                ShowOnConsole.ShowMessage("Настройки для отчета не найдены");
-                ShowOnConsole.ShowMessage("Для получения отчета необходимо установить данные для расчета");
-                return;
-            }
-            //Передаем в конструктор сервиса Сотрудника и период
-            Report = new SalaryReport(Person, period, settings);
-            //Получаем отчет и проверяем его на null и валидность числовых параметров
-            //Выводим результат
-            var personReport = await Report.GetPersonReport();
-            if(personReport.Item3 != null)
-            {
-                if(personReport.Item1 >= 0 && personReport.Item2 >= 0)
-                    ShowOnConsole.ShowPersonTasks(Person, period, personReport);
-            }
-            else
-            {
-                ShowOnConsole.ShowMessage("Ошибка получения отчета!");
-            }
-            ShowOnConsole.ShowContinue();
-            
+            await Reports.GetPersonReport(Person, period);            
         }
 
         //3
@@ -204,6 +188,28 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             else
                 ShowOnConsole.ShowMessage("Не удалось сформировать список сотрудников!");
             ShowOnConsole.ShowContinue();
+        }
+
+        //4
+        private async Task GetReportByPerson()
+        {
+            //Получаем период
+            var month = InputParameters.GetMonth();
+            //Получаем сотрудника
+            var person = await new Authorization().GetPerson();
+            if(person != null)
+            {
+                await Reports.GetPersonReport(person, month);
+            }
+        }
+
+        //5
+        private async Task GetReportByAllPersons()
+        {
+            //Получаем период
+            var month = InputParameters.GetMonth();
+            await Reports.GetAllPersonsReport(month);
+            
         }
 
         //8

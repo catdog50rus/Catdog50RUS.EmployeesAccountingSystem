@@ -29,11 +29,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
         /// <returns></returns>
         public async Task<Person> AutorezationUser()
         {
-            Console.Clear();
-            //Получаем имя сотрудника
-            string name = InputParameters.InputStringParameter("Введите имя пользователя");
-            //Получаем из хранилища сотрудника по имени и проверяем, если ли сотрудник с таким именем
-            var person = await PersonsService.GetPersonByName(name);
+            var person = await GetPersonByName();
             if (person != null)
             {
                 ShowOnConsole.ShowMessage($"Пользователь {person} успешно авторизован!");
@@ -43,11 +39,34 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
             }
             else
             {
-                ShowOnConsole.ShowMessage($"Пользователь с именем {name} не найден!");
-                ShowOnConsole.ShowContinue();
                 return null;
             }
 
+        }
+
+        public async Task<Person> GetPerson()
+        {
+            return await GetPersonByName();
+        }
+
+        private async Task<Person> GetPersonByName()
+        {
+            Console.Clear();
+            //Получаем имя сотрудника
+            string name = InputParameters.InputStringParameter("Введите имя пользователя");
+            //Получаем из хранилища сотрудника по имени и проверяем, если ли сотрудник с таким именем
+            var person = await PersonsService.GetPersonByName(name);
+            if (person == null)
+            {
+                ShowOnConsole.ShowMessage($"Пользователь с именем {name} не найден!");
+                ShowOnConsole.ShowContinue();
+                return null;
+
+            }
+            else
+            {
+                return person;    
+            }
         }
     }
 }

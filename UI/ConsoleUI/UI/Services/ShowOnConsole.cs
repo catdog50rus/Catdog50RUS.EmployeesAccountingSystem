@@ -1,6 +1,8 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
 {
@@ -29,20 +31,39 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         /// </summary>
         /// <param name="person"></param>
         /// <param name="period"></param>
-        /// <param name="data"></param>
-        public static void ShowPersonTasks(Person person, (DateTime, DateTime) period, (double, decimal, IEnumerable<CompletedTask>) data)
+        /// <param name="report"></param>
+        public static void ShowPersonTasks(Person person, (DateTime, DateTime) period, (double, decimal, IEnumerable<CompletedTask>) report)
         {
             Console.Clear();
             Console.WriteLine($"Перечень выполненных задач Сотрудником {person} \nВ период с {period.Item1:dd.MM.yyyy} по {period.Item2:dd.MM.yyyy}: ");
             Console.WriteLine();
-            var collection = data.Item3;
+            var collection = report.Item3;
             foreach (var item in collection)
             {
                 ShowTask(item);
             }
-            Console.WriteLine($"Всего затрачено {data.Item1} часов, к выплате: {data.Item2} рублей.");
+            Console.WriteLine($"Всего затрачено {report.Item1} часов, к выплате: {report.Item2} рублей.");
         }
         
+        public static void ShowAllPersonsTasks((DateTime, DateTime) period, List<(Person, double, decimal, List<CompletedTask>)> report)
+        {
+            Console.Clear();
+            Console.WriteLine($"Отчет по сотрудникам за {CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(period.Item1.Month)} месяц {period.Item1.Year} года");
+            Console.WriteLine();
+            foreach (var item in report)
+            {
+                Console.WriteLine(item.Item1.ToDisplay());
+                foreach (var items in item.Item4)
+                {
+                    Console.WriteLine(items.ToDisplay());
+                }
+                Console.WriteLine($"Всего: отработано: {item.Item2} часов, к выплате: {item.Item3} рублей.");
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+            Console.WriteLine($"Итого: отработано: {report.Sum(t => t.Item2)} часов, к выплате: {report.Sum(t => t.Item3)} рублей.");
+        }
+
         /// <summary>
         /// Вывод подтверждения о добавлении сотрудника
         /// </summary>

@@ -29,6 +29,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository
         /// <param name="beginDate"></param>
         /// <param name="lastDate"></param>
         /// <returns></returns>
-        Task<IEnumerable<CompletedTask>> GetPersonsTaskListAsync(Person person, DateTime beginDate, DateTime lastDate);
+        Task<IEnumerable<CompletedTask>> GetPersonsTaskListAsync(Guid personID, DateTime beginDate, DateTime lastDate);
+        Task<IEnumerable<CompletedTask>> GetCompletedTasksListInPeriodAsync(DateTime beginDate, DateTime lastDate);
     }
 }

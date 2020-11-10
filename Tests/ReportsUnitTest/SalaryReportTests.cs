@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Models.Settings;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ReportsUnitTest
@@ -12,17 +13,20 @@ namespace ReportsUnitTest
     [TestClass]
     public class SalaryReportTests
     {
-        SalaryReport reportDirector, reportDeveloper, reportFreelancer;
+        SalaryReport report;
         Person testPerson1, testPerson2, testPerson3;
         CompletedTask task1, task2, task3, task4, task5, task6, task7, task8, task9;
         ReportSettings settings;
 
         double time1, time2, time3;
+        decimal sum1, sum2, sum3;
         readonly PersonsService personsService = new PersonsService();
         readonly CompletedTasksService completedTasksService = new CompletedTasksService();
 
 
         (DateTime, DateTime) period = (DateTime.Parse("02.11.2020"), DateTime.Parse("07.11.2020"));
+
+        (DateTime, DateTime) month = (DateTime.Parse("01.11.2020"), DateTime.Parse("01.12.2020"));
 
 
         [TestInitialize]
@@ -147,19 +151,35 @@ namespace ReportsUnitTest
 
             settings = new ReportSettings(160, 20000, 2);
 
-            reportDirector = new SalaryReport(testPerson1, period, settings);
-            reportDeveloper = new SalaryReport(testPerson2, period, settings);
-            reportFreelancer = new SalaryReport(testPerson3, period, settings);
+            report = new SalaryReport(settings);
 
             time1 = task1.Time + task2.Time + task3.Time;
             time2 = task4.Time + task5.Time + task6.Time;
             time3 = task7.Time + task8.Time + task9.Time;
+
+
+            if (time1 > settings.NormTimeInMonth)
+            {
+                sum1 = testPerson1.BaseSalary + settings.BonusDirector * (decimal)(time1 - settings.NormTimeInMonth) / settings.NormTimeInMonth;
+            }
+            else
+                sum1 = testPerson1.BaseSalary + settings.BonusDirector * (decimal)(time1 - settings.NormTimeInMonth) / settings.NormTimeInMonth;
+
+            if (time2 > settings.NormTimeInMonth)
+            {
+                sum2 = testPerson2.BaseSalary + settings.BonusCoefficient * testPerson2.BaseSalary * (decimal)(time2 - settings.NormTimeInMonth) / settings.NormTimeInMonth;
+            }
+            else
+                sum2 = testPerson2.BaseSalary * (decimal)(time2) / settings.NormTimeInMonth;
+
+            sum3 = testPerson3.BaseSalary * (decimal)time3;
+
         }
 
         [TestMethod]
         public async Task A_ReturnDirectorTimeSummTest()
         {
-            var res = await reportDirector.GetPersonReport();
+            var res = await report.GetPersonReport(testPerson1, period);
 
             Assert.AreEqual(time1, res.Item1);
         }
@@ -167,16 +187,10 @@ namespace ReportsUnitTest
         [TestMethod]
         public async Task B_ReturnDirectorSalarySummTest()
         {
-            decimal testSalary;
-            if (time1 > settings.NormTimeInMonth)
-            {
-                testSalary = testPerson1.BaseSalary + settings.BonusDirector * (decimal)(time1 - settings.NormTimeInMonth) / settings.NormTimeInMonth;
-            }
-            else
-                testSalary = testPerson1.BaseSalary + settings.BonusDirector * (decimal)(time1 - settings.NormTimeInMonth) / settings.NormTimeInMonth;
+            decimal testSalary = sum1;
+            
 
-
-            var res = await reportDirector.GetPersonReport();
+            var res = await report.GetPersonReport(testPerson1, period);
 
             Assert.AreEqual(testSalary, res.Item2);
         }
@@ -184,7 +198,7 @@ namespace ReportsUnitTest
         [TestMethod]
         public async Task C_ReturnDeveloperTimeSummTest()
         {
-            var res = await reportDeveloper.GetPersonReport();
+            var res = await report.GetPersonReport(testPerson2, period);
 
             Assert.AreEqual(time2, res.Item1);
         }
@@ -192,15 +206,9 @@ namespace ReportsUnitTest
         [TestMethod]
         public async Task D_ReturnDeveloperSalarySummTest()
         {
-            decimal testSalary;
-            if(time2 > settings.NormTimeInMonth)
-            {
-                testSalary = testPerson2.BaseSalary + settings.BonusCoefficient * testPerson2.BaseSalary * (decimal)(time2 - settings.NormTimeInMonth) / settings.NormTimeInMonth;
-            }
-            else
-                 testSalary = testPerson2.BaseSalary * (decimal)(time2) / settings.NormTimeInMonth;
+            decimal testSalary = sum2;
 
-            var res = await reportDeveloper.GetPersonReport();
+            var res = await report.GetPersonReport(testPerson2, period);
 
             Assert.AreEqual(testSalary, res.Item2);
         }
@@ -208,7 +216,7 @@ namespace ReportsUnitTest
         [TestMethod]
         public async Task E_ReturnFreelancerTimeSummTest()
         {
-            var res = await reportFreelancer.GetPersonReport();
+            var res = await report.GetPersonReport(testPerson3, period);
 
             Assert.AreEqual(time3, res.Item1);
         }
@@ -216,11 +224,39 @@ namespace ReportsUnitTest
         [TestMethod]
         public async Task F_ReturnFreeLancerSalarySummTest()
         {
-            var testSalary = testPerson3.BaseSalary * (decimal)time3;
+            var testSalary = sum3;
 
-            var res = await reportFreelancer.GetPersonReport();
+            var res = await report.GetPersonReport(testPerson3, period);
 
             Assert.AreEqual(testSalary, res.Item2);
+        }
+
+
+        [TestMethod]
+        public async Task G_ReturnAllPersonsSalaryTimeTest()
+        {
+           
+            var testTime = time1 + time2 + time3;
+
+            var res = await report.GetAllPersonsReport(month);
+
+            var allTime = res.Sum(s => s.Item2);
+
+
+            Assert.AreEqual(testTime, allTime);
+        }
+
+        [TestMethod]
+        public async Task H_ReturnAllPersonsSalarySummTest()
+        {
+            var testSalary = sum1 + sum2 + sum3;
+
+            var res = await report.GetAllPersonsReport(month);
+
+            var allSum = res.Sum(s => s.Item3);
+
+            
+            Assert.AreEqual(testSalary, allSum);
         }
 
         [TestCleanup]

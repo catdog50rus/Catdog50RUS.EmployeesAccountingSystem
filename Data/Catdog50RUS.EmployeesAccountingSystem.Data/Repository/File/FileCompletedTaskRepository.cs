@@ -123,32 +123,39 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
         /// <param name="beginDate"></param>
         /// <param name="lastDate"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<CompletedTask>> GetPersonsTaskListAsync(Person person, 
+        public async Task<IEnumerable<CompletedTask>> GetPersonsTaskListAsync(Guid personID, 
                                                                               DateTime beginDate, 
                                                                               DateTime lastDate)
         {
-            //Создаем результирующую коллекцию
-            IEnumerable<CompletedTask> result = null;
-
             //Получаем список всех задач
-            var tasksList = await GetCompletedTasksList();
-
-
-            //TODO похоже на говно код. Подумать как реализовать по другому. Возможно следует обернуть в блок try
+            var tasksList = await GetCompletedTasksListInPeriodAsync(beginDate, lastDate);
 
             //Проверяем, есть ли в списке задачи, выполненные заданным сотрудником
             //Если задач нет выходим из метода, возвращаем null
             //Иначе передаем в результирующий список все задачи сотрудника
-            var enablePerson = tasksList.FirstOrDefault(p => p.Person.IdPerson == person.IdPerson);
-            if (enablePerson == null) return null;
-            result = tasksList.Where(p => p.Person.IdPerson == person.IdPerson);
+            if (tasksList.FirstOrDefault(p => p.Person.IdPerson == personID) != null)
+                return tasksList.Where(p => p.Person.IdPerson == personID);
+            else
+                return null;
+        }
+
+
+        public async Task<IEnumerable<CompletedTask>> GetCompletedTasksListInPeriodAsync(DateTime beginDate,
+                                                                              DateTime lastDate)
+        {
+            //Получаем список всех задач
+            var tasksList = await GetCompletedTasksList();
 
             //Проверяем, есть ли в списке задачи, выполненные в указанную дату или позднее
             //Если задач нет выходим из метода, возвращаем null
             //Иначе передаем в результирующий список задач выполненных в заданный период
-            var enablePeriod = result.FirstOrDefault(d => d.Date >= beginDate);
-            if (enablePeriod == null) return null;
-            return result.Where(d => d.Date >= beginDate && d.Date < lastDate);
+            if(tasksList.FirstOrDefault(d => d.Date >= beginDate) != null)
+            {
+                return tasksList.Where(d => d.Date >= beginDate && d.Date < lastDate);
+            }
+            return null;
+
+            
         }
 
         #endregion

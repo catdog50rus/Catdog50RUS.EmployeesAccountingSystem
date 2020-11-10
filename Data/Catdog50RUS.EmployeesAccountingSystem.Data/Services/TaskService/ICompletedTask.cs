@@ -8,7 +8,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
     public interface ICompletedTask
     {
         Task<bool> AddNewTask(CompletedTask task);
-        Task<IEnumerable<CompletedTask>> GetPersonTask(Person person, DateTime firstDate, DateTime lastDate);
+        Task<IEnumerable<CompletedTask>> GetPersonTask(Guid personID, DateTime firstDate, DateTime lastDate);
+        Task<IEnumerable<CompletedTask>> GetCompletedTask(DateTime firstDate, DateTime lastDate);
 
     }
 }

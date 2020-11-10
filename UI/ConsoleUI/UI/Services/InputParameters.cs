@@ -131,6 +131,19 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
 
             return (start, end);
         }
+
+        public static (DateTime, DateTime) GetMonth()
+        {
+            int month = 0; 
+            while (month < 1 || month > 12)
+            {
+                month = InputIntegerParameter("Введите номер месяца (например: 5)");
+            }
+            var date = $"01.{month}.{DateTime.Today.Year}";
+            DateTime.TryParse(date, out DateTime res);    
+            return (res, res.AddMonths(1));
+        }
+
         /// <summary>
         /// Получение параметра Departments
         /// </summary>

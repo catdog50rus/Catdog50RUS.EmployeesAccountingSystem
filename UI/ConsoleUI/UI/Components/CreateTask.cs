@@ -14,7 +14,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
         {
             Console.Clear();
             //Получаем данные от пользователя используя компоненты UI
-            string date = DateTime.Today.ToString("dd.MM.yyyy");
+            DateTime date = InputParameters.InputDateParameter("Введите дату выполнения задачи");
             string taskName = InputParameters.InputStringParameter("Введите наименование задачи");
             double time = InputParameters.InputDoubleParameter("Введите затраченное время в часах (например: 3,5)");
             //Возвращаем задачу

@@ -1,6 +1,4 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
-using System;
-using System.Globalization;
+﻿using System;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
@@ -14,28 +12,22 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
 
         public CompletedTask() { }
 
-        public CompletedTask(Guid id, string date, double time, string task) : this(date, time, task)
+        public CompletedTask(Guid id, DateTime date, double time, string task) : this(date, time, task)
         {
             IdTask = id;
         }
 
-        public CompletedTask(string date, double time, string task)
+        public CompletedTask(DateTime date, double time, string task)
         {
             IdTask = Guid.NewGuid();
 
-            if (!string.IsNullOrEmpty(date))
-            {
-                DateTime.TryParseExact(date, "dd.MM.yyyy", CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime tryDate);
-                Date = tryDate;
-            }
-            else 
-                Date = DateTime.Today;
+            Date = date;
 
             Time = (time > 0) ? time : throw new ArgumentException("Рабочее время должно быть положительным числом");
             TaskName = (!string.IsNullOrEmpty(task)) ? task : throw new ArgumentException("Ошибка в наименовании задачи");
         }
 
-        public CompletedTask(Person person, string date, double time, string task) : this(date, time, task)
+        public CompletedTask(Person person, DateTime date, double time, string task) : this(date, time, task)
         {
             Person = person ?? throw new ArgumentNullException(person.ToString(), "Ошибка сотрудника");
         }

@@ -1,6 +1,6 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Repository;
 using Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File;
-using Models.Settings;
+using Catdog50RUS.EmployeesAccountingSystem.Models;
 using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services

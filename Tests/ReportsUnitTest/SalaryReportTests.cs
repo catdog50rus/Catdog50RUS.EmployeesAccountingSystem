@@ -2,7 +2,6 @@ using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
 using Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Models.Settings;
 using System;
 using System.IO;
 using System.Linq;
@@ -181,7 +180,7 @@ namespace ReportsUnitTest
         {
             var res = await report.GetPersonReport(testPerson1, period);
 
-            Assert.AreEqual(time1, res.Item1);
+            Assert.AreEqual(time1, res.Time);
         }
 
         [TestMethod]
@@ -192,7 +191,7 @@ namespace ReportsUnitTest
 
             var res = await report.GetPersonReport(testPerson1, period);
 
-            Assert.AreEqual(testSalary, res.Item2);
+            Assert.AreEqual(testSalary, res.Salary);
         }
 
         [TestMethod]
@@ -200,7 +199,7 @@ namespace ReportsUnitTest
         {
             var res = await report.GetPersonReport(testPerson2, period);
 
-            Assert.AreEqual(time2, res.Item1);
+            Assert.AreEqual(time2, res.Time);
         }
 
         [TestMethod]
@@ -210,7 +209,7 @@ namespace ReportsUnitTest
 
             var res = await report.GetPersonReport(testPerson2, period);
 
-            Assert.AreEqual(testSalary, res.Item2);
+            Assert.AreEqual(testSalary, res.Salary);
         }
 
         [TestMethod]
@@ -218,7 +217,7 @@ namespace ReportsUnitTest
         {
             var res = await report.GetPersonReport(testPerson3, period);
 
-            Assert.AreEqual(time3, res.Item1);
+            Assert.AreEqual(time3, res.Time);
         }
 
         [TestMethod]
@@ -228,7 +227,7 @@ namespace ReportsUnitTest
 
             var res = await report.GetPersonReport(testPerson3, period);
 
-            Assert.AreEqual(testSalary, res.Item2);
+            Assert.AreEqual(testSalary, res.Salary);
         }
 
 
@@ -240,7 +239,7 @@ namespace ReportsUnitTest
 
             var res = await report.GetAllPersonsReport(month);
 
-            var allTime = res.Sum(s => s.Item2);
+            var allTime = res.Sum(s => s.Time);
 
 
             Assert.AreEqual(testTime, allTime);
@@ -253,11 +252,40 @@ namespace ReportsUnitTest
 
             var res = await report.GetAllPersonsReport(month);
 
-            var allSum = res.Sum(s => s.Item3);
+            var allSum = res.Sum(s => s.Salary);
 
             
             Assert.AreEqual(testSalary, allSum);
         }
+
+
+        [TestMethod]
+        public async Task I_ReturnDepartmentsSalaryTimeTest()
+        {
+
+            var testTime = time1 + time2 + time3;
+
+            var res = await report.GetDepartmentsReport(month);
+
+            var allTime = res.Sum(s => s.Item2.Sum(x=>x.Time));
+
+
+            Assert.AreEqual(testTime, allTime);
+        }
+
+        [TestMethod]
+        public async Task J_ReturnDepartmensSalarySummTest()
+        {
+            var testSalary = sum1 + sum2 + sum3;
+
+            var res = await report.GetDepartmentsReport(month);
+
+            var allSum = res.Sum(s => s.Item2.Sum(x => x.Salary));
+
+
+            Assert.AreEqual(testSalary, allSum);
+        }
+
 
         [TestCleanup]
         public void CleanUp()

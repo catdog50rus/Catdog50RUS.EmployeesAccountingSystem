@@ -32,36 +32,50 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         /// <param name="person"></param>
         /// <param name="period"></param>
         /// <param name="report"></param>
-        public static void ShowPersonTasks(Person person, (DateTime, DateTime) period, (double, decimal, IEnumerable<CompletedTask>) report)
+        public static void ShowPersonTasks((DateTime, DateTime) period, SalaryReportModel report)
         {
             Console.Clear();
-            Console.WriteLine($"Перечень выполненных задач Сотрудником {person} \nВ период с {period.Item1:dd.MM.yyyy} по {period.Item2:dd.MM.yyyy}: ");
+            Console.WriteLine($"Отчет по Сотруднику: {report.Person} \nВ период с {period.Item1:dd.MM.yyyy} по {period.Item2:dd.MM.yyyy}: ");
             Console.WriteLine();
-            var collection = report.Item3;
-            foreach (var item in collection)
-            {
-                ShowTask(item);
-            }
-            Console.WriteLine($"Всего затрачено {report.Item1} часов, к выплате: {report.Item2} рублей.");
+            ShowTasks(report);
+            
         }
         
-        public static void ShowAllPersonsTasks((DateTime, DateTime) period, List<(Person, double, decimal, List<CompletedTask>)> report)
+        /// <summary>
+        /// Вывод отчета по всем сотрудникам
+        /// </summary>
+        /// <param name="period"></param>
+        /// <param name="report"></param>
+        public static void ShowAllPersonsTasks((DateTime, DateTime) period, List<SalaryReportModel> report)
         {
             Console.Clear();
             Console.WriteLine($"Отчет по сотрудникам за {CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(period.Item1.Month)} месяц {period.Item1.Year} года");
             Console.WriteLine();
-            foreach (var item in report)
+            ShowPersonsReport(report);
+            Console.WriteLine($"Итого: отработано: {report.Sum(t => t.Time)} часов, к выплате: {report.Sum(t => t.Salary)} рублей.");
+        }
+
+        /// <summary>
+        /// Вывод отчета по отделам
+        /// </summary>
+        /// <param name="period"></param>
+        /// <param name="report"></param>
+        public static void ShowDepartmetsTasks((DateTime, DateTime) period, List<(Departments, List<SalaryReportModel>)> report)
+        {
+            Console.Clear();
+            Console.WriteLine($"Отчет по отделам за {CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(period.Item1.Month)} месяц {period.Item1.Year} года");
+            Console.WriteLine();
+            foreach (var depatment in report)
             {
-                Console.WriteLine(item.Item1.ToDisplay());
-                foreach (var items in item.Item4)
-                {
-                    Console.WriteLine(items.ToDisplay());
-                }
-                Console.WriteLine($"Всего: отработано: {item.Item2} часов, к выплате: {item.Item3} рублей.");
+                Console.WriteLine($"Отдел {depatment.Item1}:");
+                Console.WriteLine();
+                ShowPersonsReport(depatment.Item2);
+                Console.WriteLine($"Итого по отделу {depatment.Item1}:  отработано: {depatment.Item2.Sum(t => t.Time)} часов, к выплате: {depatment.Item2.Sum(t => t.Salary)} рублей.");
+                Console.WriteLine(new string('-', 100));
                 Console.WriteLine();
             }
-            Console.WriteLine();
-            Console.WriteLine($"Итого: отработано: {report.Sum(t => t.Item2)} часов, к выплате: {report.Sum(t => t.Item3)} рублей.");
+            Console.WriteLine($"Всего по организации:  отработано: {report.Sum(t=>t.Item2.Sum(s=>s.Time))} часов, к выплате: {report.Sum(t => t.Item2.Sum(s => s.Salary))} рублей.");
+            Console.WriteLine(new string('-', 100));
         }
 
         /// <summary>
@@ -129,12 +143,30 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
             Console.WriteLine(person.ToDisplay());
         }
         /// <summary>
-        /// Вывод строки отчета
+        /// Вывод списка выполненных задач сотрудником
         /// </summary>
         /// <param name="task"></param>
-        private static void ShowTask(CompletedTask task)
+        private static void ShowTasks(SalaryReportModel report)
         {
-            Console.WriteLine(task.ToDisplay());
+            foreach (var task in report.Tasks)
+            {
+                Console.WriteLine(task.ToDisplay());
+            }
+            Console.WriteLine($"Всего отработано: {report.Time} часов, к выплате: {report.Salary} рублей.");
+
+        }
+        /// <summary>
+        /// Вывод списка выполненных задач сотрудниками
+        /// </summary>
+        /// <param name="report"></param>
+        private static void ShowPersonsReport(List<SalaryReportModel> report)
+        {
+            foreach (var item in report)
+            {
+                Console.WriteLine(item.Person.ToDisplay());
+                ShowTasks(item);
+                Console.WriteLine();
+            }           
         }
     }
 }

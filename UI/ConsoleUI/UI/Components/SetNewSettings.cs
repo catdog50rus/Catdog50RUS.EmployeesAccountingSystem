@@ -1,5 +1,5 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
-using Models.Settings;
+using Catdog50RUS.EmployeesAccountingSystem.Models;
 using System;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI

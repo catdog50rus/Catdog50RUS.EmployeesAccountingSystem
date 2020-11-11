@@ -4,7 +4,6 @@ using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Data.Repository;
 using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
-using Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports;
 using System;
 using System.Threading.Tasks;
 
@@ -72,26 +71,30 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                         await AddNewTask();
                         break;
                     case '2':
-                        //Получаем отчет по сотруднику
-                        await CreatePersonReport();
-                        break;
+                        //Получаем отчет по сотруднику за период
+                        await GetPersonReport();
+                        break; 
                     case '3':
+                        //Получаем отчет по сотруднику за месяц
+                        await GetReportByPerson();
+                        break;
+                    case '4':
+                        //Получаем отчет по всем сотрудникам за месяц
+                        await GetReportByAllPersons();
+                        break;
+                    case '5':
+                        //Получаем отчет по отделам за месяц
+                        await GetReportByDepatments();
+                        break;
+                    case '6':
                         //Получаем список сотрудников
                         await CreatePersonsList();
                         break;
-                    case '4':
-                        
-                        await GetReportByPerson();
-                        break;
-                    case '5':
-
-                        await GetReportByAllPersons();
-                        break;
-                    case '8':
+                    case '7':
                         //Добавляем сотрудника
                         await InsertNewPerson();
                         break;
-                    case '9':
+                    case '8':
                         //Удаляем сотрудника
                         await DeletePerson();
                         break;
@@ -121,18 +124,22 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             Console.WriteLine();
             Console.WriteLine("Выберите дальнейшие действия:");
             Console.WriteLine("1 - Добавить выполненную задачу");
-            Console.WriteLine("2 - Посмотреть список моих выполненных задач");
+            Console.WriteLine(new string('-', 70));
+            Console.WriteLine("2 - Вывести на экран отчет по сотруднику за период");
+            Console.WriteLine("3 - Вывести на экран отчет по сотруднику за месяц");
             //Вывод элементов меню доступных только руководителю
             if (positions.Equals(Positions.Director))
-            {
-                Console.WriteLine("3 - Вывести на экран список сотрудников");
-                Console.WriteLine("4 - Вывести на экран отчет по сотруднику за месяц");
-                Console.WriteLine("5 - Вывести на экран отчет по всем сотрудникам за месяц");
-                Console.WriteLine("6 - Вывести на экран отчет по работе отдела за месяц (не реализовано)");
-                Console.WriteLine("8 - Добавить сотрудника");
-                Console.WriteLine("9 - Удалить сотрудника");
+            { 
+                Console.WriteLine("4 - Вывести на экран отчет по всем сотрудникам за месяц");
+                Console.WriteLine("5 - Вывести на экран отчет по работе отдела за месяц");
+                Console.WriteLine(new string('-', 70));
+                Console.WriteLine("6 - Вывести на экран список сотрудников");
+                Console.WriteLine("7 - Добавить сотрудника");
+                Console.WriteLine("8 - Удалить сотрудника");
+                Console.WriteLine(new string('-', 70));
                 Console.WriteLine("s - Ввести данные для расчета");
             }
+            Console.WriteLine(new string('-', 70));
             Console.WriteLine("0 - Выйти из профиля");
         }
 
@@ -167,14 +174,45 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         /// Получаем отчет по сотруднику
         /// </summary>
         /// <returns></returns>
-        private async Task CreatePersonReport()
+        private async Task GetPersonReport()
         {
             //Получаем период
             var period = InputParameters.GetPeriod();
-            await Reports.GetPersonReport(Person, period);            
+            await GetReportOnPerson(period);
         }
+       
 
         //3
+        private async Task GetReportByPerson()
+        {
+            //Получаем период
+            var period = InputParameters.GetMonth();
+            await GetReportOnPerson(period);
+
+        }
+
+
+
+        //4
+        private async Task GetReportByAllPersons()
+        {
+            //Получаем период
+            var month = InputParameters.GetMonth();
+            await Reports.GetAllPersonsReport(month);
+            
+        }
+
+        //5
+        private async Task GetReportByDepatments()
+        {
+            //Получаем период
+            var month = InputParameters.GetMonth();
+            await Reports.GetDepartmentsReport(month);
+
+        }
+
+
+        //6
         /// <summary>
         /// Получить список сотрудников
         /// </summary>
@@ -190,29 +228,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             ShowOnConsole.ShowContinue();
         }
 
-        //4
-        private async Task GetReportByPerson()
-        {
-            //Получаем период
-            var month = InputParameters.GetMonth();
-            //Получаем сотрудника
-            var person = await new Authorization().GetPerson();
-            if(person != null)
-            {
-                await Reports.GetPersonReport(person, month);
-            }
-        }
-
-        //5
-        private async Task GetReportByAllPersons()
-        {
-            //Получаем период
-            var month = InputParameters.GetMonth();
-            await Reports.GetAllPersonsReport(month);
-            
-        }
-
-        //8
+        //7
         /// <summary>
         /// Добавление нового сотрудника
         /// </summary>
@@ -237,7 +253,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
         }
 
-        //9
+        //8
         /// <summary>
         /// Удаление сотрудника
         /// </summary>
@@ -295,6 +311,26 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             Console.WriteLine($"{Person} До свидания!");
             ShowOnConsole.ShowContinue();
             return true;
+        }
+
+        /// <summary>
+        /// Поучение отчета по сотруднику с проверкой сотрудника
+        /// </summary>
+        /// <param name="period"></param>
+        /// <returns></returns>
+        private async Task GetReportOnPerson((DateTime, DateTime) period)
+        {
+            //Если текущий сотрудник директор, то получаем интересующего сотрудника
+            if (Person.Positions.Equals(Positions.Director))
+            {
+                var person = await new Authorization().GetPerson();
+                if (person != null)
+                {
+                    await Reports.GetPersonReport(person, period);
+                }
+            }
+            else //иначе получаем отчет по текущему сотруднику
+                await Reports.GetPersonReport(Person, period);
         }
 
         #endregion

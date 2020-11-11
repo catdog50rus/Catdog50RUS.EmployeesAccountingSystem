@@ -1,6 +1,5 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
-using Models.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,11 +57,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         /// Возвращает кортеж с количеством рабочих часов и заработком
         /// </summary>
         /// <returns></returns>
-        public async Task<(double, decimal, IEnumerable<CompletedTask>)> GetPersonReport(Person person, (DateTime, DateTime) period)
+        public async Task<SalaryReportModel> GetPersonReport(Person person, (DateTime, DateTime) period)
         {
             Position = person.Positions;
             BaseSalary = person.BaseSalary;
-            return await GetPersonTasksList(person.IdPerson, period);
+            return await GetPersonTasksList(person, period);
         }
 
 
@@ -71,9 +70,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         /// Возвращает список кортежей с сотрудниками, количеством рабочих часов, заработком и списком выполненных задач
         /// </summary>
         /// <returns></returns>
-        public async Task<List<(Person, double, decimal, List<CompletedTask>)>> GetAllPersonsReport((DateTime, DateTime) period)
+        public async Task<List<SalaryReportModel>> GetAllPersonsReport((DateTime, DateTime) period)
         {
-            return await GetCompletedTasksList(period);
+            return await GetAllPersonsTasksList(period);
+        }
+
+        public async Task<List<(Departments, List<SalaryReportModel>)>> GetDepartmentsReport((DateTime, DateTime) period)
+        {
+            return await GetDepartmentsTasksList(period);
         }
 
         #endregion
@@ -85,10 +89,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         /// Получить отчет по выполненным задачам сотрудника
         /// </summary>
         /// <returns></returns>
-        private async Task<(double, decimal, IEnumerable<CompletedTask>)> GetPersonTasksList(Guid personID, (DateTime, DateTime) period)
+        private async Task<SalaryReportModel> GetPersonTasksList(Person person, (DateTime, DateTime) period)
         {
             //Получаем список выполненных задач сотрудником
-            var result = await CompletedTasksService.GetPersonTask(personID, period.Item1, period.Item2);
+            var result = await CompletedTasksService.GetPersonTask(person.IdPerson, period.Item1, period.Item2);
             if (result != null)
             {
                 //Суммарное время
@@ -96,9 +100,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
                 //Получаем сумму оплаты
                 decimal salary = GetSalary(time);
 
-                return (time, salary, result);
+                return new SalaryReportModel(person, time, salary, result.ToList());
             }
-            return (0, 0, null);
+            return null;
         }
 
         /// <summary>
@@ -106,9 +110,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         /// </summary>
         /// <param name="period"></param>
         /// <returns></returns>
-        private async Task<List<(Person, double, decimal, List<CompletedTask>)>> GetCompletedTasksList((DateTime, DateTime) period)
+        private async Task<List<SalaryReportModel>> GetAllPersonsTasksList((DateTime, DateTime) period)
         {
-            var result = new List<(Person, double, decimal, List<CompletedTask>)>();
+            var result = new List<SalaryReportModel>();
             //Получаем список выполненных задач за месяц и проверяем его на null
             var list = await CompletedTasksService.GetCompletedTask(period.Item1, period.Item2);
             if (list != null)
@@ -129,12 +133,42 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
                     //Получаем оплату
                     decimal salary = GetSalary(item.Times);
                     //Добавляем полученные данные в итоговую коллекцию
-                    result.Add((person, item.Times, salary, taskslist));
+                    result.Add(new SalaryReportModel(person, item.Times, salary, taskslist));
                 }
                 return result;
             }
             else
                 return null;           
+        }
+
+        /// <summary>
+        /// Получить отчет по выполненным задачам по Отделам
+        /// </summary>
+        /// <param name="period"></param>
+        /// <returns></returns>
+        private async Task<List<(Departments, List<SalaryReportModel>)>> GetDepartmentsTasksList((DateTime, DateTime) period)
+        {
+            var result = new List<(Departments, List<SalaryReportModel>)>();
+            //Получаем список выполненных задач за месяц и проверяем его на null
+            var list = await GetAllPersonsReport(period);
+            if (list != null)
+            {
+                //Выполняем группировку по отделам
+                var query = list.GroupBy(p => p.Person.Department);
+                //Получаем выделяем данные из групп и формируем результат
+                foreach (var item in query)
+                {
+                    var includeList = new List<SalaryReportModel>();
+                    for (int i = 0; i < item.Count(); i++)
+                    {
+                        includeList.Add(item.ElementAt(i));
+                    }
+
+                    result.Add((item.Key, includeList));
+                }
+                return result;
+            }
+            return null;
         }
 
         /// <summary>

@@ -23,10 +23,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             //Получаем отчет и проверяем его на null и валидность числовых параметров
             //Выводим результат
             var personReport = await Report.GetPersonReport(person, period);
-            if (personReport.Item3 != null)
+            if (personReport != null)
             {
-                if (personReport.Item1 >= 0 && personReport.Item2 >= 0)
-                    ShowOnConsole.ShowPersonTasks(person, period, personReport);
+                ShowOnConsole.ShowPersonTasks(period, personReport);
             }
             else
             {
@@ -38,7 +37,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         public static async Task GetAllPersonsReport((DateTime, DateTime) period)
         {
             await InitialReport();
-            //Получаем отчет и проверяем его на null и валидность числовых параметров
+            //Получаем отчет и проверяем его на null
             //Выводим результат
             var report = await Report.GetAllPersonsReport(period);
             if(report != null)
@@ -49,6 +48,19 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             {
                 ShowOnConsole.ShowMessage("Ошибка получения отчета!");
             }
+            ShowOnConsole.ShowContinue();
+        }
+
+        public static async Task GetDepartmentsReport((DateTime, DateTime) period)
+        {
+            await InitialReport();
+            //Получаем отчет и проверяем его на null
+            //Выводим результат
+            var report = await Report.GetDepartmentsReport(period);
+            if(report != null)
+                ShowOnConsole.ShowDepartmetsTasks(period, report);
+            else
+                ShowOnConsole.ShowMessage("Ошибка получения отчета!");
             ShowOnConsole.ShowContinue();
         }
 

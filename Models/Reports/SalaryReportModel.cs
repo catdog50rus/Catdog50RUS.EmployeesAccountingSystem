@@ -1,5 +1,6 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {

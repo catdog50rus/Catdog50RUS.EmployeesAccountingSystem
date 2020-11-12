@@ -112,7 +112,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
                 throw;
             }
 
-            return result;
+            return result.OrderBy(d=>d.Date);
         }
         /// <summary>
         /// Получить список задач

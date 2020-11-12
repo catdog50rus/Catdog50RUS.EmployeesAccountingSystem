@@ -150,9 +150,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         /// <returns></returns>
         private async Task AddNewTask()
         {
+            
             //Создаем новую задачу в отдельном компоненте UI
             //И проверяем результат на null
-            var task = CreateTask.CreatNewTask(Person);
+            var task = await CreateTask.CreatNewTask(Person);
             if(task != null)
             {
                 //Добавляем задачу в хранилище и проверяем результат операции

@@ -131,7 +131,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
 
             return (start, end);
         }
-
+        /// <summary>
+        /// Получение месячного периода
+        /// </summary>
+        /// <returns></returns>
         public static (DateTime, DateTime) GetMonth()
         {
             int month = 0; 
@@ -143,7 +146,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
             DateTime.TryParse(date, out DateTime res);    
             return (res, res.AddMonths(1));
         }
-
         /// <summary>
         /// Получение параметра Departments
         /// </summary>

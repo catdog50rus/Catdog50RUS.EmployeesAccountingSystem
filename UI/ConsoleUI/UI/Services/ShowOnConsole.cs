@@ -108,7 +108,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
             Console.WriteLine();
             Console.WriteLine("Для продолжения нажмите любую клавишу");
             Console.ReadKey();
-            Console.Clear();
         }
         
         /// <summary>

@@ -8,6 +8,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
 {
     public interface IPersons
     {
+        public bool IsFirstRun { get; }
+
         Task<bool> InsertPersonAsync(Person person);
         Task<IEnumerable<Person>> GetAllPersonsAsync();
         Task<Person> GetPersonByName(string name);

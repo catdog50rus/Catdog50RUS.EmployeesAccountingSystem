@@ -54,6 +54,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             //Флаг выхода из главного меню
             bool exit = default;
 
+            if (Person.NamePerson.Equals("Admin"))
+            {
+                await ShowAdmin();
+                return;
+            }
             //Запускаем цикл ожидающий выбора элементов меню
             while (!exit)
             {
@@ -117,10 +122,42 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
         #region Реализация
 
+        private async Task ShowAdmin()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("Вы вошли под пользователем Admin!");
+            Console.WriteLine("Для продолжения работы программы необходимо зарегистрировать в системе пользоателя - Руководителя");
+            Console.WriteLine();
+            Console.WriteLine("Выберите дальнейшие действия:");
+            Console.WriteLine("1 - Зарегистрировать Руководителя");
+            Console.WriteLine("0 - Выйти из профиля");
+
+            bool exit = default;
+            while (!exit)
+            {
+                var key = Console.ReadKey().KeyChar;
+                switch (key)
+                {
+                    case '1':
+                        await InsertNewPerson();
+                        await PersonsService.DeletePersonAsync(Person.IdPerson);
+                        exit = true;
+                        break;
+                    case '0':
+                        exit = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         //Отображение элементов меню
         private static void ShowText(Positions positions)
         {
             //Вывод общих элементов меню
+            Console.Clear();
             Console.WriteLine();
             Console.WriteLine("Выберите дальнейшие действия:");
             Console.WriteLine("1 - Добавить выполненную задачу");

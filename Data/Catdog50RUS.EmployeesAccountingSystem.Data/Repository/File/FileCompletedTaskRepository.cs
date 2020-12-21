@@ -129,7 +129,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
         {
             //Получаем список всех задач
             var tasksList = await GetCompletedTasksListInPeriodAsync(beginDate, lastDate);
-
+            if (tasksList == null) return null;
             //Проверяем, есть ли в списке задачи, выполненные заданным сотрудником
             //Если задач нет выходим из метода, возвращаем null
             //Иначе передаем в результирующий список все задачи сотрудника

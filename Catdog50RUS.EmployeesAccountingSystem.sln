@@ -13,9 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{45CB8737
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServicesUnitTest", "Tests\ServicesUnitTest\ServicesUnitTest.csproj", "{E8C821F5-92DC-4361-B1F5-D24991F6B93A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reports", "Reports\Reports.csproj", "{609C913C-1232-4EBB-8E4C-C0631313E610}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reports", "Reports\Reports.csproj", "{609C913C-1232-4EBB-8E4C-C0631313E610}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportsUnitTest", "Tests\ReportsUnitTest\ReportsUnitTest.csproj", "{B2473FA5-7453-4342-B29C-6F131121FDA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportsUnitTest", "Tests\ReportsUnitTest\ReportsUnitTest.csproj", "{B2473FA5-7453-4342-B29C-6F131121FDA5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{B27C6CBB-5927-4202-82D9-24E4EF3506D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +54,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{D3089A73-72B4-42EB-B01A-901744F41032} = {B27C6CBB-5927-4202-82D9-24E4EF3506D4}
 		{E8C821F5-92DC-4361-B1F5-D24991F6B93A} = {45CB8737-B2FD-4F57-A88D-4F5078948743}
 		{B2473FA5-7453-4342-B29C-6F131121FDA5} = {45CB8737-B2FD-4F57-A88D-4F5078948743}
 	EndGlobalSection

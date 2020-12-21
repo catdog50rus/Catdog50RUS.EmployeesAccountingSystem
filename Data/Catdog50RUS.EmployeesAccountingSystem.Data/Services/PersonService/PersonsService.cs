@@ -17,13 +17,17 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// <summary>
         /// Внедрение зависимости через интерфейс
         /// </summary>
-        private IPersonRepository PersonRepository { get; }
+        private readonly FilePersonRepository _personRepository;
+
+        public bool IsFirstRun { get ; }
+
         /// <summary>
         /// Конструктор
         /// </summary>
         public PersonsService()
         {
-            PersonRepository = new FilePersonRepository();
+            _personRepository = new FilePersonRepository();
+            IsFirstRun = _personRepository.IsFirstRun;
         }
 
         #region Interface
@@ -40,7 +44,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
             {
                 //Пытаемся добавить сотрудника в хранилище, 
                 //если результат не null возвращаем true, иначе false
-                var result = await PersonRepository.InsertPerson(person);
+                var result = await _personRepository.InsertPerson(person);
                 if (result != null)
                     return true;
                 else
@@ -56,7 +60,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// <returns></returns>
         public async Task<IEnumerable<Person>> GetAllPersonsAsync()
         {
-            return await PersonRepository.GetPersonsListAsync();
+            return await _personRepository.GetPersonsListAsync();
         }
 
         /// <summary>
@@ -66,7 +70,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// <returns></returns>
         public async Task<Person> GetPersonByName(string name)
         {
-            return await PersonRepository.GetPersonByNameAsync(name);
+            return await _personRepository.GetPersonByNameAsync(name);
         }
 
         /// <summary>
@@ -77,7 +81,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         public async Task<bool> DeletePersonAsync(Guid id)
         {
             //Пробуем удалить сотрудника из хранилища
-            var result = await PersonRepository.DeletePerson(id);
+            var result = await _personRepository.DeletePerson(id);
             //Если результат не null возвращаем true, иначе false
             if (result != null)
                 return true;

@@ -15,13 +15,16 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
         /// <summary>
         /// Внедрение бизнес логики
         /// </summary>
-        private IPersons PersonsService { get; }
+        private readonly IPersons _personsService;
+        private readonly bool _isFirstRun;
 
         public Authorization()
         {
-            PersonsService = new PersonsService();
+            _personsService = new PersonsService();
+            _isFirstRun = _personsService.IsFirstRun;
         }
 
+        public bool IsFirstRun() => _isFirstRun;
 
         /// <summary>
         /// Авторизация пользователя
@@ -55,7 +58,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
             //Получаем имя сотрудника
             string name = InputParameters.InputStringParameter("Введите имя пользователя");
             //Получаем из хранилища сотрудника по имени и проверяем, если ли сотрудник с таким именем
-            var person = await PersonsService.GetPersonByName(name);
+            var person = await _personsService.GetPersonByName(name);
             if (person == null)
             {
                 ShowOnConsole.ShowMessage($"Пользователь с именем {name} не найден!");
@@ -68,5 +71,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
                 return person;    
             }
         }
+
+
     }
 }

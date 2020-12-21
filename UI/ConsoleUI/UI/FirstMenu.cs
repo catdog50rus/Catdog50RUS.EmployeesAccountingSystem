@@ -47,17 +47,24 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
         #region Реализация
 
-        private async Task AuthorizeUser() 
+        private async Task AuthorizeUser()
         {
             //Создаем экземпляр класса авторизации и получаем авторизованного пользователя 
             var auth = new Authorization();
+
+            if (auth.IsFirstRun())
+            {
+                ShowOnConsole.ShowMessage($" Это первый запуск программы! \n Для начала работы необходимо войти под пользователем Admin");
+                ShowOnConsole.ShowContinue();
+            }
             var person = await auth.AutorezationUser();
-            if(person != null)
+            if (person != null)
             {
                 //Переходим в главное меню и передаем в него сотрудника
                 var mainmenu = new MainMenu(person);
                 await mainmenu.Intro();
-            } 
+            }
+
         }
 
         /// <summary>
@@ -72,8 +79,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             Console.WriteLine("1 - Авторизоваться");
             Console.WriteLine("0 - Выйти из программы");
         }
-
-        
 
         #endregion
 

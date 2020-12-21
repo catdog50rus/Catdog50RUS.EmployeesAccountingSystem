@@ -33,7 +33,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
         {
             //Создаем новый список сотрудников
             List<Person> result = new List<Person>();
-
+            
             //Процесс получения данных оборачиваем в блок try,
             //чтобы отловить исключения как по доступу к файлу, так и по качеству данных,
             //что позволит не использовать методы TryParse
@@ -69,8 +69,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
             //TODO Дописать обработчик исключений
             catch (Exception)
             {
-
-                throw;
+                
+                throw new FileNotFoundException($"Файл не найден!");
             }
 
             return result;

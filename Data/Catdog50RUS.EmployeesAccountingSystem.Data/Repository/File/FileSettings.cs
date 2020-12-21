@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
+﻿namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
 {
     public static class FileSettings
     {

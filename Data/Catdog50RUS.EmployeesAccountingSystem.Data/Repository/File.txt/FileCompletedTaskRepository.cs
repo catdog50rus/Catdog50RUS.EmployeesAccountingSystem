@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
+namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt
 {
     /// <summary>
     /// Реализация доступа к данным выполненных задач из файла

@@ -1,31 +1,28 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt;
-using Catdog50RUS.EmployeesAccountingSystem.Models;
+﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Repository;
+using Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv;
+using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
+namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
 {
-    /// <summary>
-    /// Реализация бизнес логики
-    /// Работа хранилищем сотрудников
-    /// </summary>
-    public class PersonsService : IPersons
+    public class EmployeeService : IEmployeeService
     {
         /// <summary>
         /// Внедрение зависимости через интерфейс
         /// </summary>
-        private readonly FilePersonRepository _personRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public bool IsFirstRun { get ; }
+        public bool IsFirstRun { get; }
 
         /// <summary>
         /// Конструктор
         /// </summary>
-        public PersonsService()
+        public EmployeeService(IEmployeeRepository repository)
         {
-            _personRepository = new FilePersonRepository();
-            IsFirstRun = _personRepository.IsFirstRun;
+            _employeeRepository = repository;
+            //IsFirstRun = _employeeRepository.IsFirstRun;
         }
 
         #region Interface
@@ -33,16 +30,16 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// <summary>
         /// Добавить сотрудника
         /// </summary>
-        /// <param name="person"></param>
+        /// <param name="employee"></param>
         /// <returns></returns>
-        public async Task<bool> InsertPersonAsync(Person person)
+        public async Task<bool> InsertEmployeeAsync(EmployeesBase employee)
         {
             //Проверяем входные параметры на null
-            if (person != null)
+            if (employee != null)
             {
                 //Пытаемся добавить сотрудника в хранилище, 
                 //если результат не null возвращаем true, иначе false
-                var result = await _personRepository.InsertPerson(person);
+                var result = await _employeeRepository.InsertEmployeeAsync(employee);
                 if (result != null)
                     return true;
                 else
@@ -56,9 +53,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// Получить всех сотрудников
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<Person>> GetAllPersonsAsync()
+        public async Task<IEnumerable<EmployeesBase>> GetAllPersonsAsync()
         {
-            return await _personRepository.GetPersonsListAsync();
+            return await _employeeRepository.GetEmployeesListAsync();
         }
 
         /// <summary>
@@ -66,9 +63,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public async Task<Person> GetPersonByName(string name)
+        public async Task<EmployeesBase> GetPersonByName(string name)
         {
-            return await _personRepository.GetPersonByNameAsync(name);
+            return await _employeeRepository.GetEmployeeByNameAsync(name);
         }
 
         /// <summary>
@@ -79,7 +76,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         public async Task<bool> DeletePersonAsync(Guid id)
         {
             //Пробуем удалить сотрудника из хранилища
-            var result = await _personRepository.DeletePerson(id);
+            var result = await _employeeRepository.DeleteEmployeeAsync(id);
             //Если результат не null возвращаем true, иначе false
             if (result != null)
                 return true;
@@ -88,7 +85,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         }
 
         #endregion
-
 
     }
 }

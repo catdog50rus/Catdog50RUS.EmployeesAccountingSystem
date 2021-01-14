@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
+namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt
 {
     public class FileReportSettings : FileBase, ISettingsRepository
     {

@@ -1,8 +1,8 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Repository;
-using Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv;
 using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
@@ -37,6 +37,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
             //Проверяем входные параметры на null
             if (employee != null)
             {
+                //Проверяем сотрудника на уникальность
+                var employeesList = await GetAllPersonsAsync();
+                if (employeesList.ToList().Contains(employee))
+                    return false;
+                
                 //Пытаемся добавить сотрудника в хранилище, 
                 //если результат не null возвращаем true, иначе false
                 var result = await _employeeRepository.InsertEmployeeAsync(employee);

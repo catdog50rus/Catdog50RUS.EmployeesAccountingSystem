@@ -171,10 +171,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             //Проверяем входные данные на null
             if (employee != null)
             {
-                var employeesList = await GetEmployeesListAsync();
-                if (employeesList == null || employeesList.Contains(employee))
-                    return null;
-
                 try
                 {
                     //Преобразуем сотрудника в строку используя модель

@@ -12,16 +12,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
         public Positions Positions { get; set; }
         public decimal BaseSalary { get; set; }
 
-        public EmployeesBase(Guid id, string name, string surname, Departments dep, Positions pos, decimal baseSalary)
-        {
-            Id = id;
-            NamePerson = name;
-            SurnamePerson = surname;
-            Department = dep;
-            Positions = pos;
-            BaseSalary = baseSalary;
-        }
-
         public EmployeesBase(string name, string surname, Departments dep, Positions pos, decimal baseSalary)
         {
             Id = Guid.NewGuid();
@@ -32,11 +22,16 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
             BaseSalary = baseSalary;
         }
 
-
-        public override string ToString()
+        public EmployeesBase(Guid id, string name, string surname, Departments dep, Positions pos, decimal baseSalary) : 
+                        this(name, surname, dep, pos, baseSalary)
         {
-            return $"{NamePerson} {SurnamePerson}";
+            Id = id;
         }
+
+        
+
+
+        public override string ToString() => $"{NamePerson} {SurnamePerson}";
 
         public override bool Equals(object obj) => ToString().Equals(obj.ToString());
 
@@ -51,6 +46,17 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
                    $"{Positions}{dateSeparator}" +
                    $"{BaseSalary}{dateSeparator}";
         }
+
+        //public virtual Autorize GetAuthorization()
+        //{
+        //    var role = Role.User;
+        //    return new Autorize
+        //    {
+        //        IsAutentificated = true,
+        //        AutorizeRole = role
+        //    };
+        //}
+
 
         public abstract decimal CalculateSamary(IEnumerable<CompletedTask> tasks);
 

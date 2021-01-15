@@ -38,7 +38,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
             if (employee != null)
             {
                 //Проверяем сотрудника на уникальность
-                var employeesList = await GetAllPersonsAsync();
+                var employeesList = await GetAllEmployeeAsync();
                 if (employeesList.ToList().Contains(employee))
                     return false;
                 
@@ -58,7 +58,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
         /// Получить всех сотрудников
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<EmployeesBase>> GetAllPersonsAsync()
+        public async Task<IEnumerable<EmployeesBase>> GetAllEmployeeAsync()
         {
             return await _employeeRepository.GetEmployeesListAsync();
         }
@@ -68,7 +68,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public async Task<EmployeesBase> GetPersonByName(string name)
+        public async Task<EmployeesBase> GetEmployeeByName(string name)
         {
             return await _employeeRepository.GetEmployeeByNameAsync(name);
         }
@@ -78,7 +78,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<bool> DeletePersonAsync(Guid id)
+        public async Task<bool> DeleteEmployeeAsync(Guid id)
         {
             //Пробуем удалить сотрудника из хранилища
             var result = await _employeeRepository.DeleteEmployeeAsync(id);

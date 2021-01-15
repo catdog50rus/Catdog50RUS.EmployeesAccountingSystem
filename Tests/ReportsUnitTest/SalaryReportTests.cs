@@ -20,7 +20,7 @@ namespace ReportsUnitTest
         double time1, time2, time3;
         decimal sum1, sum2, sum3;
         readonly PersonsService personsService = new PersonsService();
-        readonly CompletedTasksService completedTasksService = new CompletedTasksService();
+        readonly CompletedTasksLogsService completedTasksService = new CompletedTasksService();
 
 
         (DateTime, DateTime) period = (DateTime.Parse("02.11.2020"), DateTime.Parse("07.11.2020"));
@@ -138,15 +138,15 @@ namespace ReportsUnitTest
                 TaskName = "Тестовое задание9"
             };
 
-            await completedTasksService.AddNewTask(task1);
-            await completedTasksService.AddNewTask(task2);
-            await completedTasksService.AddNewTask(task3);
-            await completedTasksService.AddNewTask(task4);
-            await completedTasksService.AddNewTask(task5);
-            await completedTasksService.AddNewTask(task6);
-            await completedTasksService.AddNewTask(task7);
-            await completedTasksService.AddNewTask(task8);
-            await completedTasksService.AddNewTask(task9);
+            await completedTasksService.AddNewTaskLog(task1);
+            await completedTasksService.AddNewTaskLog(task2);
+            await completedTasksService.AddNewTaskLog(task3);
+            await completedTasksService.AddNewTaskLog(task4);
+            await completedTasksService.AddNewTaskLog(task5);
+            await completedTasksService.AddNewTaskLog(task6);
+            await completedTasksService.AddNewTaskLog(task7);
+            await completedTasksService.AddNewTaskLog(task8);
+            await completedTasksService.AddNewTaskLog(task9);
 
             settings = new ReportSettings(160, 20000, 2);
 

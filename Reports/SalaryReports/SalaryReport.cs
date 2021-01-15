@@ -31,7 +31,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         /// <summary>
         /// Внедрение сервиса работы с задачами
         /// </summary>
-        private ICompletedTask CompletedTasksService { get; } = new CompletedTasksService();
+        private ICompletedTaskLogs CompletedTasksService { get; } = new CompletedTasksService();
 
         /// <summary>
         /// Должность сотрудника
@@ -92,7 +92,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         private async Task<SalaryReportModel> GetPersonTasksList(Person person, (DateTime, DateTime) period)
         {
             //Получаем список выполненных задач сотрудником
-            var result = await CompletedTasksService.GetPersonTask(person.IdPerson, period.Item1, period.Item2);
+            var result = await CompletedTasksService.GetEmployeeTaskLogs(person.IdPerson, period.Item1, period.Item2);
             if (result != null)
             {
                 //Суммарное время
@@ -114,7 +114,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         {
             var result = new List<SalaryReportModel>();
             //Получаем список выполненных задач за месяц и проверяем его на null
-            var list = await CompletedTasksService.GetCompletedTask(period.Item1, period.Item2);
+            var list = await CompletedTasksService.GetCompletedTaskLogs(period.Item1, period.Item2);
             if (list != null)
             {
                 //Группируем полученный список по сотрудникам и отбираем ID сотрудника и и время

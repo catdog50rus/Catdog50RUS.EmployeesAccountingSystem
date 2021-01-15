@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
+    //к удалению
     public class SalaryReportModel
     {
         public Person Person { get; set; }

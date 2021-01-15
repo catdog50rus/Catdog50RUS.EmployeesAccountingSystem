@@ -11,30 +11,30 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository
         /// Получить асинхронно список всех сотрудников
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<EmployeesBase>> GetEmployeesListAsync();
+        Task<IEnumerable<BaseEmployee>> GetEmployeesListAsync();
         /// <summary>
         /// Добавить сотрудника
         /// </summary>
         /// <param name="person"></param>
         /// <returns></returns>
-        Task<EmployeesBase> InsertEmployeeAsync(EmployeesBase employee);
+        Task<BaseEmployee> InsertEmployeeAsync(BaseEmployee employee);
         /// <summary>
         /// Удалить сотрудника
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<EmployeesBase> DeleteEmployeeAsync(Guid id);
+        Task<BaseEmployee> DeleteEmployeeAsync(Guid id);
         /// <summary>
         /// Получить сотрудника по имени
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        Task<EmployeesBase> GetEmployeeByNameAsync(string name);
+        Task<BaseEmployee> GetEmployeeByNameAsync(string name);
         /// <summary>
         /// Получить сотрудника по id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<EmployeesBase> GetEmployeeByIdAsync(Guid id);
+        Task<BaseEmployee> GetEmployeeByIdAsync(Guid id);
     }
 }

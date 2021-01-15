@@ -1,6 +1,8 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
+using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
 {
@@ -46,7 +48,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         private void FileNotFound(string file)
         {
             new FileInfo(file).Create().Close();
-            if (file.Contains(FileCSVSettings.PERSONSFILENAME))
+            if (file.Contains(FileCSVSettings.EMPLOYEES_LIST_FILENAME))
             {
                 var admin = new Person()
                 {
@@ -61,6 +63,32 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
                 //передаем в него полное имя файла с данными и разрешаем добавление
                 using StreamWriter sw = new StreamWriter(file, true);
                 sw.WriteLine(line);
+            }
+
+        }
+
+
+        public static async Task<string[]> ReadAsync(string filename)
+        {
+            try
+            {
+                //Создаем экземпляр класса StreamReader, 
+                //передаем в него полное имя файла с данными
+                using StreamReader sr = new StreamReader(filename);
+                string[] dataLines = null;
+
+                //Считываем данные из файла
+                var data = await sr.ReadToEndAsync();
+
+                //Объявляем строковый массив и передаем в него строку с данными
+                //Массив заполняется данными, каждый элемент массива разделяется знаком "новой строкой"
+                //Исходя из структуры данных преобразуем string в элементы модели
+                return dataLines = data.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
 
         }

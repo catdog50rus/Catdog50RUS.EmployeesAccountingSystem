@@ -16,7 +16,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// <summary>
         /// Внедрение зависимости через интерфейс
         /// </summary>
-        private ICompletedTaskRepository TasksRepository { get; }
+        private ICompletedTasksLogRepository TasksRepository { get; }
         /// <summary>
         /// Конструктор
         /// </summary>
@@ -39,7 +39,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
             {
                 //Пытаемся добавить задачу в хранилище, 
                 //если результат не null возвращаем true, иначе false
-                var result = await TasksRepository.AddCompletedTask(task);
+                var result = await TasksRepository.InsertCompletedTaskAsync(task);
                 if (result != null)
                     return true;
                 else
@@ -57,7 +57,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// <returns></returns>
         public async Task<IEnumerable<CompletedTask>> GetPersonTask(Guid personID, DateTime firstDate, DateTime lastDate)
         {
-             return await TasksRepository.GetPersonsTaskListAsync(personID, firstDate, lastDate);
+             return await TasksRepository.GetEmployeeTasksListAsync(personID, firstDate, lastDate);
         }
        
         public async Task<IEnumerable<CompletedTask>> GetCompletedTask(DateTime firstDate, DateTime lastDate)

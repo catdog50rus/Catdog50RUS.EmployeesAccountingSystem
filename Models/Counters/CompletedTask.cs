@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
+using System;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
     public class CompletedTask
     {
         public Guid IdTask { get; set; }
-        public Person Person { get; set; }
+        public BaseEmployee Employee { get; set; }
         public DateTime Date { get; set; }
         public double Time { get; set; }
         public string TaskName { get; set; }
@@ -27,16 +28,16 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
             TaskName = (!string.IsNullOrEmpty(task)) ? task : throw new ArgumentException("Ошибка в наименовании задачи");
         }
 
-        public CompletedTask(Person person, DateTime date, double time, string task) : this(date, time, task)
+        public CompletedTask(BaseEmployee employee, DateTime date, double time, string task) : this(date, time, task)
         {
-            Person = person ?? throw new ArgumentNullException(person.ToString(), "Ошибка сотрудника");
+            Employee = employee ?? throw new ArgumentNullException(employee.ToString(), "Ошибка сотрудника");
         }
 
 
 
         public string ToFile()
         {
-            return $"{IdTask};{Date};{Person.IdPerson};{Time};{TaskName}";
+            return $"{IdTask};{Date};{Employee.Id};{Time};{TaskName}";
         }
 
         public string ToDisplay()

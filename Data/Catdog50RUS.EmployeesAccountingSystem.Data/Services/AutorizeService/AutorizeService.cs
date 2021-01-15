@@ -15,7 +15,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.AutorizeService
             _employeesRepository = employeeRepository;
         }
 
-        public async Task<EmployeesBase> Autentificate(string name)
+        public async Task<BaseEmployee> Autentificate(string name)
         {
             if (string.IsNullOrEmpty(name)||string.IsNullOrWhiteSpace(name))
                 return null;
@@ -27,7 +27,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.AutorizeService
             return employee;
         }
 
-        public Autorize GetAuthorization(EmployeesBase employee)
+        public Autorize GetAuthorization(BaseEmployee employee)
         {
             if (employee == null)
                 return null;

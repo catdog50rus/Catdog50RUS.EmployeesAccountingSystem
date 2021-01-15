@@ -13,12 +13,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// <summary>
         /// Хранилище данных о сотрудниках
         /// </summary>
-        private static readonly string filename = FileCSVSettings.PERSONSFILENAME;
+        private static readonly string _filename = FileCSVSettings.EMPLOYEES_LIST_FILENAME;
         /// <summary>
         /// Используем конструктор базового класса
         /// В конструктор базового класса передаем имя файла с данными
         /// </summary>
-        public FileCSVEmployeeRepository() : base(filename) { }
+        public FileCSVEmployeeRepository() : base(_filename) { }
 
 
         #region Interface
@@ -27,71 +27,48 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// Получить асинхронно список всех сотрудников
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<EmployeesBase>> GetEmployeesListAsync()
+        public async Task<IEnumerable<BaseEmployee>> GetEmployeesListAsync()
         {
             //Создаем новый список сотрудников
-            List<EmployeesBase> dto = new List<EmployeesBase>();
+            List<BaseEmployee> dto = new List<BaseEmployee>();
 
-            //Процесс получения данных оборачиваем в блок try,
-            //чтобы отловить исключения как по доступу к файлу
-            try
+            var dataLines = await ReadAsync(_filename);
+
+            foreach (var dataLine in dataLines)
             {
-                //Создаем экземпляр класса StreamReader, 
-                //передаем в него полное имя файла с данными
-                using StreamReader sr = new StreamReader(FileName);
-                string[] dataLines = null;
+                var model = dataLine.Split(',');
+                Guid.TryParse(model[0], out Guid id);
+                string name = model[1];
+                string surnamePerson = model[2];
+                var department = (Departments)Enum.Parse(typeof(Departments), model[3]);
+                var position = (Positions)Enum.Parse(typeof(Positions), model[4]);
+                decimal.TryParse(model[5], out decimal salary);
 
-                //Считываем данные из файла
-                var data = await sr.ReadToEndAsync();
-
-                //Объявляем строковый массив и передаем в него строку с данными
-                //Массив заполняется данными, каждый элемент массива разделяется знаком "новой строкой"
-                //Исходя из структуры данных преобразуем string в элементы модели
-                dataLines = data.Split(new char[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (var dataLine in dataLines)
+                BaseEmployee employee = null;
+                switch (position)
                 {
-                    var model = dataLine.Split(',');
-                    Guid.TryParse(model[0], out Guid id);
-                    string name = model[1];
-                    string surnamePerson = model[2];
-                    var department = (Departments)Enum.Parse(typeof(Departments), model[3]);
-                    var position = (Positions)Enum.Parse(typeof(Positions), model[4]);
-                    decimal.TryParse(model[5], out decimal salary);
+                    case Positions.Developer:
+                        employee = new StaffEmployee(id, name, surnamePerson, department, position, salary);
+                        break;
+                    case Positions.Director:
+                        employee = new StaffEmployee(id, name, surnamePerson, department, position, salary);
+                        break;
+                    case Positions.Freelance:
+                        employee = new StaffEmployee(id, name, surnamePerson, department, position, salary);
+                        break;
+                    default:
+                        break;
+                }
 
-                    EmployeesBase employee = null;
-                    switch (position)
-                    {
-                        case Positions.Developer:
-                            employee = new StaffEmployee(id, name, surnamePerson, department, position, salary);                           
-                            break;
-                        case Positions.Director:
-                            employee = new StaffEmployee(id, name, surnamePerson, department, position, salary);
-                            break;
-                        case Positions.Freelance:
-                            employee = new StaffEmployee(id, name, surnamePerson, department, position, salary);
-                            break;
-                        default:
-                            break;
-                    }
-
-                    if (employee != null)
-                        dto.Add(employee);
-                }               
+                if (employee != null)
+                    dto.Add(employee);
             }
-            //TODO Дописать обработчик исключений
-            catch (Exception)
-            {
-                throw new Exception($"Ошибка блока FileCSVEmployeeRepository, метод GetEmployeesListAsync");
-            }
-
             if (dto.Count == 0)
                 return null;
 
             var result = dto;
-            
-            return result;
 
+            return result;
         }
 
         /// <summary>
@@ -99,7 +76,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<EmployeesBase> DeleteEmployeeAsync(Guid id)
+        public async Task<BaseEmployee> DeleteEmployeeAsync(Guid id)
         {
             //Получаем коллекцию всех сотрудников
             var employeesList = await GetEmployeesListAsync();
@@ -108,7 +85,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             if (deleteEmployee != null)
             {
                 //Создаем результирующий список и удаляем из него сотрудника
-                List<EmployeesBase> resultlist = employeesList.ToList();
+                List<BaseEmployee> resultlist = employeesList.ToList();
                 resultlist.Remove(deleteEmployee);
 
                 //Удаляем файл с данными сотрудников
@@ -152,7 +129,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public async Task<EmployeesBase> GetEmployeeByNameAsync(string name)
+        public async Task<BaseEmployee> GetEmployeeByNameAsync(string name)
         {
             var list = await GetEmployeesListAsync();
             if (list != null)
@@ -166,7 +143,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// </summary>
         /// <param name="employee"></param>
         /// <returns></returns>
-        public async Task<EmployeesBase> InsertEmployeeAsync(EmployeesBase employee)
+        public async Task<BaseEmployee> InsertEmployeeAsync(BaseEmployee employee)
         {
             //Проверяем входные данные на null
             if (employee != null)
@@ -200,7 +177,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// Получить сотрудника по id
         /// </summary>
         /// <returns></returns>
-        public async Task<EmployeesBase> GetEmployeeByIdAsync(Guid id)
+        public async Task<BaseEmployee> GetEmployeeByIdAsync(Guid id)
         {
             var list = await GetEmployeesListAsync();
             if (list != null)

@@ -69,7 +69,7 @@ namespace ReportsUnitTest
             {
                 IdTask = Guid.Parse("91a1d966-e063-4623-b380-cfc698cb9f5e"),
                 Date = DateTime.Parse("03.11.2020"),
-                Person = testPerson1,
+                Employee = testPerson1,
                 Time = 8.5,
                 TaskName = "Тестовое задание"
             };
@@ -77,7 +77,7 @@ namespace ReportsUnitTest
             {
                 IdTask = Guid.Parse("91a1d966-e063-4623-b381-cfc698cb9f5e"),
                 Date = DateTime.Parse("04.11.2020"),
-                Person = testPerson1,
+                Employee = testPerson1,
                 Time = 10.5,
                 TaskName = "Тестовое задание2"
             };
@@ -85,7 +85,7 @@ namespace ReportsUnitTest
             {
                 IdTask = Guid.Parse("91a1d966-e063-4623-b384-cfc698cb9f5e"),
                 Date = DateTime.Parse("05.11.2020"),
-                Person = testPerson1,
+                Employee = testPerson1,
                 Time = 158.5,
                 TaskName = "Тестовое задание3"
             };
@@ -93,7 +93,7 @@ namespace ReportsUnitTest
             {
                 IdTask = Guid.Parse("91a1d966-e063-4462-b380-cfc698cb9f5e"),
                 Date = DateTime.Parse("03.11.2020"),
-                Person = testPerson2,
+                Employee = testPerson2,
                 Time = 9.5,
                 TaskName = "Тестовое задание4"
             };
@@ -101,7 +101,7 @@ namespace ReportsUnitTest
             {
                 IdTask = Guid.Parse("91a1d966-e063-8662-b387-cfc698cb9f5e"),
                 Date = DateTime.Parse("05.11.2020"),
-                Person = testPerson2,
+                Employee = testPerson2,
                 Time = 7,
                 TaskName = "Тестовое задание5"
             };
@@ -109,7 +109,7 @@ namespace ReportsUnitTest
             {
                 IdTask = Guid.Parse("91a1d966-e063-4612-b389-cfc698cb9f5e"),
                 Date = DateTime.Parse("06.11.2020"),
-                Person = testPerson2,
+                Employee = testPerson2,
                 Time = 150,
                 TaskName = "Тестовое задание6"
             };
@@ -117,7 +117,7 @@ namespace ReportsUnitTest
             {
                 IdTask = Guid.Parse("91a1d966-e463-4632-b389-cfc698cb9f5e"),
                 Date = DateTime.Parse("03.11.2020"),
-                Person = testPerson3,
+                Employee = testPerson3,
                 Time = 5,
                 TaskName = "Тестовое задание7"
             };
@@ -125,7 +125,7 @@ namespace ReportsUnitTest
             {
                 IdTask = Guid.Parse("91a1d966-e463-4626-b389-cfc698cb9f5e"),
                 Date = DateTime.Parse("05.11.2020"),
-                Person = testPerson3,
+                Employee = testPerson3,
                 Time = 10,
                 TaskName = "Тестовое задание8"
             };
@@ -133,7 +133,7 @@ namespace ReportsUnitTest
             {
                 IdTask = Guid.Parse("91a1d966-e463-4665-b389-cfc698cb9f5e"),
                 Date = DateTime.Parse("06.11.2020"),
-                Person = testPerson3,
+                Employee = testPerson3,
                 Time = 12,
                 TaskName = "Тестовое задание9"
             };

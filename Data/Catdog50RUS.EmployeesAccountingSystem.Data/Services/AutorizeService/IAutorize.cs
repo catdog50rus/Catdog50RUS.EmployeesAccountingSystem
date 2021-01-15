@@ -6,8 +6,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.AutorizeService
 {
     public interface IAutorize
     {
-        Autorize GetAuthorization(EmployeesBase employee);
-        Task<EmployeesBase> Autentificate(string name);
+        Autorize GetAuthorization(BaseEmployee employee);
+        Task<BaseEmployee> Autentificate(string name);
     }
 
 }

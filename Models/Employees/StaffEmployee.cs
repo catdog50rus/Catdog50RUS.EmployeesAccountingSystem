@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
 {
-    public class StaffEmployee : EmployeesBase
+    public class StaffEmployee : BaseEmployee
     {
         public StaffEmployee(string name, string surname, Departments department, Positions position, decimal baseSalary)
                             : base(name, surname, department, position, baseSalary)

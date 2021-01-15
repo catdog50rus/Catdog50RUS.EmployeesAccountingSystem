@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
 {
-    public abstract class EmployeesBase
+    public abstract class BaseEmployee
     {
         public Guid Id { get; set; }
         public string NamePerson { get; set; }
@@ -12,7 +12,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
         public Positions Positions { get; set; }
         public decimal BaseSalary { get; set; }
 
-        public EmployeesBase(string name, string surname, Departments dep, Positions pos, decimal baseSalary)
+        public BaseEmployee(string name, string surname, Departments dep, Positions pos, decimal baseSalary)
         {
             Id = Guid.NewGuid();
             NamePerson = name;
@@ -22,7 +22,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
             BaseSalary = baseSalary;
         }
 
-        public EmployeesBase(Guid id, string name, string surname, Departments dep, Positions pos, decimal baseSalary) : 
+        public BaseEmployee(Guid id, string name, string surname, Departments dep, Positions pos, decimal baseSalary) : 
                         this(name, surname, dep, pos, baseSalary)
         {
             Id = id;
@@ -46,17 +46,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
                    $"{Positions}{dateSeparator}" +
                    $"{BaseSalary}{dateSeparator}";
         }
-
-        //public virtual Autorize GetAuthorization()
-        //{
-        //    var role = Role.User;
-        //    return new Autorize
-        //    {
-        //        IsAutentificated = true,
-        //        AutorizeRole = role
-        //    };
-        //}
-
 
         public abstract decimal CalculateSamary(IEnumerable<CompletedTask> tasks);
 

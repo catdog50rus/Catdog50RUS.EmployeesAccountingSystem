@@ -32,7 +32,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
         /// </summary>
         /// <param name="employee"></param>
         /// <returns></returns>
-        public async Task<bool> InsertEmployeeAsync(EmployeesBase employee)
+        public async Task<bool> InsertEmployeeAsync(BaseEmployee employee)
         {
             //Проверяем входные параметры на null
             if (employee != null)
@@ -58,7 +58,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
         /// Получить всех сотрудников
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<EmployeesBase>> GetAllEmployeeAsync()
+        public async Task<IEnumerable<BaseEmployee>> GetAllEmployeeAsync()
         {
             return await _employeeRepository.GetEmployeesListAsync();
         }
@@ -68,7 +68,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public async Task<EmployeesBase> GetEmployeeByName(string name)
+        public async Task<BaseEmployee> GetEmployeeByName(string name)
         {
             return await _employeeRepository.GetEmployeeByNameAsync(name);
         }

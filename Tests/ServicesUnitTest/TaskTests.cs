@@ -36,7 +36,7 @@ namespace ServicesUnitTest
             {
                 IdTask = idTask,
                 Date = DateTime.Now,
-                Person = testPerson,
+                //Employee = testPerson,
                 TaskName = "Тестовое задание",
                 Time = time
             };

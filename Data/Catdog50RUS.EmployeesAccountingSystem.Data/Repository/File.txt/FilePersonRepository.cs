@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
+namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt
 {
     /// <summary>
     /// Реализация доступа к данным сотрудников из файла
@@ -17,6 +17,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
         /// Хранилище данных о сотрудниках
         /// </summary>
         private static readonly string filename = FileSettings.PERSONSFILENAME;
+
+        public bool IsFirstRun { get; internal set; }
+
         /// <summary>
         /// Используем конструктор базового класса
         /// В конструктор базового класса передаем имя файла с данными
@@ -41,7 +44,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
             {
                 //Создаем экземпляр класса StreamReader, 
                 //передаем в него полное имя файла с данными и кодировку
-                using StreamReader sr = new StreamReader(FileName, Encoding.Default);
+                using StreamReader sr = new StreamReader(FileName, Encoding.UTF8);
                 string line = null;
 
                 //Считываем данные построчно, до тех пор пока очередная строка не окажется пустой
@@ -50,7 +53,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
                     //Объявляем строковый массив и передаем в него строку с данными
                     //Массив заполняется данными, каждый элемент массива разделяется знаком ";"
                     //Исходя из структуры данных преобразуем string в элементы модели
-                    var personModel = line.Split(';');
+                    var personModel = line.Split(',');
                     Person person = new Person()
                     {
                         IdPerson = Guid.Parse(personModel[0]),

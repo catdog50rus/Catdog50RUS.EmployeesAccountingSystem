@@ -19,7 +19,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         /// <summary>
         /// Внедрение сервиса работы с задачами
         /// </summary>
-        private ICompletedTask CompletedTasksService { get; } = new CompletedTasksService();
+        private ICompletedTaskLogs CompletedTasksService { get; } = new CompletedTasksService();
 
         private ISettingsRepository Settings { get; } = new ReportSettingsService();
 
@@ -194,7 +194,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             if(task != null)
             {
                 //Добавляем задачу в хранилище и проверяем результат операции
-                var result =  await CompletedTasksService.AddNewTask(task);
+                var result =  await CompletedTasksService.AddNewTaskLog(task);
                 if (result)
                 {
                     ShowOnConsole.ShowNewTask(task);

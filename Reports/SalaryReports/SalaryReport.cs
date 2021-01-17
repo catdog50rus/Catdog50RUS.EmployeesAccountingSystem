@@ -31,7 +31,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         /// <summary>
         /// Внедрение сервиса работы с задачами
         /// </summary>
-        private ICompletedTask CompletedTasksService { get; } = new CompletedTasksService();
+        private ICompletedTaskLogs CompletedTasksService { get; } = new CompletedTasksService();
 
         /// <summary>
         /// Должность сотрудника
@@ -92,7 +92,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         private async Task<SalaryReportModel> GetPersonTasksList(Person person, (DateTime, DateTime) period)
         {
             //Получаем список выполненных задач сотрудником
-            var result = await CompletedTasksService.GetPersonTask(person.IdPerson, period.Item1, period.Item2);
+            var result = await CompletedTasksService.GetEmployeeTaskLogs(person.IdPerson, period.Item1, period.Item2);
             if (result != null)
             {
                 //Суммарное время
@@ -114,18 +114,18 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         {
             var result = new List<SalaryReportModel>();
             //Получаем список выполненных задач за месяц и проверяем его на null
-            var list = await CompletedTasksService.GetCompletedTask(period.Item1, period.Item2);
+            var list = await CompletedTasksService.GetCompletedTaskLogs(period.Item1, period.Item2);
             if (list != null)
             {
                 //Группируем полученный список по сотрудникам и отбираем ID сотрудника и и время
-                var query = list.GroupBy(p=>p.Person.IdPerson).Select(l => new { ID = l.Key, Times = l.Sum(t => t.Time) }) ;
+                var query = list.GroupBy(p=>p.Employee.Id).Select(l => new { ID = l.Key, Times = l.Sum(t => t.Time) }) ;
 
                 foreach (var item in query)
                 {
                     //Получаем сотрудника по ID
-                    var person = list.Select(p => p.Person).FirstOrDefault(p => p.IdPerson == item.ID);
+                    var person = list.Select(p => p.Employee).FirstOrDefault(p => p.Id == item.ID);
                     //Получаем список задач по Сотруднику
-                    var taskslist = list.Where(p => p.Person.IdPerson == item.ID).ToList();
+                    var taskslist = list.Where(p => p.Employee.Id == item.ID).ToList();
                     //Получаем базовую ставку сотрудника
                     BaseSalary = person.BaseSalary;
                     //Получаем должность сотрудника
@@ -133,7 +133,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
                     //Получаем оплату
                     decimal salary = GetSalary(item.Times);
                     //Добавляем полученные данные в итоговую коллекцию
-                    result.Add(new SalaryReportModel(person, item.Times, salary, taskslist));
+                    //result.Add(new SalaryReportModel(person, item.Times, salary, taskslist));
                 }
                 return result;
             }

@@ -12,7 +12,7 @@ namespace ServicesUnitTest
     {
         Person testPerson;
         CompletedTask testTask;
-        CompletedTasksService service;
+        CompletedTasksLogsService service;
         Guid id = Guid.Parse("8cfca3cc-e79b-43be-881f-91d3a7ddf27f");
         Guid idTask = Guid.Parse("8cfca3cc-e79b-4444-881f-91d3a7ddf27f");
         readonly double time = 180;
@@ -36,7 +36,7 @@ namespace ServicesUnitTest
             {
                 IdTask = idTask,
                 Date = DateTime.Now,
-                Person = testPerson,
+                //Employee = testPerson,
                 TaskName = "Тестовое задание",
                 Time = time
             };
@@ -47,14 +47,14 @@ namespace ServicesUnitTest
         [TestMethod]
         public async Task A_AddNewTaskTest()
         {
-            var res = await service.AddNewTask(testTask);
+            var res = await service.AddNewTaskLog(testTask);
             Assert.IsTrue(res);
         }
 
         [TestMethod]
         public async Task B_GetPersonTaskPersonTest()
         {
-            var res = await service.GetPersonTask(testPerson.IdPerson, period.Item1, period.Item2);
+            var res = await service.GetEmployeeTaskLogs(testPerson.IdPerson, period.Item1, period.Item2);
             var task = res.FirstOrDefault(p => p.IdTask == testTask.IdTask);
 
             Assert.AreEqual(idTask, task.IdTask);
@@ -63,7 +63,7 @@ namespace ServicesUnitTest
         [TestMethod]
         public async Task C_GetPersonTaskPeriodTest()
         {
-            var res = await service.GetPersonTask(testPerson.IdPerson, period.Item1, period.Item2);
+            var res = await service.GetEmployeeTaskLogs(testPerson.IdPerson, period.Item1, period.Item2);
             var task = res.FirstOrDefault(p => p.Date >= DateTime.Today);
 
             Assert.AreEqual(idTask, task.IdTask);

@@ -30,7 +30,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
 
         public string ToFile()
         {
-            return $"{IdPerson};{NamePerson};{SurnamePerson};{Department};{Positions};{BaseSalary}";
+            return $"{IdPerson},{NamePerson},{SurnamePerson},{Department},{Positions},{BaseSalary}";
         }
 
         public string ToInsert()

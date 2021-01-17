@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
+namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt
 {
     /// <summary>
     /// Реализация доступа к данным выполненных задач из файла
     /// </summary>
-    public class FileCompletedTaskRepository : FileBase, ICompletedTaskRepository
+    public class FileCompletedTaskRepository : FileBase, ICompletedTasksLogRepository
     {
         /// <summary>
         /// Хранилище данных о затраченном времени на выполнение задач
@@ -35,7 +35,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
         /// Асинхронное добавление выполненной задачи
         /// </summary>
         /// <returns></returns>
-        public async Task<CompletedTask> AddCompletedTask(CompletedTask task)
+        public async Task<CompletedTask> InsertCompletedTaskAsync(CompletedTask task)
         {
             //Проверяем входные данные на null
             if (task != null)
@@ -65,7 +65,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
         /// Получить список всех выполненных задач
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<CompletedTask>> GetCompletedTasksList()
+        public async Task<IEnumerable<CompletedTask>> GetCompletedTasksListAsync()
         {
             //Создаем новый список выполненных задач
             List<CompletedTask> result = new List<CompletedTask>();
@@ -96,7 +96,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
                     {
                         IdTask = Guid.Parse(model[0]),
                         Date = DateTime.Parse(model[1]),
-                        Person = person,
+                        //Employee = person,
                         Time = double.Parse(model[3]),
                         TaskName = model[4],
                     };
@@ -123,7 +123,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
         /// <param name="beginDate"></param>
         /// <param name="lastDate"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<CompletedTask>> GetPersonsTaskListAsync(Guid personID, 
+        public async Task<IEnumerable<CompletedTask>> GetEmployeeTasksListAsync(Guid personID, 
                                                                               DateTime beginDate, 
                                                                               DateTime lastDate)
         {
@@ -133,8 +133,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
             //Проверяем, есть ли в списке задачи, выполненные заданным сотрудником
             //Если задач нет выходим из метода, возвращаем null
             //Иначе передаем в результирующий список все задачи сотрудника
-            if (tasksList.FirstOrDefault(p => p.Person.IdPerson == personID) != null)
-                return tasksList.Where(p => p.Person.IdPerson == personID);
+            ////if (tasksList.FirstOrDefault(p => p.Employee.IdPerson == personID) != null)
+            //    return tasksList.Where(p => p.Employee.IdPerson == personID);
             else
                 return null;
         }
@@ -144,7 +144,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File
                                                                               DateTime lastDate)
         {
             //Получаем список всех задач
-            var tasksList = await GetCompletedTasksList();
+            var tasksList = await GetCompletedTasksListAsync();
 
             //Проверяем, есть ли в списке задачи, выполненные в указанную дату или позднее
             //Если задач нет выходим из метода, возвращаем null

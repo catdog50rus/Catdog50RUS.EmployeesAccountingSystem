@@ -24,11 +24,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// Асинхронное добавление выполненной задачи
         /// </summary>
         /// <returns></returns>
-        public async Task<CompletedTask> InsertCompletedTaskAsync(CompletedTask taskLog)
+        public async Task<bool> InsertCompletedTaskAsync(CompletedTask taskLog)
         {
             //Проверяем входные данные на null
             if (taskLog == null)
-                return null;
+                return false;
             try
             {
                 //Преобразуем задачу в строку используя модель
@@ -38,14 +38,17 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
                 using StreamWriter sw = new StreamWriter(FileName, true);
                 //Записываем в файл строку
                 await sw.WriteLineAsync(line);
-                return taskLog;
+                return true;
             }
             catch (Exception)
             {
                 //TODO Дописать обработчик исключений
+                return false;
                 throw;
+                
             }
         }
+
         /// <summary>
         /// Получить список всех выполненных задач
         /// </summary>
@@ -65,14 +68,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
                 //Получаем сотрудника по id
                 BaseEmployee employee = await _employeeRepository.GetEmployeeByIdAsync(id);
                 //Заполняем модель
-                CompletedTask task = new CompletedTask()
-                {
-                    IdTask = Guid.Parse(model[0]),
-                    Date = DateTime.Parse(model[1]),
-                    Employee = employee,
-                    Time = double.Parse(model[3]),
-                    TaskName = model[4],
-                };
+                CompletedTask task = new CompletedTask(Guid.Parse(model[0]), employee, DateTime.Parse(model[1]), double.Parse(model[3]), model[4]);
                 //Проверяем полученную модель на null и добавляем в результирующий список
                 if (task != null)
                     result.Add(task);

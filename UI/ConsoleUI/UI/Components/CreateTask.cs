@@ -49,7 +49,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
             string taskName = InputParameters.InputStringParameter("Введите наименование задачи");
             double time = InputParameters.InputDoubleParameter("Введите затраченное время в часах (например: 3,5)");
             //Возвращаем задачу
-            return new CompletedTask(person, date, time, taskName);
+            return new CompletedTask();//(person, date, time, taskName);
         }
 
         private static async Task<Person> SelectPerson()

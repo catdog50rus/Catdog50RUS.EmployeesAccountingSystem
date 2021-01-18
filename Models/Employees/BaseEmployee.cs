@@ -12,6 +12,15 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
         public Positions Positions { get; set; }
         public decimal BaseSalary { get; set; }
 
+        public BaseEmployee(string name, string surname, Departments dep, decimal baseSalary)
+        {
+            Id = Guid.NewGuid();
+            NamePerson = name;
+            SurnamePerson = surname;
+            Department = dep;
+            BaseSalary = baseSalary;
+        }
+
         public BaseEmployee(string name, string surname, Departments dep, Positions pos, decimal baseSalary)
         {
             Id = Guid.NewGuid();
@@ -22,13 +31,19 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
             BaseSalary = baseSalary;
         }
 
-        public BaseEmployee(Guid id, string name, string surname, Departments dep, Positions pos, decimal baseSalary) : 
+        public BaseEmployee(Guid id, string name, string surname, Departments dep, decimal baseSalary) : 
+                        this(name, surname, dep, baseSalary)
+        {
+            Id = id;
+        }
+
+        public BaseEmployee(Guid id, string name, string surname, Departments dep, Positions pos, decimal baseSalary) :
                         this(name, surname, dep, pos, baseSalary)
         {
             Id = id;
         }
 
-        
+
 
 
         public override string ToString() => $"{NamePerson} {SurnamePerson}";

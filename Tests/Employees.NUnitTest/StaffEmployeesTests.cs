@@ -30,11 +30,11 @@ namespace Employees.NUnitTest
         {
             //arrange
 
-            var staffEmployee = new StaffEmployee(name, surname, department, position, baseSalary);
+            var staffEmployee = new StaffEmployee(name, surname, department, baseSalary);
             var employeeRepositoryMock = new Mock<IEmployeeRepository>();
             employeeRepositoryMock
                 .Setup(x => x.InsertEmployeeAsync(staffEmployee))
-                .ReturnsAsync(() => new StaffEmployee(Guid.NewGuid(), name, surname, department, position, baseSalary));
+                .ReturnsAsync(() => new StaffEmployee(Guid.NewGuid(), name, surname, department, baseSalary));
 
             var service = new EmployeeService(employeeRepositoryMock.Object);
 
@@ -63,14 +63,14 @@ namespace Employees.NUnitTest
                                                          Positions position,
                                                          decimal baseSalary)
         {
-            var staffEmployee = new StaffEmployee(name, surname, department, position, baseSalary);
+            var staffEmployee = new StaffEmployee(name, surname, department, baseSalary);
             var employeeRepositoryMock = new Mock<IEmployeeRepository>();
             employeeRepositoryMock
                 .Setup(x => x.InsertEmployeeAsync(staffEmployee))
-                .ReturnsAsync(() => new StaffEmployee(Guid.NewGuid(), name, surname, department, position, baseSalary));
+                .ReturnsAsync(() => new StaffEmployee(Guid.NewGuid(), name, surname, department, baseSalary));
             employeeRepositoryMock
                 .Setup(x => x.GetEmployeesListAsync())
-                .ReturnsAsync(() => new List<BaseEmployee> { new StaffEmployee(Guid.NewGuid(), name, surname, department, position, baseSalary) });
+                .ReturnsAsync(() => new List<BaseEmployee> { new StaffEmployee(Guid.NewGuid(), name, surname, department, baseSalary) });
 
             var service = new EmployeeService(employeeRepositoryMock.Object);
 
@@ -105,7 +105,7 @@ namespace Employees.NUnitTest
             var employeeRepositoryMock = new Mock<IEmployeeRepository>();
             employeeRepositoryMock
                 .Setup(x => x.GetEmployeeByNameAsync(name))
-                .ReturnsAsync(() => new StaffEmployee(Guid.NewGuid(), name, surname, department, position, baseSalary))
+                .ReturnsAsync(() => new StaffEmployee(Guid.NewGuid(), name, surname, department, baseSalary))
                 .Verifiable();
 
             var service = new EmployeeService(employeeRepositoryMock.Object);
@@ -132,10 +132,10 @@ namespace Employees.NUnitTest
 
             employeeRepositoryMock
                 .Setup(x => x.GetEmployeeByNameAsync(name))
-                .ReturnsAsync(() => new StaffEmployee(Guid.NewGuid(), name, surname, department, position, baseSalary));
+                .ReturnsAsync(() => new StaffEmployee(Guid.NewGuid(), name, surname, department, baseSalary));
             employeeRepositoryMock
                 .Setup(x => x.GetEmployeesListAsync())
-                .ReturnsAsync(() => new List<BaseEmployee> { new StaffEmployee(Guid.NewGuid(), name, surname, department, position, baseSalary) });
+                .ReturnsAsync(() => new List<BaseEmployee> { new StaffEmployee(Guid.NewGuid(), name, surname, department, baseSalary) });
 
             var service = new AutorizeService(employeeRepositoryMock.Object);
             

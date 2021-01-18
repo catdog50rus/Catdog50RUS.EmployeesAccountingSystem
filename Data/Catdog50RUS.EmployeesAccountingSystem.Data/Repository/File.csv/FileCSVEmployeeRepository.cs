@@ -48,13 +48,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
                 switch (position)
                 {
                     case Positions.Developer:
-                        employee = new StaffEmployee(id, name, surnamePerson, department, position, salary);
+                        employee = new StaffEmployee(id, name, surnamePerson, department, salary);
                         break;
                     case Positions.Director:
-                        employee = new StaffEmployee(id, name, surnamePerson, department, position, salary);
+                        employee = new StaffEmployee(id, name, surnamePerson, department, salary);
                         break;
                     case Positions.Freelance:
-                        employee = new StaffEmployee(id, name, surnamePerson, department, position, salary);
+                        employee = new StaffEmployee(id, name, surnamePerson, department, salary);
                         break;
                     default:
                         break;

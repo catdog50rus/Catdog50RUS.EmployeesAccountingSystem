@@ -156,5 +156,28 @@ namespace Employees.NUnitTest
             Assert.IsFalse(resultFalse);
         }
 
+        
+        //Получение списка сотрудников
+        [Test]
+        public void E_GetAllEmployeesList_ShouldReturnEmployeesList()
+        {
+            var expactedListCount = 3;
+
+            var expactedDirectorEmployee = new DirectorEmployee("Александр", "Александров", Departments.Managment, 200_000);
+            var expactedStaffEmployee = new StaffEmployee("Алексей", "Алексеев", Departments.IT, 100_000);
+            var expactedFreelancerEmployee = new FreeLancerEmployee("Николай", "Николаев", Departments.IT, 1_000);
+
+            var result = _service.GetAllEmployeeAsync().Result.ToList();
+
+            _repository.Verify(method => method.GetEmployeesListAsync(), Times.Once);
+
+            Assert.AreEqual(expactedListCount, result.Count());
+            Assert.AreEqual(expactedStaffEmployee, result[0]);
+            Assert.AreEqual(expactedFreelancerEmployee, result[1]);
+            Assert.AreEqual(expactedDirectorEmployee, result[2]);
+
+
+        }
+
     }
 }

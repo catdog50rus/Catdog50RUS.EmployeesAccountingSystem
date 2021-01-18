@@ -38,7 +38,7 @@ namespace Employees.NUnitTest
         }
 
         [Test]
-        public void CreateEmployee_ShouldReturnNewEmployee()
+        public void _CreateEmployee_ShouldReturnNewEmployee()
         {
             var directorNew = new DirectorEmployee("Александр", "Александров", Departments.Managment, 200_000);
             var directorGet = new DirectorEmployee(Guid.NewGuid(), "Александр", "Александров", Departments.Managment, 200_000);
@@ -77,25 +77,28 @@ namespace Employees.NUnitTest
 
         [Test]
         //Добавление нового сотрудника
-        public void A_InsertNewDirector_ShouldReturnTrue()
+        public void A_InsertNewEmployee_ShouldReturnBoolResult()
         {
             _repository
                 .Setup(method => method.InsertEmployeeAsync(_director))
                 .ReturnsAsync(_director)
                 .Verifiable();
 
-            var result = _service.InsertEmployeeAsync(_director).Result;
+            var resultTrue = _service.InsertEmployeeAsync(_director).Result;
+            var resultFalse = _service.InsertEmployeeAsync(null).Result;
 
             _repository.Verify(method => method.GetEmployeesListAsync(), Times.Once);
             _repository.Verify(method => method.InsertEmployeeAsync(_director), Times.Once);
+            _repository.Verify(method => method.InsertEmployeeAsync(null), Times.Never);
 
-            Assert.IsTrue(result);
+            Assert.IsTrue(resultTrue);
+            Assert.IsFalse(resultFalse);
 
         }
 
         [Test]
         //Добавление существующего сотрудника
-        public void B_InsertMoreThenOneNewDirector_ShouldReturnTrue()
+        public void B_InsertMoreThenOneEmployee_ShouldReturnFalse()
         {
             _repository
                 .Setup(method => method.GetEmployeesListAsync())
@@ -113,5 +116,45 @@ namespace Employees.NUnitTest
             Assert.IsFalse(result);
 
         }
+
+        [Test]
+        //Удаление существующего сотрудника
+        public void C_DeleteEmployeeByName_ShouldReturnBoolResults()
+        {
+            _repository
+                .Setup(method => method.DeleteEmployeeByNameAsync("Алексей"))
+                .ReturnsAsync(new StaffEmployee("Алексей", "Алексеев", Departments.IT, 100_000));
+
+            var resultTrue = _service.DeleteEmployeeByNameAsync("Алексей").Result;
+
+            var resultFalseEmpty = _service.DeleteEmployeeByNameAsync("").Result;
+
+            var resultFalseNull = _service.DeleteEmployeeByNameAsync(null).Result;
+
+            _repository.Verify(method => method.DeleteEmployeeByNameAsync("Алексей"), Times.Once);
+            _repository.Verify(method => method.DeleteEmployeeByNameAsync(""), Times.Never);
+            _repository.Verify(method => method.DeleteEmployeeByNameAsync(" "), Times.Never);
+            _repository.Verify(method => method.DeleteEmployeeByNameAsync(null), Times.Never);
+
+            Assert.IsTrue(resultTrue);
+            Assert.IsFalse(resultFalseEmpty);
+            Assert.IsFalse(resultFalseNull);
+
+        }
+
+        [Test]
+        //Удаление несуществующего сотрудника
+        public void D_DeleteEmployeeByName_ShouldReturnFalse()
+        {
+            _repository
+                .Setup(method => method.DeleteEmployeeByNameAsync("Евгений"))
+                .ReturnsAsync(() => null);
+
+            var resultFalse = _service.DeleteEmployeeByNameAsync("Евгений").Result;
+
+            _repository.Verify(method => method.DeleteEmployeeByNameAsync("Евгений"), Times.Once);
+            Assert.IsFalse(resultFalse);
+        }
+
     }
 }

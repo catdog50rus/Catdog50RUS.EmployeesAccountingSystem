@@ -88,6 +88,23 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
             else
                 return false;
         }
+        /// <summary>
+        /// Удалить сотрудника по имени
+        /// </summary>
+        public async Task<bool> DeleteEmployeeByNameAsync(string name)
+        {
+            //Проверяем имя на пустое значение или null
+            if (string.IsNullOrWhiteSpace(name))
+                return false;
+            
+            //Пробуем удалить сотрудника из хранилища
+            var result = await _employeeRepository.DeleteEmployeeByNameAsync(name);
+            //Если результат не null возвращаем true, иначе false
+            if (result != null)
+                return true;
+            else
+                return false;
+        }
 
         #endregion
 

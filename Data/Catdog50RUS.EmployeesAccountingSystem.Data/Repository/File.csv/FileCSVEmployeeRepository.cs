@@ -128,6 +128,55 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         }
 
         /// <summary>
+        /// Удаление сотрудника из файла данных по имени
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public async Task<BaseEmployee> DeleteEmployeeByNameAsync(string name)
+        {
+            //Получаем коллекцию всех сотрудников
+            var employeesList = await GetEmployeesListAsync();
+            //Находим удаляемого сотрудника по id  и проверяем, существует ли такой сотрудник
+            var deleteEmployee = employeesList.FirstOrDefault(p => p.NamePerson.Equals(name));
+            if (deleteEmployee == null)
+                return null;
+
+            //Создаем результирующий список и удаляем из него сотрудника
+            List<BaseEmployee> resultlist = employeesList.ToList();
+            resultlist.Remove(deleteEmployee);
+
+            //Удаляем файл с данными сотрудников
+            try
+            {
+                //Сохраним копию текущего файла с данными
+                //Получим имя сохраненного файла
+                string savefile = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).FullName,
+                                                   $"{Path.GetFileNameWithoutExtension(FileName)}_save.csv");
+                //Копируем текущий файл
+                new FileInfo(FileName).CopyTo(savefile);
+                //И удаляем его
+                new FileInfo(FileName).Delete();
+
+                //Записываем результирующий список сотрудников в новый файл
+                foreach (var item in resultlist)
+                {
+                    await InsertEmployeeAsync(item);
+                }
+
+                //Если ошибок не пришло удаляем временный файл
+                new FileInfo(savefile).Delete();
+                return deleteEmployee;
+
+            }
+            //TODO Дописать обработчик исключений
+            catch (Exception)
+            {
+                return null;
+                throw new Exception($"Ошибка блока FileCSVEmployeeRepository, метод DeleteEmployeeAsync");
+            }
+        }
+
+        /// <summary>
         /// Получить сотрудника по имени
         /// </summary>
         /// <param name="name"></param>

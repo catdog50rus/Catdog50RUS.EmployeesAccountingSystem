@@ -95,8 +95,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             //Проверяем, есть ли в списке задачи, выполненные заданным сотрудником
             //Если задач нет выходим из метода, возвращаем null
             //Иначе передаем в результирующий список все задачи сотрудника
-            if (tasksList.FirstOrDefault(p => p.Employee.Id == employeeID) != null)
-                return tasksList.Where(p => p.Employee.Id == employeeID);
+            if (tasksList.FirstOrDefault(p => p.IdEmployee == employeeID) != null)
+                return tasksList.Where(p => p.IdEmployee == employeeID);
             else
                 return null;
         }

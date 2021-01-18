@@ -1,6 +1,6 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Repository;
-using Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
+using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,15 +17,58 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// Внедрение зависимости через интерфейс
         /// </summary>
         private readonly ICompletedTasksLogRepository _tasksRepository;
+
+        private readonly Autorize _autorize;
+
         /// <summary>
         /// Конструктор
         /// </summary>
-        public CompletedTasksLogsService(ICompletedTasksLogRepository repository)
+        public CompletedTasksLogsService(ICompletedTasksLogRepository repository, Autorize autorize)
         {
             _tasksRepository = repository;
+            if (autorize != null)
+                _autorize = autorize;
         }
 
         #region Interface
+
+        public CompletedTask CreateNewTask(DateTime date, BaseEmployee employee, string taskname, double time)
+        {
+            //Первичная валидация данных
+            if (employee == null ||
+                string.IsNullOrWhiteSpace(taskname) ||
+                time <= 0 || time > 24 ||
+                date > DateTime.Now.AddDays(1))
+            {
+                return null;
+            }
+            bool isValid = default;
+
+            switch (_autorize.UserRole)
+            {
+                case Role.Freelancer:
+                    isValid = employee.GetType().Equals(typeof(FreeLancerEmployee)) && 
+                              (date.Date >= DateTime.Now.Date.AddDays(-2));
+                    break;
+                case Role.Developer:
+                    isValid = employee.GetType().Equals(typeof(StaffEmployee));
+                    break;
+                default:
+                    break;
+                    
+            }
+            if (!isValid)
+                return null;
+
+            return new CompletedTask
+            {
+                IdTask = Guid.NewGuid(),
+                Date = date,
+                IdEmployee = employee.Id,
+                TaskName = taskname,
+                Time = time
+            };
+        }
 
         /// <summary>
         /// Добавить новую задачу
@@ -62,7 +105,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
             else
                 return null;
         }
-       
         public async Task<IEnumerable<CompletedTask>> GetCompletedTaskLogs(DateTime startday, DateTime stopday)
         {
             if (ValidateData(startday, stopday))

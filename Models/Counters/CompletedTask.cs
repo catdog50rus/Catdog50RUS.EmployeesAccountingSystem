@@ -6,7 +6,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
     public class CompletedTask
     {
         public Guid IdTask { get; set; }
-        public BaseEmployee Employee { get; set; }
+        public Guid IdEmployee { get; set; }
         public DateTime Date { get; set; }
         public double Time { get; set; }
         public string TaskName { get; set; }
@@ -25,7 +25,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
 
         public CompletedTask(BaseEmployee employee, DateTime date, double time, string task) : this(date, time, task)
         {
-            Employee = employee ?? throw new ArgumentNullException(employee.ToString(), "Ошибка сотрудника");
+            IdEmployee = employee != null? employee.Id: throw new ArgumentNullException(employee.ToString(), "Ошибка сотрудника");
         }
 
         public CompletedTask(Guid id, BaseEmployee employee, DateTime date, double time, string task) : this(employee, date, time, task)
@@ -40,7 +40,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
 
         public string ToFile()
         {
-            return $"{IdTask};{Date};{Employee.Id};{Time};{TaskName}";
+            return $"{IdTask};{Date};{IdEmployee};{Time};{TaskName}";
         }
 
         public string ToDisplay()

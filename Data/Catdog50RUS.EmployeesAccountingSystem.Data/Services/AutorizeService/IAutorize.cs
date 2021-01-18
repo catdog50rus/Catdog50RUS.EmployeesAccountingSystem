@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.AutorizeService
 {
     public interface IAutorize
-    {
+    { 
+        Task<BaseEmployee> AutentificatedUser(string name);
         Autorize GetAuthorization(BaseEmployee employee);
-        Task<BaseEmployee> Autentificate(string name);
+       
     }
 
 }

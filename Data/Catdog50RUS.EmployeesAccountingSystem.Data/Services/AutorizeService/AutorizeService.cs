@@ -1,7 +1,6 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Repository;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
 using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
-using Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService;
 using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.AutorizeService
@@ -15,15 +14,17 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.AutorizeService
             _employeesRepository = employeeRepository;
         }
 
-        public async Task<BaseEmployee> Autentificate(string name)
+
+        #region Interface
+
+        public async Task<BaseEmployee> AutentificatedUser(string name)
         {
-            if (string.IsNullOrEmpty(name)||string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
                 return null;
-            var service = new EmployeeService.EmployeeService(_employeesRepository);
-            var employee = await service.GetEmployeeByNameAsync(name);
+            var employee = await _employeesRepository.GetEmployeeByNameAsync(name);
             if (employee == null)
                 return null;
-         
+
             return employee;
         }
 
@@ -36,23 +37,23 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.AutorizeService
             switch (position)
             {
                 case Positions.Developer:
-                    role = Role.User;
+                    role = Role.Developer;
                     break;
                 case Positions.Director:
                     role = Role.Director;
                     break;
                 case Positions.Freelance:
-                    role = Role.User;
+                    role = Role.Freelancer;
                     break;
                 default:
                     break;
             }
-            
-            return new Autorize
-            {
-                IsAutentificated = true,
-                AutorizeRole = role
-            };
+
+            return new Autorize(role, employee.Id);
+
         }
+       
+        #endregion
+
     }
 }

@@ -119,41 +119,5 @@ namespace Employees.NUnitTest
             Assert.AreEqual(name, result.Result.NamePerson);
         }
 
-        [TestCase("Вася", "Иванов", Departments.IT, Positions.Developer, 200000)]
-        public void D_AutorizeStaffEmployee_ShouldReturnAutorize(string name,
-                                                         string surname,
-                                                         Departments department,
-                                                         Positions position,
-                                                         decimal baseSalary)
-        {
-            //arrange
-
-            var employeeRepositoryMock = new Mock<IEmployeeRepository>();
-
-            employeeRepositoryMock
-                .Setup(x => x.GetEmployeeByNameAsync(name))
-                .ReturnsAsync(() => new StaffEmployee(Guid.NewGuid(), name, surname, department, baseSalary));
-            employeeRepositoryMock
-                .Setup(x => x.GetEmployeesListAsync())
-                .ReturnsAsync(() => new List<BaseEmployee> { new StaffEmployee(Guid.NewGuid(), name, surname, department, baseSalary) });
-
-            var service = new AutorizeService(employeeRepositoryMock.Object);
-            
-            
-
-            //act
-            var autenteficatedUser = service.Autentificate(name).Result;
-            var autorize = service.GetAuthorization(autenteficatedUser);
-
-
-            //assert
-
-            Assert.AreEqual(name, autenteficatedUser.NamePerson);
-            Assert.AreEqual(true, autorize.IsAutentificated);
-            Assert.AreEqual(Role.User, autorize.AutorizeRole);
-
-        }
-
-
     }
 }

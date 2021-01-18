@@ -20,7 +20,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.AutorizeService
             if (string.IsNullOrEmpty(name)||string.IsNullOrWhiteSpace(name))
                 return null;
             var service = new EmployeeService.EmployeeService(_employeesRepository);
-            var employee = await service.GetEmployeeByName(name);
+            var employee = await service.GetEmployeeByNameAsync(name);
             if (employee == null)
                 return null;
          

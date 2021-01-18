@@ -155,7 +155,6 @@ namespace Employees.NUnitTest
             _repository.Verify(method => method.DeleteEmployeeByNameAsync("Евгений"), Times.Once);
             Assert.IsFalse(resultFalse);
         }
-
         
         //Получение списка сотрудников
         [Test]
@@ -175,8 +174,46 @@ namespace Employees.NUnitTest
             Assert.AreEqual(expactedStaffEmployee, result[0]);
             Assert.AreEqual(expactedFreelancerEmployee, result[1]);
             Assert.AreEqual(expactedDirectorEmployee, result[2]);
+        }
 
+        //Получение сотрудника по имени
+        [Test]
+        public void GetEmployeeByName_ShouldReturnNewEmployee()
+        {
+            string name = "Алексей";
+            _repository
+                .Setup(method => method.GetEmployeeByNameAsync(name))
+                .ReturnsAsync(() => new StaffEmployee("Алексей", "Алексеев", Departments.IT, 100_000))
+                .Verifiable();
 
+            var result = _service.GetEmployeeByNameAsync(name).Result;
+            var resultFalseNull = _service.GetEmployeeByNameAsync(null).Result;
+            var resultFalseEmpty = _service.GetEmployeeByNameAsync("").Result;
+
+            _repository.Verify(method => method.GetEmployeeByNameAsync(name), Times.Once);
+            _repository.Verify(method => method.GetEmployeeByNameAsync(null), Times.Never);
+            _repository.Verify(method => method.GetEmployeeByNameAsync(" "), Times.Never);
+
+            Assert.AreEqual(name, result.NamePerson);
+            Assert.IsNull(resultFalseNull);
+            Assert.IsNull(resultFalseEmpty);
+        }
+
+        //Получение не существующего сотрудника по имени
+        [Test]
+        public void GetEmployeeByName_ShouldReturnNull()
+        {
+            string name = "Евгений";
+            _repository
+                .Setup(method => method.GetEmployeeByNameAsync(name))
+                .ReturnsAsync(() => null)
+                .Verifiable();
+
+            var result = _service.GetEmployeeByNameAsync(name).Result;
+
+            _repository.Verify(method => method.GetEmployeeByNameAsync(name), Times.Once);
+
+            Assert.IsNull(result);
         }
 
     }

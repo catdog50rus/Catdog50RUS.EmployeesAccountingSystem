@@ -112,7 +112,7 @@ namespace Employees.NUnitTest
 
 
             //act
-            var result = service.GetEmployeeByName(name);
+            var result = service.GetEmployeeByNameAsync(name);
 
             //assert
             employeeRepositoryMock.VerifyAll();

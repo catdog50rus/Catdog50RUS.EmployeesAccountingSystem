@@ -68,8 +68,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public async Task<BaseEmployee> GetEmployeeByName(string name)
+        public async Task<BaseEmployee> GetEmployeeByNameAsync(string name)
         {
+            //Проверяем входной параметр на пустоту и null
+            if (string.IsNullOrWhiteSpace(name))
+                return null;
+
             return await _employeeRepository.GetEmployeeByNameAsync(name);
         }
 

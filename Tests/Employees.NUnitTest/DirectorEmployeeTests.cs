@@ -15,18 +15,20 @@ namespace Employees.NUnitTest
         private readonly BaseEmployee _director;
         private IEmployeeService _service;
         private Mock<IEmployeeRepository> _repository;
+        private Autorize _autorize;
 
         public DirectorEmployeeTests()
         {
-            _director = new DirectorEmployee("Петр", "Петров", Departments.Managment, 200_000);
-            
+            var id = Guid.NewGuid();
+            _director = new DirectorEmployee(id, "Петр", "Петров", Departments.Managment, 200_000);
+            _autorize = new Autorize(Role.Director, id);
         }
 
         [SetUp]
         public void TestsSetup()
         {
             _repository = new Mock<IEmployeeRepository>();
-            _service = new EmployeeService(_repository.Object);
+            _service = new EmployeeService(_repository.Object, _autorize);
 
             _repository
                 .Setup(method => method.GetEmployeesListAsync())

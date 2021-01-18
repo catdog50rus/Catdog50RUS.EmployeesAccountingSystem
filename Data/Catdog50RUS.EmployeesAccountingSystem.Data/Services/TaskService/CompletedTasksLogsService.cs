@@ -17,7 +17,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// Внедрение зависимости через интерфейс
         /// </summary>
         private readonly ICompletedTasksLogRepository _tasksRepository;
-
         private readonly Autorize _autorize;
 
         /// <summary>
@@ -42,16 +41,21 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
             {
                 return null;
             }
+
+            //Внедрение ограничений по ролям пользователей
             bool isValid = default;
 
             switch (_autorize.UserRole)
             {
-                case Role.Freelancer:
-                    isValid = employee.GetType().Equals(typeof(FreeLancerEmployee)) && 
+                case Role.Freelancer: //Может создавать логи для себя, при этом дата лога не может быть старше чем за 2 дня
+                    isValid = _autorize.UserId.Equals(employee.Id) && 
                               (date.Date >= DateTime.Now.Date.AddDays(-2));
                     break;
-                case Role.Developer:
-                    isValid = employee.GetType().Equals(typeof(StaffEmployee));
+                case Role.Developer: //Может создавать логи только за себя
+                    isValid = _autorize.UserId.Equals(employee.Id);
+                    break;
+                case Role.Director:
+                    isValid = true;
                     break;
                 default:
                     break;

@@ -180,7 +180,7 @@ namespace Employees.NUnitTest
 
         //Получение сотрудника по имени
         [Test]
-        public void GetEmployeeByName_ShouldReturnNewEmployee()
+        public void F_GetEmployeeByName_ShouldReturnNewEmployee()
         {
             string name = "Алексей";
             _repository
@@ -203,7 +203,7 @@ namespace Employees.NUnitTest
 
         //Получение не существующего сотрудника по имени
         [Test]
-        public void GetEmployeeByName_ShouldReturnNull()
+        public void G_GetEmployeeByName_ShouldReturnNull()
         {
             string name = "Евгений";
             _repository

@@ -9,18 +9,18 @@ using System.Collections.Generic;
 
 namespace Employees.NUnitTest
 {
-    class StaffEmployeeServiceTests
+    class FreelancerEmployeeServiceTests
     {
-        private readonly BaseEmployee _staff;
+        private readonly BaseEmployee _freelancer;
         private IEmployeeService _service;
         private Mock<IEmployeeRepository> _repository;
         private Autorize _autorize;
 
-        public StaffEmployeeServiceTests()
+        public FreelancerEmployeeServiceTests()
         {
             var id = Guid.NewGuid();
-            _staff = new StaffEmployee(id, "Петр", "Петров", Departments.IT, 200_000);
-            _autorize = new Autorize(Role.Developer, id);
+            _freelancer = new FreeLancerEmployee(id, "Петр", "Петров", Departments.IT, 1_000);
+            _autorize = new Autorize(Role.Freelancer, id);
         }
 
         [SetUp]
@@ -36,31 +36,31 @@ namespace Employees.NUnitTest
                                                             })
                 .Verifiable();
         }
-        
+
         //Добавление нового сотрудника
         [Test]
         public void A_InsertNewEmployee_ShouldReturnFalse()
         {
             _repository
-                .Setup(method => method.InsertEmployeeAsync(_staff))
-                .ReturnsAsync(_staff)
+                .Setup(method => method.InsertEmployeeAsync(_freelancer))
+                .ReturnsAsync(_freelancer)
                 .Verifiable();
 
-            var resultFalseAutorize = _service.InsertEmployeeAsync(_staff).Result;
+            var resultFalseAutorize = _service.InsertEmployeeAsync(_freelancer).Result;
 
-            _repository.Verify(method => method.InsertEmployeeAsync(_staff), Times.Never);
+            _repository.Verify(method => method.InsertEmployeeAsync(_freelancer), Times.Never);
 
             Assert.IsFalse(resultFalseAutorize);
 
         }
-        
+
         //Удаление существующего сотрудника
         [Test]
         public void B_DeleteEmployeeByName_ShouldReturnFalse()
         {
             _repository
                 .Setup(method => method.DeleteEmployeeByNameAsync("Алексей"))
-                .ReturnsAsync(new StaffEmployee("Алексей", "Алексеев", Departments.IT, 100_000));
+                .ReturnsAsync(new FreeLancerEmployee("Алексей", "Алексеев", Departments.IT, 100_000));
 
             var resultFalse = _service.DeleteEmployeeByNameAsync("Алексей").Result;
 
@@ -69,7 +69,7 @@ namespace Employees.NUnitTest
             Assert.IsFalse(resultFalse);
 
         }
-        
+
         //Получение списка сотрудников
         [Test]
         public void C_GetAllEmployeesList_ShouldReturnNull()
@@ -88,7 +88,7 @@ namespace Employees.NUnitTest
             string name = "Алексей";
             _repository
                 .Setup(method => method.GetEmployeeByNameAsync(name))
-                .ReturnsAsync(() => new StaffEmployee("Алексей", "Алексеев", Departments.IT, 100_000))
+                .ReturnsAsync(() => new FreeLancerEmployee("Алексей", "Алексеев", Departments.IT, 100_000))
                 .Verifiable();
 
             var result = _service.GetEmployeeByNameAsync(name).Result;

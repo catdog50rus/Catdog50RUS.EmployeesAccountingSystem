@@ -14,7 +14,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
         public DirectorEmployee(Guid id, string name, string surname, Departments dep, decimal baseSalary) 
                          : base(id, name, surname, dep, baseSalary)
         {
-            Positions = Positions.Developer;
+            Positions = Positions.Director;
         }
 
         public override decimal CalculateSamary(IEnumerable<CompletedTask> tasks)

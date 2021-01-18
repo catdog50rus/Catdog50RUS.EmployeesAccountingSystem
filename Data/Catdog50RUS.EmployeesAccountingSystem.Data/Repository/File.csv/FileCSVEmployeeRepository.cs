@@ -47,14 +47,17 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
                 BaseEmployee employee = null;
                 switch (position)
                 {
+                    case Positions.None:
+                        employee = new StaffEmployee(id, name, surnamePerson, department, position, salary);
+                        break;
                     case Positions.Developer:
                         employee = new StaffEmployee(id, name, surnamePerson, department, salary);
                         break;
                     case Positions.Director:
-                        employee = new StaffEmployee(id, name, surnamePerson, department, salary);
+                        employee = new DirectorEmployee(id, name, surnamePerson, department, salary);
                         break;
                     case Positions.Freelance:
-                        employee = new StaffEmployee(id, name, surnamePerson, department, salary);
+                        employee = new FreeLancerEmployee(id, name, surnamePerson, department, salary);
                         break;
                     default:
                         break;
@@ -131,11 +134,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// <returns></returns>
         public async Task<BaseEmployee> GetEmployeeByNameAsync(string name)
         {
+            //Получаем список всех сотрудников
             var list = await GetEmployeesListAsync();
-            if (list != null)
-                return list.FirstOrDefault(p => p.NamePerson == name);
-            else
+            //Если получаем null или пустой список, возвращаем null
+            if (list == null || list.Count()==0)
                 return null;
+            //Возвращаем результат    
+            return list.FirstOrDefault(p => p.NamePerson == name);
         }
 
         /// <summary>

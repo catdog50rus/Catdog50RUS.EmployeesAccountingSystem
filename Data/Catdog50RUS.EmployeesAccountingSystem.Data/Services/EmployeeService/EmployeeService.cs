@@ -35,23 +35,23 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
         public async Task<bool> InsertEmployeeAsync(BaseEmployee employee)
         {
             //Проверяем входные параметры на null
-            if (employee != null)
-            {
-                //Проверяем сотрудника на уникальность
-                var employeesList = await GetAllEmployeeAsync();
-                if (employeesList.ToList().Contains(employee))
-                    return false;
-                
-                //Пытаемся добавить сотрудника в хранилище, 
-                //если результат не null возвращаем true, иначе false
-                var result = await _employeeRepository.InsertEmployeeAsync(employee);
-                if (result != null)
-                    return true;
-                else
-                    return false;
-            }
+            if (employee == null)
+                return false;
+
+            //Проверяем сотрудника на уникальность
+            var employeesList = await GetAllEmployeeAsync();
+            if (employeesList.ToList().Contains(employee))
+                return false;
+
+            //Пытаемся добавить сотрудника в хранилище, 
+            //если результат не null возвращаем true, иначе false
+            var result = await _employeeRepository.InsertEmployeeAsync(employee);
+            if (result != null)
+                return true;
             else
                 return false;
+
+
         }
 
         /// <summary>

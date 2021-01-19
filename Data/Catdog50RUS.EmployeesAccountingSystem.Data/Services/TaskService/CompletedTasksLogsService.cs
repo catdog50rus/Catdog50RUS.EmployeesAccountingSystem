@@ -95,25 +95,51 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
 
         }
 
-
         /// <summary>
         /// Получить выполненные задачи пользователя
-        /// За определенный период
+        /// за определенный период
         /// </summary>
-        /// <param name="person"></param>
+        /// <param name="id"></param>
         /// <param name="startday"></param>
         /// <param name="stopday"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<CompletedTask>> GetEmployeeTaskLogs(Guid personID, DateTime startday, DateTime stopday)
+        public async Task<IEnumerable<CompletedTask>> GetEmployeeTaskLogs(Guid id, DateTime startday, DateTime stopday)
         {
-            if (ValidateData(startday, stopday))
-                return await _tasksRepository.GetEmployeeTasksListAsync(personID, startday, stopday);
+            //Первичная валидация данных
+            if (!ValidateDate(startday, stopday) || id == Guid.Empty)
+                return null;
+            //Валидация на основе прав доступа
+            bool isValid = default;
+            switch (_autorize.UserRole)
+            {
+                case Role.None:
+                    break;
+                case Role.Admin:
+                    break;
+                case Role.Director: //Полные права
+                    isValid = true;
+                    break;
+                case Role.Developer: //Может получать только свои логи
+                    isValid = _autorize.UserId.Equals(id);
+                    break;
+                case Role.Freelancer: //Может получать только свои логи
+                    isValid = _autorize.UserId.Equals(id);
+                    break;
+                default:
+                    break;
+            }
+            //Получение результата на основе валидации прав доступа
+            if (isValid)
+                return await _tasksRepository.GetEmployeeTasksListAsync(id, startday, stopday);
             else
                 return null;
+
         }
+        
+        
         public async Task<IEnumerable<CompletedTask>> GetCompletedTaskLogs(DateTime startday, DateTime stopday)
         {
-            if (ValidateData(startday, stopday))
+            if (ValidateDate(startday, stopday))
                 return await _tasksRepository.GetCompletedTasksListInPeriodAsync(startday, stopday);
             else
                 return null;
@@ -127,7 +153,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// <param name="startday"></param>
         /// <param name="stopday"></param>
         /// <returns></returns>
-        private bool ValidateData(DateTime startday, DateTime stopday)
+        private bool ValidateDate(DateTime startday, DateTime stopday)
         {
             //Проверяем, чтобы начальная дата была не больше конечной даты
             if (startday > stopday)

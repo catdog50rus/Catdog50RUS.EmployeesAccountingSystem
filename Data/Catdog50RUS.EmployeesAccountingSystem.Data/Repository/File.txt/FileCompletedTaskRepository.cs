@@ -93,12 +93,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt
                     //Получаем сотрудника по id
                     Person person = await PersonRepository.GetPersonByIdAsync(id);
                     //Заполняем модель
-                    CompletedTask task = new CompletedTask();//(Guid.Parse(model[0]), person, DateTime.Parse(model[1]), double.Parse(model[3]), model[4]);
+                    //CompletedTask task = new CompletedTask();//(Guid.Parse(model[0]), person, DateTime.Parse(model[1]), double.Parse(model[3]), model[4]);
 
-                    //Проверяем полученную модель на null и добавляем в результирующий список
-                    if (task != null)
-                        result.Add(task);
-                    model = default;
+                    ////Проверяем полученную модель на null и добавляем в результирующий список
+                    //if (task != null)
+                    //    result.Add(task);
+                    //model = default;
                 }
             }
             //TODO Дописать обработчик исключений

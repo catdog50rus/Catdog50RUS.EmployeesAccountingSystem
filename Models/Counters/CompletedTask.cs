@@ -12,23 +12,22 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
         public string TaskName { get; set; }
 
         //Временное решение
-        public CompletedTask() { }
+        //public CompletedTask() { }
 
         public CompletedTask(DateTime date, double time, string task)
         {
             IdTask = Guid.NewGuid();
-
             Date = date;
-            Time = (time > 0) ? time : throw new ArgumentException("Рабочее время должно быть положительным числом");
-            TaskName = (!string.IsNullOrEmpty(task)) ? task : throw new ArgumentException("Ошибка в наименовании задачи");
+            Time = time;
+            TaskName = task;
         }
 
-        public CompletedTask(BaseEmployee employee, DateTime date, double time, string task) : this(date, time, task)
+        public CompletedTask(Guid idEmployee, DateTime date, double time, string task) : this(date, time, task)
         {
-            IdEmployee = employee != null? employee.Id: throw new ArgumentNullException(employee.ToString(), "Ошибка сотрудника");
+            IdEmployee = idEmployee;
         }
 
-        public CompletedTask(Guid id, BaseEmployee employee, DateTime date, double time, string task) : this(employee, date, time, task)
+        public CompletedTask(Guid id, Guid idEmployee, DateTime date, double time, string task) : this(idEmployee, date, time, task)
         {
             IdTask = id;
             

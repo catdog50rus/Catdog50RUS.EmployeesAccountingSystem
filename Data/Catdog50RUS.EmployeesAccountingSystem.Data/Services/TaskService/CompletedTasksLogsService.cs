@@ -31,6 +31,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
 
         #region Interface
 
+        /// <summary>
+        /// Создание выполненной задачи
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="employee"></param>
+        /// <param name="taskname"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
         public CompletedTask CreateNewTask(DateTime date, BaseEmployee employee, string taskname, double time)
         {
             //Первичная валидация данных
@@ -44,7 +52,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
 
             //Внедрение ограничений по ролям пользователей
             bool isValid = default;
-
             switch (_autorize.UserRole)
             {
                 case Role.Freelancer: //Может создавать логи для себя, при этом дата лога не может быть старше чем за 2 дня
@@ -54,7 +61,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
                 case Role.Developer: //Может создавать логи только за себя
                     isValid = _autorize.UserId.Equals(employee.Id);
                     break;
-                case Role.Director:
+                case Role.Director: //Может создавать логи за всех
                     isValid = true;
                     break;
                 default:
@@ -64,14 +71,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
             if (!isValid)
                 return null;
 
-            return new CompletedTask
-            {
-                IdTask = Guid.NewGuid(),
-                Date = date,
-                IdEmployee = employee.Id,
-                TaskName = taskname,
-                Time = time
-            };
+            return new CompletedTask(Guid.NewGuid(), employee.Id, date,time,taskname);
         }
 
         /// <summary>

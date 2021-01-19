@@ -68,7 +68,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
                 //Получаем сотрудника по id
                 BaseEmployee employee = await _employeeRepository.GetEmployeeByIdAsync(id);
                 //Заполняем модель
-                CompletedTask task = new CompletedTask(Guid.Parse(model[0]), employee, DateTime.Parse(model[1]), double.Parse(model[3]), model[4]);
+                CompletedTask task = new CompletedTask(Guid.Parse(model[0]), employee.Id, DateTime.Parse(model[1]), double.Parse(model[3]), model[4]);
                 //Проверяем полученную модель на null и добавляем в результирующий список
                 if (task != null)
                     result.Add(task);

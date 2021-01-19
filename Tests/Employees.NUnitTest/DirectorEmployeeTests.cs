@@ -232,6 +232,7 @@ namespace Employees.NUnitTest
             Assert.IsNull(result);
         }
 
+        //Создание нового лога выполненной задачи
         [Test]
         public void H_CreateCompliteTask_ShouldReturnComplitedTask()
         {
@@ -255,6 +256,30 @@ namespace Employees.NUnitTest
             Assert.IsNull(resultNull4);
 
             Assert.IsNull(resultNull6);
+
+        }
+
+        //Добавление выполненной задачи в хранилище
+        [Test]
+        public void I_AddCompliteTask_ShouldReturnBoolResult()
+        {
+            var task1 = _serviceCompletedTaskLogs.CreateNewTask(DateTime.Now.Date.AddDays(-2), _freelancer, "Task1", 8);
+            _repositoryCompletedTaskLog
+                .Setup(method => method.InsertCompletedTaskAsync(task1))
+                .ReturnsAsync(true)
+                .Verifiable();
+
+            var result = _serviceCompletedTaskLogs.AddNewTaskLog(task1).Result;
+            var resultFalse = _serviceCompletedTaskLogs.AddNewTaskLog(null).Result;
+
+
+
+            _repositoryCompletedTaskLog.Verify(meth => meth.InsertCompletedTaskAsync(task1), Times.Once);
+            _repositoryCompletedTaskLog.Verify(meth => meth.InsertCompletedTaskAsync(null), Times.Never);
+
+            Assert.IsTrue(result);
+            Assert.IsFalse(resultFalse);
+
 
         }
 

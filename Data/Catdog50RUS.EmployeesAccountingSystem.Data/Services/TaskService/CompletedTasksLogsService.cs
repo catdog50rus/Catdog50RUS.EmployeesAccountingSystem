@@ -136,10 +136,37 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
 
         }
         
-        
+        /// <summary>
+        /// Получение логов всех пользователей
+        /// </summary>
+        /// <param name="startday"></param>
+        /// <param name="stopday"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<CompletedTask>> GetCompletedTaskLogs(DateTime startday, DateTime stopday)
         {
-            if (ValidateDate(startday, stopday))
+            //Первичная валидация данных
+            if (!ValidateDate(startday, stopday))
+                return null;
+            //Валидация прав доступа
+            bool isValid = default;
+            switch (_autorize.UserRole)
+            {
+                case Role.None:
+                    break;
+                case Role.Admin:
+                    break;
+                case Role.Director: //Есть доступ
+                    isValid = true;
+                    break;
+                case Role.Developer:
+                    break;
+                case Role.Freelancer:
+                    break;
+                default:
+                    break;
+            }
+
+            if(isValid)
                 return await _tasksRepository.GetCompletedTasksListInPeriodAsync(startday, stopday);
             else
                 return null;

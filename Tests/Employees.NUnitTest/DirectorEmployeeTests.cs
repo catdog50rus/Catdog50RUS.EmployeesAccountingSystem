@@ -340,5 +340,63 @@ namespace Employees.NUnitTest
             Assert.IsNull(result6);
         }
 
+        //Получение логов всех выполненных задач
+        [Test]
+        public void K_GetAllCompletedTaskLogs_ShouldReturnCompletedTaskLoagsList()
+        {
+            _repositoryCompletedTaskLog
+                .Setup(meth => meth.GetCompletedTasksListInPeriodAsync(DateTime.Now.Date.AddDays(-10), DateTime.Now.Date))
+                .ReturnsAsync(() => new List<CompletedTask>{new CompletedTask(Guid.NewGuid(), _director.Id,
+                                                                                DateTime.Now.Date.AddDays(-5), 5, "TestTask4"),
+                                                           new CompletedTask(Guid.NewGuid(), _staff.Id,
+                                                                                DateTime.Now.Date.AddDays(-2), 7, "TestTask3"),
+                                                           new CompletedTask(Guid.NewGuid(), _freelancer.Id,
+                                                                                DateTime.Now.Date.AddDays(-4), 8, "TestTask7") });
+
+
+            var result = _serviceCompletedTaskLogs.GetCompletedTaskLogs(DateTime.Now.Date.AddDays(-10), 
+                                                                        DateTime.Now.Date).Result;
+
+            _repositoryCompletedTaskLog
+               .Setup(meth => meth.GetCompletedTasksListInPeriodAsync(DateTime.Now.Date.AddDays(-4), DateTime.Now.Date))
+               .ReturnsAsync(() => new List<CompletedTask>{new CompletedTask(Guid.NewGuid(), _staff.Id,
+                                                                                DateTime.Now.Date.AddDays(-2), 7, "TestTask3"),
+                                                           new CompletedTask(Guid.NewGuid(), _freelancer.Id,
+                                                                                DateTime.Now.Date.AddDays(-4), 8, "TestTask7") });
+
+            var result2 = _serviceCompletedTaskLogs.GetCompletedTaskLogs(DateTime.Now.Date.AddDays(-4),
+                                                                        DateTime.Now.Date).Result;
+
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetCompletedTasksListInPeriodAsync(
+                                                                        DateTime.Now.Date.AddDays(-10),
+                                                                        DateTime.Now.Date), Times.Once);
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetCompletedTasksListInPeriodAsync(
+                                                                        DateTime.Now.Date.AddDays(-4),
+                                                                        DateTime.Now.Date), Times.Once);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(3, result.ToList().Count);
+
+            Assert.IsNotNull(result2);
+            Assert.AreEqual(2, result2.ToList().Count);
+
+
+            //Тестирование первичной валидации
+            var result3 = _serviceCompletedTaskLogs.GetCompletedTaskLogs(DateTime.Now.Date.AddDays(10),
+                                                                        DateTime.Now.Date).Result;
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetCompletedTasksListInPeriodAsync(
+                                                                        DateTime.Now.Date.AddDays(10),
+                                                                        DateTime.Now.Date), Times.Never);
+            Assert.IsNull(result3);
+
+            var result4 = _serviceCompletedTaskLogs.GetCompletedTaskLogs(DateTime.Now.Date.AddDays(-10),
+                                                                        DateTime.Now.Date.AddYears(2)).Result;
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetCompletedTasksListInPeriodAsync(
+                                                                        DateTime.Now.Date.AddDays(-10),
+                                                                        DateTime.Now.Date.AddYears(2)), Times.Never);
+            Assert.IsNull(result4);
+
+        }
+
     }
 }

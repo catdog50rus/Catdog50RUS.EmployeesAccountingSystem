@@ -3,6 +3,7 @@ using Catdog50RUS.EmployeesAccountingSystem.Models;
 using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
@@ -130,7 +131,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
             }
             //Получение результата на основе валидации прав доступа
             if (isValid)
-                return await _tasksRepository.GetEmployeeTasksListAsync(id, startday, stopday);
+            {
+                var result = await _tasksRepository.GetEmployeeTasksListAsync(id, startday, stopday);
+                if (result == null || result.ToList().Count == 0)
+                    return null;
+                else
+                    return result;
+            }
             else
                 return null;
 
@@ -166,8 +173,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
                     break;
             }
 
-            if(isValid)
-                return await _tasksRepository.GetCompletedTasksListInPeriodAsync(startday, stopday);
+            if (isValid)
+            {
+                var result = await _tasksRepository.GetCompletedTasksListInPeriodAsync(startday, stopday);
+                if (result == null || result.ToList().Count == 0)
+                    return null;
+                else
+                    return result;
+            }
             else
                 return null;
         }

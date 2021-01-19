@@ -8,6 +8,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Employees.NUnitTest
 {
@@ -41,8 +42,8 @@ namespace Employees.NUnitTest
 
             _repositoryCompletedTaskLog = new Mock<ICompletedTasksLogRepository>();
             _repositoryCompletedTaskLog
-                .Setup(method => method.GetCompletedTasksListAsync())
-                .ReturnsAsync(() => new List<CompletedTask>{ new CompletedTask(Guid.NewGuid(),_freelancer.Id, DateTime.Now, 4, "task1") });
+                .Setup(meth => meth.GetEmployeeTasksListAsync(_freelancer.Id, DateTime.Now.Date.AddDays(-10), DateTime.Now.Date))
+                .ReturnsAsync(() => new List<CompletedTask>{ new CompletedTask(Guid.NewGuid(),_freelancer.Id, DateTime.Now.Date.AddDays(-5), 4, "task1") });
 
             _serviceEmployee = new EmployeeService(_repositoryEmployee.Object, _autorize);
             _serviceCompletedTaskLogs = new CompletedTasksLogsService(_repositoryCompletedTaskLog.Object, _autorize);
@@ -164,6 +165,61 @@ namespace Employees.NUnitTest
             Assert.IsFalse(resultFalse);
 
 
+        }
+
+        //Получение логов выполненных задач
+        [Test]
+        public void G_GetCompletedTaskLogs_ShouldReturnCompletedTaskLoagsList()
+        {
+            
+            var result = _serviceCompletedTaskLogs.GetEmployeeTaskLogs(_freelancer.Id, 
+                                        DateTime.Now.Date.AddDays(-10), DateTime.Now.Date).Result;
+            var result2 = _serviceCompletedTaskLogs.GetEmployeeTaskLogs(_freelancer.Id, 
+                                        DateTime.Now.Date.AddDays(-1), DateTime.Now.Date).Result;
+
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetEmployeeTasksListAsync(_freelancer.Id, 
+                                        DateTime.Now.Date.AddDays(-10), DateTime.Now.Date), Times.Once);
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetEmployeeTasksListAsync(_freelancer.Id, 
+                                        DateTime.Now.Date.AddDays(-1), DateTime.Now.Date), Times.Once);
+            
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.ToList().Count);
+
+            Assert.IsNull(result2);
+
+
+            //Тестирование первичной валидации
+            var result3 = _serviceCompletedTaskLogs.GetEmployeeTaskLogs(_freelancer.Id,
+                                        DateTime.Now.Date.AddDays(-1), DateTime.Now.Date.AddDays(40).AddYears(2)).Result;
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetEmployeeTasksListAsync(_freelancer.Id,
+                                        DateTime.Now.Date.AddDays(-1), DateTime.Now.Date.AddDays(40).AddYears(2)), Times.Never);
+            Assert.IsNull(result3);
+
+            var result4 = _serviceCompletedTaskLogs.GetEmployeeTaskLogs(_freelancer.Id,
+                                        DateTime.Now.Date.AddDays(1), DateTime.Now.Date).Result;
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetEmployeeTasksListAsync(_freelancer.Id,
+                                        DateTime.Now.Date.AddDays(1), DateTime.Now.Date), Times.Never);
+            Assert.IsNull(result4);
+
+            var result5 = _serviceCompletedTaskLogs.GetEmployeeTaskLogs(Guid.Empty,
+                                        DateTime.Now.Date.AddDays(-10), DateTime.Now.Date).Result;
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetEmployeeTasksListAsync(Guid.Empty,
+                                        DateTime.Now.Date.AddDays(-10), DateTime.Now.Date), Times.Never);
+            Assert.IsNull(result5);
+
+            //Тестирование валидации прав
+            var id = Guid.NewGuid();
+            _repositoryCompletedTaskLog
+                .Setup(method => method.GetEmployeeTasksListAsync(id,
+                                        DateTime.Now.Date.AddDays(-10), DateTime.Now.Date));
+
+            var result6 = _serviceCompletedTaskLogs.GetEmployeeTaskLogs(id,
+                                        DateTime.Now.Date.AddDays(-10), DateTime.Now.Date).Result;
+
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetEmployeeTasksListAsync(id,
+                                        DateTime.Now.Date.AddDays(-10), DateTime.Now.Date), Times.Never);
+
+            Assert.IsNull(result6);
         }
     }
 }

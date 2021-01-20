@@ -6,38 +6,40 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
     public class CompletedTask
     {
         public Guid IdTask { get; set; }
-        public BaseEmployee Employee { get; set; }
+        public Guid IdEmployee { get; set; }
         public DateTime Date { get; set; }
         public double Time { get; set; }
         public string TaskName { get; set; }
 
-        public CompletedTask() { }
-
-        public CompletedTask(Guid id, DateTime date, double time, string task) : this(date, time, task)
-        {
-            IdTask = id;
-        }
+        //Временное решение
+        //public CompletedTask() { }
 
         public CompletedTask(DateTime date, double time, string task)
         {
             IdTask = Guid.NewGuid();
-
             Date = date;
-
-            Time = (time > 0) ? time : throw new ArgumentException("Рабочее время должно быть положительным числом");
-            TaskName = (!string.IsNullOrEmpty(task)) ? task : throw new ArgumentException("Ошибка в наименовании задачи");
+            Time = time;
+            TaskName = task;
         }
 
-        public CompletedTask(BaseEmployee employee, DateTime date, double time, string task) : this(date, time, task)
+        public CompletedTask(Guid idEmployee, DateTime date, double time, string task) : this(date, time, task)
         {
-            Employee = employee ?? throw new ArgumentNullException(employee.ToString(), "Ошибка сотрудника");
+            IdEmployee = idEmployee;
         }
+
+        public CompletedTask(Guid id, Guid idEmployee, DateTime date, double time, string task) : this(idEmployee, date, time, task)
+        {
+            IdTask = id;
+            
+        }
+
+
 
 
 
         public string ToFile()
         {
-            return $"{IdTask};{Date};{Employee.Id};{Time};{TaskName}";
+            return $"{IdTask};{Date};{IdEmployee};{Time};{TaskName}";
         }
 
         public string ToDisplay()

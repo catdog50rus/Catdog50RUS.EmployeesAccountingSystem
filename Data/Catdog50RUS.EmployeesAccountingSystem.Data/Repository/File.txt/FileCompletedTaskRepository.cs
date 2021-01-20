@@ -5,13 +5,14 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt
 {
     /// <summary>
     /// Реализация доступа к данным выполненных задач из файла
     /// </summary>
-    public class FileCompletedTaskRepository : FileBase, ICompletedTasksLogRepository
+    public class FileCompletedTaskRepository : FileBase//, ICompletedTasksLogRepository
     {
         /// <summary>
         /// Хранилище данных о затраченном времени на выполнение задач
@@ -20,7 +21,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt
         /// <summary>
         /// Внедряем репозиторий с данными сотрудников через интерфейс
         /// </summary>
-        private static IPersonRepository PersonRepository { get; } = new FilePersonRepository();
+        private static IPersonRepository PersonRepository { get; }// = new FilePersonRepository();
 
         /// <summary>
         /// Используем конструктор базового класса
@@ -92,18 +93,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt
                     //Получаем сотрудника по id
                     Person person = await PersonRepository.GetPersonByIdAsync(id);
                     //Заполняем модель
-                    CompletedTask task = new CompletedTask()
-                    {
-                        IdTask = Guid.Parse(model[0]),
-                        Date = DateTime.Parse(model[1]),
-                        //Employee = person,
-                        Time = double.Parse(model[3]),
-                        TaskName = model[4],
-                    };
-                    //Проверяем полученную модель на null и добавляем в результирующий список
-                    if (task != null)
-                        result.Add(task);
-                    model = default;
+                    //CompletedTask task = new CompletedTask();//(Guid.Parse(model[0]), person, DateTime.Parse(model[1]), double.Parse(model[3]), model[4]);
+
+                    ////Проверяем полученную модель на null и добавляем в результирующий список
+                    //if (task != null)
+                    //    result.Add(task);
+                    //model = default;
                 }
             }
             //TODO Дописать обработчик исключений

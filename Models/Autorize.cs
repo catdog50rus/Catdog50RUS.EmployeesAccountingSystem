@@ -1,13 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
     public class Autorize
     {
-        public bool IsAutentificated { get; set; }
-        public Role AutorizeRole { get; set; }
+        public Role UserRole { get; }
+        public Guid UserId { get; }
+
+        public Autorize(Role role, Guid id)
+        {
+            UserRole = role;
+            UserId = id;
+        }
     }
 
     public enum Role
@@ -15,6 +19,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
         None,
         Admin,
         Director,
-        User
+        Developer,
+        Freelancer
     }
 }

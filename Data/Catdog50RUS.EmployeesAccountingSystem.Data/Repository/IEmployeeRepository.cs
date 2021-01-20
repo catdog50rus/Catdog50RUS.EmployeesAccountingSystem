@@ -25,6 +25,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository
         /// <returns></returns>
         Task<BaseEmployee> DeleteEmployeeAsync(Guid id);
         /// <summary>
+        /// Удалить сотрудника по имени
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        Task<BaseEmployee> DeleteEmployeeByNameAsync(string name);
+        /// <summary>
         /// Получить сотрудника по имени
         /// </summary>
         /// <param name="name"></param>

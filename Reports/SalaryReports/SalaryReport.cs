@@ -31,7 +31,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         /// <summary>
         /// Внедрение сервиса работы с задачами
         /// </summary>
-        private ICompletedTaskLogs CompletedTasksService { get; } = new CompletedTasksService();
+        private ICompletedTaskLogs CompletedTasksService { get; }// = new CompletedTasksService();
 
         /// <summary>
         /// Должность сотрудника
@@ -118,23 +118,23 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
             if (list != null)
             {
                 //Группируем полученный список по сотрудникам и отбираем ID сотрудника и и время
-                var query = list.GroupBy(p=>p.Employee.Id).Select(l => new { ID = l.Key, Times = l.Sum(t => t.Time) }) ;
+                var query = list.GroupBy(p=>p.IdEmployee).Select(l => new { ID = l.Key, Times = l.Sum(t => t.Time) }) ;
 
-                foreach (var item in query)
-                {
-                    //Получаем сотрудника по ID
-                    var person = list.Select(p => p.Employee).FirstOrDefault(p => p.Id == item.ID);
-                    //Получаем список задач по Сотруднику
-                    var taskslist = list.Where(p => p.Employee.Id == item.ID).ToList();
-                    //Получаем базовую ставку сотрудника
-                    BaseSalary = person.BaseSalary;
-                    //Получаем должность сотрудника
-                    Position = person.Positions;
-                    //Получаем оплату
-                    decimal salary = GetSalary(item.Times);
-                    //Добавляем полученные данные в итоговую коллекцию
-                    //result.Add(new SalaryReportModel(person, item.Times, salary, taskslist));
-                }
+                //foreach (var item in query)
+                //{
+                //    //Получаем сотрудника по ID
+                //    var person = list.Select(p => p.Employee).FirstOrDefault(p => p.Id == item.ID);
+                //    //Получаем список задач по Сотруднику
+                //    var taskslist = list.Where(p => p.Employee.Id == item.ID).ToList();
+                //    //Получаем базовую ставку сотрудника
+                //    BaseSalary = person.BaseSalary;
+                //    //Получаем должность сотрудника
+                //    Position = person.Positions;
+                //    //Получаем оплату
+                //    decimal salary = GetSalary(item.Times);
+                //    //Добавляем полученные данные в итоговую коллекцию
+                //    //result.Add(new SalaryReportModel(person, item.Times, salary, taskslist));
+                //}
                 return result;
             }
             else

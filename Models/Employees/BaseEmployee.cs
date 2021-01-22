@@ -43,9 +43,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
             Id = id;
         }
 
-
-
-
         public override string ToString() => $"{NamePerson} {SurnamePerson}";
 
         public override bool Equals(object obj) => ToString().Equals(obj.ToString());
@@ -62,7 +59,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
                    $"{BaseSalary}{dateSeparator}";
         }
 
-        public abstract decimal CalculateSamary(IEnumerable<CompletedTask> tasks);
+        public abstract decimal CalculateSamary(IEnumerable<CompletedTaskLog> tasksLogList);
 
     }
 }

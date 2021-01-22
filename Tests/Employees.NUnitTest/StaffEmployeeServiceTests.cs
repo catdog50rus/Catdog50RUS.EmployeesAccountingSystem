@@ -42,7 +42,7 @@ namespace Employees.NUnitTest
             _repositoryCompletedTaskLog
                 .Setup(method => method.GetEmployeeTasksListAsync(_staff.Id,
                                         DateTime.Now.Date.AddDays(-10), DateTime.Now.Date))
-                .ReturnsAsync(() => new List<CompletedTask> { new CompletedTask(Guid.NewGuid(), 
+                .ReturnsAsync(() => new List<CompletedTaskLog> { new CompletedTaskLog(Guid.NewGuid(), 
                                         _staff.Id, DateTime.Now.Date.AddDays(-5), 5, "test1") })
                 .Verifiable();
 
@@ -229,11 +229,11 @@ namespace Employees.NUnitTest
         {
             _repositoryCompletedTaskLog
                 .Setup(meth => meth.GetCompletedTasksListInPeriodAsync(DateTime.Now.Date.AddDays(-10), DateTime.Now.Date))
-                .ReturnsAsync(() => new List<CompletedTask>{new CompletedTask(Guid.NewGuid(), Guid.NewGuid(),
+                .ReturnsAsync(() => new List<CompletedTaskLog>{new CompletedTaskLog(Guid.NewGuid(), Guid.NewGuid(),
                                                                                 DateTime.Now.Date.AddDays(-5), 5, "TestTask4"),
-                                                           new CompletedTask(Guid.NewGuid(), Guid.NewGuid(),
+                                                           new CompletedTaskLog(Guid.NewGuid(), Guid.NewGuid(),
                                                                                 DateTime.Now.Date.AddDays(-2), 7, "TestTask3"),
-                                                           new CompletedTask(Guid.NewGuid(), _staff.Id,
+                                                           new CompletedTaskLog(Guid.NewGuid(), _staff.Id,
                                                                                 DateTime.Now.Date.AddDays(-4), 8, "TestTask7") });
 
 

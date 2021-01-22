@@ -16,7 +16,7 @@ namespace Employees.NUnitTest
     {
         private readonly BaseEmployee _freelancer;
         private IEmployeeService _serviceEmployee;
-        private ICompletedTaskLogs _serviceCompletedTaskLogs;
+        private ICompletedTaskLogsService _serviceCompletedTaskLogs;
         private Mock<IEmployeeRepository> _repositoryEmployee;
         private Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
         private Autorize _autorize;

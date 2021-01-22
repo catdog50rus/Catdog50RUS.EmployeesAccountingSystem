@@ -31,7 +31,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         /// <summary>
         /// Внедрение сервиса работы с задачами
         /// </summary>
-        private ICompletedTaskLogs CompletedTasksService { get; }// = new CompletedTasksService();
+        private ICompletedTaskLogsService CompletedTasksService { get; }// = new CompletedTasksService();
 
         /// <summary>
         /// Должность сотрудника

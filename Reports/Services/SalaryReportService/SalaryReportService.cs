@@ -9,11 +9,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
 {
     public class SalaryReportService : ISalaryReportService
     {
-        private readonly ICompletedTaskLogs _taskLogsService;
+        private readonly ICompletedTaskLogsService _taskLogsService;
 
-        public SalaryReportService(ICompletedTaskLogs taskLogsservice)
+        public SalaryReportService(ICompletedTaskLogsService taskLogsService)
         {
-            _taskLogsService = taskLogsservice ?? throw new ArgumentNullException(nameof(taskLogsservice));
+            _taskLogsService = taskLogsService ?? throw new ArgumentNullException(nameof(taskLogsService));
         }
         
 
@@ -25,7 +25,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
                                                                                               period.lastDate)
                                                                          .Result
                                                                          //.ToList()
-                                                                         .Where(e=>e.IdEmployee==employee.Id)
+                                                                         //.Where(e=>e.IdEmployee==employee.Id)
                                                                          .AsQueryable();
 
             //Result

@@ -1,23 +1,27 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models.Reports
 {
     public class SalaryReport
     {
-        public BaseEmployee Employee { get; set; }
-        public double Time { get; set; }
-        public decimal Salary { get; set; }
-        public List<CompletedTask> Tasks { get; set; }
+        public DateTime FirstDate { get; }
+        public DateTime LastDate { get; }
+        public BaseEmployee Employee { get; }
+        public List<CompletedTaskLog> TasksList { get; }
+        public double TotalTime { get; }
+        public decimal TotalSamary { get; set; }
 
-        public SalaryReport(double time, decimal salary, List<CompletedTask> tasks)
+        public SalaryReport(List<CompletedTaskLog> tasksList)
         {
-            Time = time;
-            Salary = salary;
-            Tasks = tasks;
+            TasksList = tasksList;
+            TotalTime = tasksList.Sum(time => time.Time);
+
         }
 
-        public SalaryReport(BaseEmployee employee, double time, decimal salary, List<CompletedTask> tasks) : this(time, salary, tasks)
+        public SalaryReport(BaseEmployee employee, List<CompletedTaskLog> tasksList) : this(tasksList)
         {
             Employee = employee;
         }

@@ -40,7 +40,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// <param name="taskname"></param>
         /// <param name="time"></param>
         /// <returns></returns>
-        public CompletedTask CreateNewTask(DateTime date, BaseEmployee employee, string taskname, double time)
+        public CompletedTaskLog CreateNewTask(DateTime date, BaseEmployee employee, string taskname, double time)
         {
             //Первичная валидация данных
             if (employee == null ||
@@ -72,7 +72,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
             if (!isValid)
                 return null;
 
-            return new CompletedTask(Guid.NewGuid(), employee.Id, date,time,taskname);
+            return new CompletedTaskLog(Guid.NewGuid(), employee.Id, date,time,taskname);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// </summary>
         /// <param name="task"></param>
         /// <returns></returns>
-        public async Task<bool> AddNewTaskLog(CompletedTask task)
+        public async Task<bool> AddNewTaskLog(CompletedTaskLog task)
         {
             //Проверяем входные параметры на null
             if (task == null)
@@ -104,7 +104,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// <param name="startday"></param>
         /// <param name="stopday"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<CompletedTask>> GetEmployeeTaskLogs(Guid id, DateTime startday, DateTime stopday)
+        public async Task<IEnumerable<CompletedTaskLog>> GetEmployeeTaskLogs(Guid id, DateTime startday, DateTime stopday)
         {
             //Первичная валидация данных
             if (!ValidateDate(startday, stopday) || id == Guid.Empty)
@@ -149,7 +149,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// <param name="startday"></param>
         /// <param name="stopday"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<CompletedTask>> GetCompletedTaskLogs(DateTime startday, DateTime stopday)
+        public async Task<IEnumerable<CompletedTaskLog>> GetCompletedTaskLogs(DateTime startday, DateTime stopday)
         {
             //Первичная валидация данных
             if (!ValidateDate(startday, stopday))

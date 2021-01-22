@@ -36,7 +36,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt
         /// Асинхронное добавление выполненной задачи
         /// </summary>
         /// <returns></returns>
-        public async Task<CompletedTask> InsertCompletedTaskAsync(CompletedTask task)
+        public async Task<CompletedTaskLog> InsertCompletedTaskAsync(CompletedTaskLog task)
         {
             //Проверяем входные данные на null
             if (task != null)
@@ -66,10 +66,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt
         /// Получить список всех выполненных задач
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<CompletedTask>> GetCompletedTasksListAsync()
+        public async Task<IEnumerable<CompletedTaskLog>> GetCompletedTasksListAsync()
         {
             //Создаем новый список выполненных задач
-            List<CompletedTask> result = new List<CompletedTask>();
+            List<CompletedTaskLog> result = new List<CompletedTaskLog>();
 
             //Процесс получения данных оборачиваем в блок try,
             //чтобы отловить исключения как по доступу к файлу, так и по качеству данных,
@@ -118,7 +118,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt
         /// <param name="beginDate"></param>
         /// <param name="lastDate"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<CompletedTask>> GetEmployeeTasksListAsync(Guid personID, 
+        public async Task<IEnumerable<CompletedTaskLog>> GetEmployeeTasksListAsync(Guid personID, 
                                                                               DateTime beginDate, 
                                                                               DateTime lastDate)
         {
@@ -135,7 +135,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt
         }
 
 
-        public async Task<IEnumerable<CompletedTask>> GetCompletedTasksListInPeriodAsync(DateTime beginDate,
+        public async Task<IEnumerable<CompletedTaskLog>> GetCompletedTasksListInPeriodAsync(DateTime beginDate,
                                                                               DateTime lastDate)
         {
             //Получаем список всех задач

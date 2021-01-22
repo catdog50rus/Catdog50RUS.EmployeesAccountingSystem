@@ -47,7 +47,7 @@ namespace Employees.NUnitTest
             _repositoryCompletedTaskLog
                 .Setup(method => method.GetEmployeeTasksListAsync(_director.Id,
                                         DateTime.Now.Date.AddDays(-10), DateTime.Now.Date))
-                .ReturnsAsync(() => new List<CompletedTask> { new CompletedTask(Guid.NewGuid(), _director.Id, 
+                .ReturnsAsync(() => new List<CompletedTaskLog> { new CompletedTaskLog(Guid.NewGuid(), _director.Id, 
                                                                                 DateTime.Now.Date.AddDays(-5), 5, "TestTask4") })
                 .Verifiable();
 
@@ -346,11 +346,11 @@ namespace Employees.NUnitTest
         {
             _repositoryCompletedTaskLog
                 .Setup(meth => meth.GetCompletedTasksListInPeriodAsync(DateTime.Now.Date.AddDays(-10), DateTime.Now.Date))
-                .ReturnsAsync(() => new List<CompletedTask>{new CompletedTask(Guid.NewGuid(), _director.Id,
+                .ReturnsAsync(() => new List<CompletedTaskLog>{new CompletedTaskLog(Guid.NewGuid(), _director.Id,
                                                                                 DateTime.Now.Date.AddDays(-5), 5, "TestTask4"),
-                                                           new CompletedTask(Guid.NewGuid(), _staff.Id,
+                                                           new CompletedTaskLog(Guid.NewGuid(), _staff.Id,
                                                                                 DateTime.Now.Date.AddDays(-2), 7, "TestTask3"),
-                                                           new CompletedTask(Guid.NewGuid(), _freelancer.Id,
+                                                           new CompletedTaskLog(Guid.NewGuid(), _freelancer.Id,
                                                                                 DateTime.Now.Date.AddDays(-4), 8, "TestTask7") });
 
 
@@ -359,9 +359,9 @@ namespace Employees.NUnitTest
 
             _repositoryCompletedTaskLog
                .Setup(meth => meth.GetCompletedTasksListInPeriodAsync(DateTime.Now.Date.AddDays(-4), DateTime.Now.Date))
-               .ReturnsAsync(() => new List<CompletedTask>{new CompletedTask(Guid.NewGuid(), _staff.Id,
+               .ReturnsAsync(() => new List<CompletedTaskLog>{new CompletedTaskLog(Guid.NewGuid(), _staff.Id,
                                                                                 DateTime.Now.Date.AddDays(-2), 7, "TestTask3"),
-                                                           new CompletedTask(Guid.NewGuid(), _freelancer.Id,
+                                                           new CompletedTaskLog(Guid.NewGuid(), _freelancer.Id,
                                                                                 DateTime.Now.Date.AddDays(-4), 8, "TestTask7") });
 
             var result2 = _serviceCompletedTaskLogs.GetCompletedTaskLogs(DateTime.Now.Date.AddDays(-4),

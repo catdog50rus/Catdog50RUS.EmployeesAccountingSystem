@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
 {
@@ -17,9 +18,18 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
             Positions = Positions.Freelance;
         }
 
-        public override decimal CalculateSamary(IEnumerable<CompletedTask> tasks)
+        /// <summary>
+        /// Переопределенный метод подсчета заработной платы
+        /// </summary>
+        /// <param name="tasksLog">Список логов</param>
+        /// <returns>Заработанная плата</returns>
+        public override decimal CalculateSamary(IEnumerable<CompletedTaskLog> tasksLog)
         {
-            throw new NotImplementedException();
+            //Получаем общее рабочее время
+            var totalTimePerDay = tasksLog.Sum(t => t.Time);
+            //Возвращаем результат
+            //Результат = Рабочее время * базовую ставку в час
+            return (decimal)totalTimePerDay * BaseSalary;
         }
     }
 }

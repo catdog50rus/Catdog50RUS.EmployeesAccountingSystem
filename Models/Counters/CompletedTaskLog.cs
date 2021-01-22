@@ -3,7 +3,7 @@ using System;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
-    public class CompletedTask
+    public class CompletedTaskLog
     {
         public Guid IdTask { get; set; }
         public Guid IdEmployee { get; set; }
@@ -14,7 +14,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
         //Временное решение
         //public CompletedTask() { }
 
-        public CompletedTask(DateTime date, double time, string task)
+        public CompletedTaskLog(DateTime date, double time, string task)
         {
             IdTask = Guid.NewGuid();
             Date = date;
@@ -22,12 +22,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
             TaskName = task;
         }
 
-        public CompletedTask(Guid idEmployee, DateTime date, double time, string task) : this(date, time, task)
+        public CompletedTaskLog(Guid idEmployee, DateTime date, double time, string task) : this(date, time, task)
         {
             IdEmployee = idEmployee;
         }
 
-        public CompletedTask(Guid id, Guid idEmployee, DateTime date, double time, string task) : this(idEmployee, date, time, task)
+        public CompletedTaskLog(Guid id, Guid idEmployee, DateTime date, double time, string task) : this(idEmployee, date, time, task)
         {
             IdTask = id;
             

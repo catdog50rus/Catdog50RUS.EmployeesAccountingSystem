@@ -124,7 +124,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         /// Вывод подтверждения о добавлении задачи
         /// </summary>
         /// <param name="task"></param>
-        public static void ShowNewTask(CompletedTask task)
+        public static void ShowNewTask(CompletedTaskLog task)
         {
             Console.Clear();
             Console.WriteLine(task.ToInsert());

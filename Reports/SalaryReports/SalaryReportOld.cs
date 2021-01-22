@@ -11,7 +11,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
     /// Реализация бизнес логики
     /// Формирование отчетов
     /// </summary>
-    public class SalaryReport
+    public class SalaryReportOld
     {
         //Настройки
         /// <summary>
@@ -42,7 +42,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         /// </summary>
         private decimal BaseSalary { get; set; }
 
-        public SalaryReport(ReportSettings settings)
+        public SalaryReportOld(ReportSettings settings)
         {
             //Настройки
             _normTimeInMonth = settings.NormTimeInMonth;
@@ -63,8 +63,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
             BaseSalary = person.BaseSalary;
             return await GetPersonTasksList(person, period);
         }
-
-
         /// <summary>
         /// Получить отчет по всем сотрудникам
         /// Возвращает список кортежей с сотрудниками, количеством рабочих часов, заработком и списком выполненных задач
@@ -74,7 +72,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports
         {
             return await GetAllPersonsTasksList(period);
         }
-
         public async Task<List<(Departments, List<SalaryReportModel>)>> GetDepartmentsReport((DateTime, DateTime) period)
         {
             return await GetDepartmentsTasksList(period);

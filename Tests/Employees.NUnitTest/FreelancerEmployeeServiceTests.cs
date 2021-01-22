@@ -43,7 +43,7 @@ namespace Employees.NUnitTest
             _repositoryCompletedTaskLog = new Mock<ICompletedTasksLogRepository>();
             _repositoryCompletedTaskLog
                 .Setup(meth => meth.GetEmployeeTasksListAsync(_freelancer.Id, DateTime.Now.Date.AddDays(-10), DateTime.Now.Date))
-                .ReturnsAsync(() => new List<CompletedTask>{ new CompletedTask(Guid.NewGuid(),_freelancer.Id, DateTime.Now.Date.AddDays(-5), 4, "task1") });
+                .ReturnsAsync(() => new List<CompletedTaskLog>{ new CompletedTaskLog(Guid.NewGuid(),_freelancer.Id, DateTime.Now.Date.AddDays(-5), 4, "task1") });
 
             _serviceEmployee = new EmployeeService(_repositoryEmployee.Object, _autorize);
             _serviceCompletedTaskLogs = new CompletedTasksLogsService(_repositoryCompletedTaskLog.Object, _autorize);
@@ -228,11 +228,11 @@ namespace Employees.NUnitTest
         {
             _repositoryCompletedTaskLog
                 .Setup(meth => meth.GetCompletedTasksListInPeriodAsync(DateTime.Now.Date.AddDays(-10), DateTime.Now.Date))
-                .ReturnsAsync(() => new List<CompletedTask>{new CompletedTask(Guid.NewGuid(), Guid.NewGuid(),
+                .ReturnsAsync(() => new List<CompletedTaskLog>{new CompletedTaskLog(Guid.NewGuid(), Guid.NewGuid(),
                                                                                 DateTime.Now.Date.AddDays(-5), 5, "TestTask4"),
-                                                           new CompletedTask(Guid.NewGuid(), Guid.NewGuid(),
+                                                           new CompletedTaskLog(Guid.NewGuid(), Guid.NewGuid(),
                                                                                 DateTime.Now.Date.AddDays(-2), 7, "TestTask3"),
-                                                           new CompletedTask(Guid.NewGuid(), _freelancer.Id,
+                                                           new CompletedTaskLog(Guid.NewGuid(), _freelancer.Id,
                                                                                 DateTime.Now.Date.AddDays(-4), 8, "TestTask7") });
 
 

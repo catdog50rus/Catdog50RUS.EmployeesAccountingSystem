@@ -14,7 +14,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         /// <summary>
         /// Внедрение сервиса отчетов
         /// </summary>
-        private static SalaryReport Report;
+        private static SalaryReportOld Report;
 
 
         public static async Task GetPersonReport(Person person, (DateTime, DateTime) period)
@@ -82,7 +82,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                 return;
             }
             //Передаем в конструктор сервиса Сотрудника и период
-            Report = new SalaryReport(settings);
+            Report = new SalaryReportOld(settings);
         }
 
         private static void ShowError()

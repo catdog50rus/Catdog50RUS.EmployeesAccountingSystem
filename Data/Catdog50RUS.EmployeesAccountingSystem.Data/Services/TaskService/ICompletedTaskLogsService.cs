@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
 {
-    public interface ICompletedTaskLogs
+    public interface ICompletedTaskLogsService
     {
         CompletedTaskLog CreateNewTask(DateTime date, BaseEmployee employee, string taskname, double time);
         Task<bool> AddNewTaskLog(CompletedTaskLog task);

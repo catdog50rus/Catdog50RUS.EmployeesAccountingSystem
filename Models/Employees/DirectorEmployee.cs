@@ -46,14 +46,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
                 var totalTimePerDay = log.Sum(t => t.Time);
 
                 //Считаем была ли переработка
-                var overtime = SalaryReportSettings.NUMBER_WORKING_HOURS_PER_DAY - totalTimePerDay;
+                var overtime = totalTimePerDay - SalaryReportSettings.NUMBER_WORKING_HOURS_PER_DAY;
 
                 //Если переработка была, считаем результат как рабочее время * на часовую ставку + бонус, 
                 //рассчитанный как месячный бонус / количество рабочих дней
                 //
                 //Иначе просто перемножаем рабочее время на часовую ставку
                 if (overtime > 0)
-                    totalSalary += (decimal)(totalTimePerDay) * salaryInHour + bonusPerDay;
+                    totalSalary += (decimal)(totalTimePerDay - overtime) * salaryInHour + bonusPerDay;
                 else
                     totalSalary += (decimal)(totalTimePerDay) * salaryInHour;
             }

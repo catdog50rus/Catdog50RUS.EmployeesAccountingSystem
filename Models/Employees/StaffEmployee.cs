@@ -50,7 +50,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
                 //Суммируем общее рабочее время в день
                 var totalTimePerDay = log.Sum(t => t.Time);
                 //Считаем была ли переработка
-                var overtime = SalaryReportSettings.NUMBER_WORKING_HOURS_PER_DAY - totalTimePerDay;
+                var overtime = totalTimePerDay - SalaryReportSettings.NUMBER_WORKING_HOURS_PER_DAY;
                 //Если переработка была, считаем результат как (стандартный рабочий день + удовоенное время переработки)* часовую ставку
                 //Иначе просто перемножаем рабочее время на часовую ставку
                 if (overtime > 0)

@@ -1,12 +1,9 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.Reports.Models.SalaryReport;
-using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
+﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
 using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
-using System.Collections.Generic;
-using System.Text;
+using Catdog50RUS.EmployeesAccountingSystem.Reports.Models.SalaryReport;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportService
 {
@@ -34,8 +31,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
             //Result
             var salaryReport = new SalaryReport(period.firstDate, period.lastDate, employee, employeeTasksLogList)
             {
-                Header = "",
-                TotalSalary = 0
+                Header = $"Отчет по Заработной плате cотрудника: {employee}\nВ период с {period.firstDate:dd.MM.yyyy} по {period.lastDate:dd.MM.yyyy}\n",
+                TotalSalary = employee.CalculateSamary(employeeTasksLogList)
             };
 
             return salaryReport;

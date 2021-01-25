@@ -132,7 +132,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
             //Получение результата на основе валидации прав доступа
             if (isValid)
             {
-                var result = await _tasksRepository.GetEmployeeTasksListAsync(id, startday, stopday);
+                var result = await _tasksRepository.GetCompletedTasksListByEmployeeAsync(id, startday, stopday);
                 if (result == null || result.ToList().Count == 0)
                     return null;
                 else

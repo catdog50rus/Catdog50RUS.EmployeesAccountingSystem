@@ -102,6 +102,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// <returns></returns>
         public async Task<BaseEmployee> DeleteEmployeeByNameAsync(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                return null;
             //Получаем коллекцию всех сотрудников
             var employeesList = await GetEmployeesListAsync();
             //Находим удаляемого сотрудника по id  и проверяем, существует ли такой сотрудник
@@ -120,6 +122,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// <returns></returns>
         public async Task<BaseEmployee> GetEmployeeByNameAsync(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                return null;
             //Получаем список всех сотрудников
             var list = await GetEmployeesListAsync();
             //Если получаем null или пустой список, возвращаем null
@@ -178,7 +182,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         private async Task<BaseEmployee> DeleteEmployeeAsync(IEnumerable<BaseEmployee> employeesList, BaseEmployee deleteEmployee)
         {
             //Создаем результирующий список и удаляем из него сотрудника
-            employeesList.ToList().Remove(deleteEmployee);
+            List<BaseEmployee> result = employeesList.ToList();
+            result.Remove(deleteEmployee);
 
             //Удаляем файл с данными сотрудников
             try
@@ -193,7 +198,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
                 new FileInfo(FileName).Delete();
 
                 //Записываем результирующий список сотрудников в новый файл
-                foreach (var e in employeesList)
+                foreach (var e in result)
                 {
                     await InsertEmployeeAsync(e);
                 }

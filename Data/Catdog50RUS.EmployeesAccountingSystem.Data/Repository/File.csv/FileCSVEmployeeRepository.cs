@@ -47,7 +47,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
                 var position = (Positions)Enum.Parse(typeof(Positions), model[4]);
                 decimal.TryParse(model[5], out decimal salary);
                 
-                //Создаем нового сотрудника и в зависимости от позиции создаем тип сотруника
+                //Создаем нового сотрудника и в зависимости от позиции создаем тип сотрудника
                 BaseEmployee employee = null;
                 switch (position)
                 {
@@ -147,7 +147,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             try
             {
                 //Преобразуем сотрудника в строку используя модель
-                string line = employee.ToFile(',');
+                string line = employee.ToFile(FileCSVSettings.DATA_SEPARATOR);
 
                 //Создаем экземпляр класса StreamWriter, 
                 //передаем в него полное имя файла с данными и разрешаем добавление

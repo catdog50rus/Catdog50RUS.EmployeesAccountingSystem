@@ -40,7 +40,7 @@ namespace Employees.NUnitTest
                 .Verifiable();
             _repositoryCompletedTaskLog = new Mock<ICompletedTasksLogRepository>();
             _repositoryCompletedTaskLog
-                .Setup(method => method.GetEmployeeTasksListAsync(_staff.Id,
+                .Setup(method => method.GetCompletedTasksListByEmployeeAsync(_staff.Id,
                                         DateTime.Now.Date.AddDays(-10), DateTime.Now.Date))
                 .ReturnsAsync(() => new List<CompletedTaskLog> { new CompletedTaskLog(Guid.NewGuid(), 
                                         _staff.Id, DateTime.Now.Date.AddDays(-5), 5, "test1") })
@@ -178,9 +178,9 @@ namespace Employees.NUnitTest
             var result2 = _serviceCompletedTaskLogs.GetEmployeeTaskLogs(_staff.Id,
                                         DateTime.Now.Date.AddDays(-1), DateTime.Now.Date).Result;
 
-            _repositoryCompletedTaskLog.Verify(meth => meth.GetEmployeeTasksListAsync(_staff.Id,
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetCompletedTasksListByEmployeeAsync(_staff.Id,
                                         DateTime.Now.Date.AddDays(-10), DateTime.Now.Date), Times.Once);
-            _repositoryCompletedTaskLog.Verify(meth => meth.GetEmployeeTasksListAsync(_staff.Id,
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetCompletedTasksListByEmployeeAsync(_staff.Id,
                                         DateTime.Now.Date.AddDays(-1), DateTime.Now.Date), Times.Once);
 
             Assert.IsNotNull(result);
@@ -192,32 +192,32 @@ namespace Employees.NUnitTest
             //Тестирование первичной валидации
             var result3 = _serviceCompletedTaskLogs.GetEmployeeTaskLogs(_staff.Id,
                                         DateTime.Now.Date.AddDays(-1), DateTime.Now.Date.AddDays(40).AddYears(2)).Result;
-            _repositoryCompletedTaskLog.Verify(meth => meth.GetEmployeeTasksListAsync(_staff.Id,
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetCompletedTasksListByEmployeeAsync(_staff.Id,
                                         DateTime.Now.Date.AddDays(-1), DateTime.Now.Date.AddDays(40).AddYears(2)), Times.Never);
             Assert.IsNull(result3);
 
             var result4 = _serviceCompletedTaskLogs.GetEmployeeTaskLogs(_staff.Id,
                                         DateTime.Now.Date.AddDays(1), DateTime.Now.Date).Result;
-            _repositoryCompletedTaskLog.Verify(meth => meth.GetEmployeeTasksListAsync(_staff.Id,
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetCompletedTasksListByEmployeeAsync(_staff.Id,
                                         DateTime.Now.Date.AddDays(1), DateTime.Now.Date), Times.Never);
             Assert.IsNull(result4);
 
             var result5 = _serviceCompletedTaskLogs.GetEmployeeTaskLogs(Guid.Empty,
                                         DateTime.Now.Date.AddDays(-10), DateTime.Now.Date).Result;
-            _repositoryCompletedTaskLog.Verify(meth => meth.GetEmployeeTasksListAsync(Guid.Empty,
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetCompletedTasksListByEmployeeAsync(Guid.Empty,
                                         DateTime.Now.Date.AddDays(-10), DateTime.Now.Date), Times.Never);
             Assert.IsNull(result5);
 
             //Тестирование валидации прав
             var id = Guid.NewGuid();
             _repositoryCompletedTaskLog
-                .Setup(method => method.GetEmployeeTasksListAsync(id,
+                .Setup(method => method.GetCompletedTasksListByEmployeeAsync(id,
                                         DateTime.Now.Date.AddDays(-10), DateTime.Now.Date));
 
             var result6 = _serviceCompletedTaskLogs.GetEmployeeTaskLogs(id,
                                         DateTime.Now.Date.AddDays(-10), DateTime.Now.Date).Result;
 
-            _repositoryCompletedTaskLog.Verify(meth => meth.GetEmployeeTasksListAsync(id,
+            _repositoryCompletedTaskLog.Verify(meth => meth.GetCompletedTasksListByEmployeeAsync(id,
                                         DateTime.Now.Date.AddDays(-10), DateTime.Now.Date), Times.Never);
 
             Assert.IsNull(result6);

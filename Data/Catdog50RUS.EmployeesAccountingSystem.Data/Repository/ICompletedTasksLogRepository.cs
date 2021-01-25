@@ -16,11 +16,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository
         /// <returns></returns>
         Task<bool> InsertCompletedTaskAsync(CompletedTaskLog task);
         /// <summary>
-        /// Получить список всех выполненных задач
-        /// </summary>
-        /// <returns></returns>
-        Task<IEnumerable<CompletedTaskLog>> GetCompletedTasksListAsync();
-        /// <summary>
         /// Получить список задач
         /// выполненных конкретным сотрудником
         /// за определенный период
@@ -29,7 +24,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository
         /// <param name="beginDate"></param>
         /// <param name="lastDate"></param>
         /// <returns></returns>
-        Task<IEnumerable<CompletedTaskLog>> GetEmployeeTasksListAsync(Guid personID, DateTime beginDate, DateTime lastDate);
+        Task<IEnumerable<CompletedTaskLog>> GetCompletedTasksListByEmployeeAsync(Guid personID, DateTime beginDate, DateTime lastDate);
+        /// <summary>
+        /// Получить список всех задач
+        /// за определенный период
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="lastDate"></param>
+        /// <returns></returns>
         Task<IEnumerable<CompletedTaskLog>> GetCompletedTasksListInPeriodAsync(DateTime beginDate, DateTime lastDate);
     }
 }

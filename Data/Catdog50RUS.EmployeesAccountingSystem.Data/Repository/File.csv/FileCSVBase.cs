@@ -82,7 +82,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
                 //Объявляем строковый массив и передаем в него строку с данными
                 //Массив заполняется данными, каждый элемент массива разделяется знаком "новой строкой"
                 //Исходя из структуры данных преобразуем string в элементы модели
-                return dataLines = data.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                return dataLines = data.Split(new char[] { FileCSVSettings.STRING_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries);
             }
             catch (Exception)
             {

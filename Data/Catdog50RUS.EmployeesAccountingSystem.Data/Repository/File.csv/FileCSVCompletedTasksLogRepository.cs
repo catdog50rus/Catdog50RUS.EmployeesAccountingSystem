@@ -50,10 +50,62 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         }
 
         /// <summary>
+        /// Получить список всех задач
+        /// за определенный период
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="lastDate"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<CompletedTaskLog>> GetCompletedTasksListInPeriodAsync(DateTime beginDate,
+                                                                        DateTime lastDate)
+        {
+            //Получаем список всех задач
+            var tasksList = await GetCompletedTasksListAsync();
+
+            //Проверяем, есть ли в списке задачи, выполненные в указанную дату или позднее
+            //Если задач нет выходим из метода, возвращаем null
+            //Иначе передаем в результирующий список задач выполненных в заданный период
+            if (tasksList.FirstOrDefault(d => d.Date >= beginDate) != null)
+            {
+                return tasksList.Where(d => d.Date >= beginDate && d.Date < lastDate);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Получить список задач
+        /// выполненных конкретным сотрудником
+        /// за определенный период
+        /// </summary>
+        /// <param name="person"></param>
+        /// <param name="beginDate"></param>
+        /// <param name="lastDate"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<CompletedTaskLog>> GetCompletedTasksListByEmployeeAsync(Guid employeeID,
+                                                                              DateTime beginDate,
+                                                                              DateTime lastDate)
+        {
+            //Получаем список всех задач
+            var tasksList = await GetCompletedTasksListInPeriodAsync(beginDate, lastDate);
+            if (tasksList == null) return null;
+
+            //Проверяем, есть ли в списке задачи, выполненные заданным сотрудником
+            //Если задач нет выходим из метода, возвращаем null
+            //Иначе передаем в результирующий список все задачи сотрудника
+            if (tasksList.FirstOrDefault(p => p.IdEmployee == employeeID) != null)
+                return tasksList.Where(p => p.IdEmployee == employeeID);
+            else
+                return null;
+        }
+
+        #endregion
+
+
+        /// <summary>
         /// Получить список всех выполненных задач
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<CompletedTaskLog>> GetCompletedTasksListAsync()
+        private async Task<IEnumerable<CompletedTaskLog>> GetCompletedTasksListAsync()
         {
             var dataLines = await ReadAsync(FileName);
 
@@ -62,7 +114,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
 
             foreach (var line in dataLines)
             {
-                var model = line.Split(',');
+                var model = line.Split(FileCSVSettings.DATA_SEPARATOR);
                 //Получаем id сотрудника
                 var id = Guid.Parse(model[2]);
                 //Получаем сотрудника по id
@@ -76,48 +128,5 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             }
             return result.OrderBy(d => d.Date);
         }
-        /// <summary>
-        /// Получить список задач
-        /// выполненных конкретным сотрудником
-        /// за определенный период
-        /// </summary>
-        /// <param name="person"></param>
-        /// <param name="beginDate"></param>
-        /// <param name="lastDate"></param>
-        /// <returns></returns>
-        public async Task<IEnumerable<CompletedTaskLog>> GetEmployeeTasksListAsync(Guid employeeID,
-                                                                              DateTime beginDate,
-                                                                              DateTime lastDate)
-        {
-            //Получаем список всех задач
-            var tasksList = await GetCompletedTasksListInPeriodAsync(beginDate, lastDate);
-            if (tasksList == null) return null;
-            //Проверяем, есть ли в списке задачи, выполненные заданным сотрудником
-            //Если задач нет выходим из метода, возвращаем null
-            //Иначе передаем в результирующий список все задачи сотрудника
-            if (tasksList.FirstOrDefault(p => p.IdEmployee == employeeID) != null)
-                return tasksList.Where(p => p.IdEmployee == employeeID);
-            else
-                return null;
-        }
-        public async Task<IEnumerable<CompletedTaskLog>> GetCompletedTasksListInPeriodAsync(DateTime beginDate,
-                                                                              DateTime lastDate)
-        {
-            //Получаем список всех задач
-            var tasksList = await GetCompletedTasksListAsync();
-
-            //Проверяем, есть ли в списке задачи, выполненные в указанную дату или позднее
-            //Если задач нет выходим из метода, возвращаем null
-            //Иначе передаем в результирующий список задач выполненных в заданный период
-            if (tasksList.FirstOrDefault(d => d.Date >= beginDate) != null)
-            {
-                return tasksList.Where(d => d.Date >= beginDate && d.Date < lastDate);
-            }
-            return null;
-
-
-        }
-
-        #endregion
     }
 }

@@ -37,7 +37,7 @@ namespace ReportService.NUnitTests
             Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
             _repositoryCompletedTaskLog = new Mock<ICompletedTasksLogRepository>();
             _repositoryCompletedTaskLog
-                .Setup(method => method.GetEmployeeTasksListAsync(id,
+                .Setup(method => method.GetCompletedTasksListByEmployeeAsync(id,
                                         DateTime.Now.Date.AddDays(-5), DateTime.Now.Date))
                 .ReturnsAsync(() => new List<CompletedTaskLog> { new CompletedTaskLog(Guid.NewGuid(), id,
                                                                                 DateTime.Now.Date.AddDays(-5), 5, "TestTask4"),
@@ -108,7 +108,7 @@ namespace ReportService.NUnitTests
             Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
             _repositoryCompletedTaskLog = new Mock<ICompletedTasksLogRepository>();
             _repositoryCompletedTaskLog
-                .Setup(method => method.GetEmployeeTasksListAsync(id,
+                .Setup(method => method.GetCompletedTasksListByEmployeeAsync(id,
                                         DateTime.Now.Date.AddDays(-5), DateTime.Now.Date))
                 .ReturnsAsync(() => new List<CompletedTaskLog> { new CompletedTaskLog(Guid.NewGuid(), id,
                                                                                 DateTime.Now.Date.AddDays(-5), 5, "TestTask4"),
@@ -177,7 +177,7 @@ namespace ReportService.NUnitTests
             Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
             _repositoryCompletedTaskLog = new Mock<ICompletedTasksLogRepository>();
             _repositoryCompletedTaskLog
-                .Setup(method => method.GetEmployeeTasksListAsync(id,
+                .Setup(method => method.GetCompletedTasksListByEmployeeAsync(id,
                                         DateTime.Now.Date.AddDays(-5), DateTime.Now.Date))
                 .ReturnsAsync(() => new List<CompletedTaskLog> { new CompletedTaskLog(Guid.NewGuid(), id,
                                                                                 DateTime.Now.Date.AddDays(-5), 5, "TestTask4"),
@@ -246,7 +246,7 @@ namespace ReportService.NUnitTests
             Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
             _repositoryCompletedTaskLog = new Mock<ICompletedTasksLogRepository>();
             _repositoryCompletedTaskLog
-                .Setup(method => method.GetEmployeeTasksListAsync(id,
+                .Setup(method => method.GetCompletedTasksListByEmployeeAsync(id,
                                         DateTime.Now.Date.AddDays(-5), DateTime.Now.Date))
                 .ReturnsAsync(() => new List<CompletedTaskLog> { new CompletedTaskLog(Guid.NewGuid(), id,
                                                                                 DateTime.Now.Date.AddDays(-5), 5, "TestTask4"),
@@ -315,7 +315,7 @@ namespace ReportService.NUnitTests
             Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
             _repositoryCompletedTaskLog = new Mock<ICompletedTasksLogRepository>();
             _repositoryCompletedTaskLog
-                .Setup(method => method.GetEmployeeTasksListAsync(id,
+                .Setup(method => method.GetCompletedTasksListByEmployeeAsync(id,
                                         DateTime.Now.Date.AddDays(-5), DateTime.Now.Date))
                 .ReturnsAsync(() => new List<CompletedTaskLog> { new CompletedTaskLog(Guid.NewGuid(), id,
                                                                                 DateTime.Now.Date.AddDays(-5), 5, "TestTask4"),

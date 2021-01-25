@@ -6,6 +6,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Repository.NUnitTests
@@ -46,7 +47,7 @@ namespace Repository.NUnitTests
         [Test]
         public void InsertNewEmployeeInRepository_ShouldReturnNull()
         {
-            
+
             var result = _repository.InsertEmployeeAsync(null).Result;
 
             Assert.IsNull(result);
@@ -110,6 +111,20 @@ namespace Repository.NUnitTests
         }
 
 
+        //Получение списка сотрудников
+        [Test]
+        public void GetEmployeesList_ShouldReturnEmployeesList()
+        {
+            var result = _repository.GetEmployeesListAsync().Result.ToList();
+
+            Assert.AreEqual((_employeeList.Count + 1), result.Count);
+            Assert.AreEqual("Admin", result[0].NamePerson);
+            Assert.AreEqual(_employeeList[0], result[1]);
+            Assert.AreEqual(_employeeList[1], result[2]);
+            Assert.AreEqual(_employeeList[2], result[3]);
+            Assert.AreEqual(_employeeList[3], result[4]);
+            Assert.AreEqual(_employeeList[4], result[5]);
+        }
 
         [TearDown]
         public void ClearFile()

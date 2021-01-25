@@ -102,7 +102,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
             if (_autorize == null)
                 return false;
             //Пробуем удалить сотрудника из хранилища
-            var result = await _employeeRepository.DeleteEmployeeAsync(id);
+            var result = await _employeeRepository.DeleteEmployeeByIdAsync(id);
             //Если результат не null возвращаем true, иначе false
             if (result != null)
                 return true;

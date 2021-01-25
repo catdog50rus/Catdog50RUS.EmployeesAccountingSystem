@@ -32,10 +32,81 @@ namespace Repository.NUnitTests
 
         }
 
+        //Добавление сотрудника 
         [Test]
-        public void AddEmployeeInRepository_ShouldReturnTrue()
+        public void InsertNewEmployeeInRepository_ShouldReturnEmployee()
         {
-            Console.WriteLine();
+            var testEmployee = new StaffEmployee("TestName", "TestSurName", Departments.IT, 100_000);
+            var result = _repository.InsertEmployeeAsync(testEmployee).Result;
+
+            Assert.AreEqual(testEmployee, result);
+        }
+
+        //Добавление сотрудника, проверка на null
+        [Test]
+        public void InsertNewEmployeeInRepository_ShouldReturnNull()
+        {
+            
+            var result = _repository.InsertEmployeeAsync(null).Result;
+
+            Assert.IsNull(result);
+        }
+
+        //Удаление сотрудника по имени
+        [Test]
+        public void DeleteEmployeeByNameFromRepository_ShouldReturnEmployee()
+        {
+            var testEmployee = new StaffEmployee("TestName", "TestSurName", Departments.IT, 100_000);
+            _repository.InsertEmployeeAsync(testEmployee).Wait();
+
+            var result = _repository.DeleteEmployeeByNameAsync(testEmployee.NamePerson).Result;
+
+            Assert.AreEqual(testEmployee, result);
+        }
+
+        //Удаление сотрудника по id
+        [Test]
+        public void DeleteEmployeeByIDFromRepository_ShouldReturnEmployee()
+        {
+            var testEmployee = new StaffEmployee("TestName", "TestSurName", Departments.IT, 100_000);
+            _repository.InsertEmployeeAsync(testEmployee).Wait();
+
+            var result = _repository.DeleteEmployeeByIdAsync(testEmployee.Id).Result;
+
+            Assert.AreEqual(testEmployee, result);
+        }
+
+        //Удаление сотрудника по имени, проверка на null
+        [TestCase("ghfgh")]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void DeleteEmployeeByNameFromRepository_ShouldReturnNull(string name)
+        {
+
+            var testEmployee = new StaffEmployee("TestName", "TestSurName", Departments.IT, 100_000);
+            _repository.InsertEmployeeAsync(testEmployee).Wait();
+
+            var result = _repository.DeleteEmployeeByNameAsync(name).Result;
+
+            Assert.IsNull(result);
+
+        }
+
+        //Удаление сотрудника по id, проверка на null
+        [TestCase("ghfgh")]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void DeleteEmployeeByIDFromRepository_ShouldReturnNull(string name)
+        {
+
+            var testEmployee = new StaffEmployee("TestName", "TestSurName", Departments.IT, 100_000);
+            _repository.InsertEmployeeAsync(testEmployee).Wait();
+
+            var result = _repository.DeleteEmployeeByNameAsync(name).Result;
+
+            Assert.IsNull(result);
         }
 
 

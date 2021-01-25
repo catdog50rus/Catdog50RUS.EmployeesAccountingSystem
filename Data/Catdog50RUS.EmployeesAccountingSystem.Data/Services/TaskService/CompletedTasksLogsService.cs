@@ -89,7 +89,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
             //Пытаемся добавить задачу в хранилище, 
             //если результат не null возвращаем true, иначе false
             var result = await _tasksRepository.InsertCompletedTaskAsync(task);
-            if (result)
+            if (result != null)
                 return true;
             else
                 return false;

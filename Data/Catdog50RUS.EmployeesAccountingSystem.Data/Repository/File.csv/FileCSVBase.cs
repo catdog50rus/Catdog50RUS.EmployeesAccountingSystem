@@ -1,5 +1,4 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File;
-using Catdog50RUS.EmployeesAccountingSystem.Models;
+﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -68,7 +67,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         }
 
 
-        public static async Task<string[]> ReadAsync(string filename)
+        public async Task<string[]> ReadAsync(string filename)
         {
             try
             {

@@ -70,6 +70,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
 
             //Передаем в результирующий список задач выполненных в заданный период
             var result = tasksList.Where(d => d.Date >= beginDate && d.Date < lastDate);
+            //Если список пустой возвращаем null
+            if (!result.Any())
+                return null;
+            //Возвращаем результат
             return result;
 
         }
@@ -89,15 +93,17 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         {
             //Получаем список всех задач
             var tasksList = await GetCompletedTasksListInPeriodAsync(beginDate, lastDate);
-            if (tasksList == null) return null;
+            if (tasksList == null) 
+                return null;
 
             //Проверяем, есть ли в списке задачи, выполненные заданным сотрудником
             //Если задач нет выходим из метода, возвращаем null
             //Иначе передаем в результирующий список все задачи сотрудника
-            if (tasksList.FirstOrDefault(p => p.IdEmployee == employeeID) != null)
-                return tasksList.Where(p => p.IdEmployee == employeeID);
-            else
+            var result = tasksList.Where(p => p.IdEmployee == employeeID);
+            if (!result.Any())
                 return null;
+
+            return result;
         }
 
         #endregion

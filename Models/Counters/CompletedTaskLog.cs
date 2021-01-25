@@ -1,5 +1,4 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
-using System;
+﻿using System;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
@@ -37,9 +36,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
 
 
 
-        public string ToFile()
+        public string ToFile(char dataSeparator)
         {
-            return $"{IdTask};{Date};{IdEmployee};{Time};{TaskName}";
+            return $"{IdTask}{dataSeparator}" +
+                   $"{Date}{dataSeparator}" +
+                   $"{IdEmployee}{dataSeparator}" +
+                   $"{Time}{dataSeparator}" +
+                   $"{TaskName}{dataSeparator}";
         }
 
         public string ToDisplay()

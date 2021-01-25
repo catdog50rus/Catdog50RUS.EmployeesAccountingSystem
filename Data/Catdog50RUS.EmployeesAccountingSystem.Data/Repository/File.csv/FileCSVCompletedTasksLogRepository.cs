@@ -24,26 +24,26 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// Асинхронное добавление выполненной задачи
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> InsertCompletedTaskAsync(CompletedTaskLog taskLog)
+        public async Task<CompletedTaskLog> InsertCompletedTaskAsync(CompletedTaskLog taskLog)
         {
             //Проверяем входные данные на null
             if (taskLog == null)
-                return false;
+                return null;
             try
             {
                 //Преобразуем задачу в строку используя модель
-                string line = taskLog.ToFile();
+                string line = taskLog.ToFile(FileCSVSettings.DATA_SEPARATOR);
                 //Создаем экземпляр класса StreamWriter, 
                 //передаем в него полное имя файла с данными и разрешаем добавление
                 using StreamWriter sw = new StreamWriter(FileName, true);
                 //Записываем в файл строку
                 await sw.WriteLineAsync(line);
-                return true;
+                return taskLog;
             }
             catch (Exception)
             {
                 //TODO Дописать обработчик исключений
-                return false;
+                return null;
                 throw;
                 
             }
@@ -62,14 +62,16 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             //Получаем список всех задач
             var tasksList = await GetCompletedTasksListAsync();
 
-            //Проверяем, есть ли в списке задачи, выполненные в указанную дату или позднее
+            //Проверяем, есть ли в списке задачи, выполненные в начальную дату или позднее
             //Если задач нет выходим из метода, возвращаем null
-            //Иначе передаем в результирующий список задач выполненных в заданный период
-            if (tasksList.FirstOrDefault(d => d.Date >= beginDate) != null)
-            {
-                return tasksList.Where(d => d.Date >= beginDate && d.Date < lastDate);
-            }
-            return null;
+
+            if (tasksList.FirstOrDefault(d => d.Date >= beginDate) == null)
+                return null;
+
+            //Передаем в результирующий список задач выполненных в заданный период
+            var result = tasksList.Where(d => d.Date >= beginDate && d.Date < lastDate);
+            return result;
+
         }
 
         /// <summary>
@@ -115,12 +117,15 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             foreach (var line in dataLines)
             {
                 var model = line.Split(FileCSVSettings.DATA_SEPARATOR);
-                //Получаем id сотрудника
-                var id = Guid.Parse(model[2]);
-                //Получаем сотрудника по id
-                BaseEmployee employee = await _employeeRepository.GetEmployeeByIdAsync(id);
+                //Получаем компонент модели
+                Guid.TryParse(model[0],out Guid id);
+                DateTime.TryParse(model[1], out DateTime date);
+                Guid.TryParse(model[2], out Guid idEmployee);
+                double.TryParse(model[3], out double time);
+                string comment = model[4];
+
                 //Заполняем модель
-                CompletedTaskLog task = new CompletedTaskLog(Guid.Parse(model[0]), employee.Id, DateTime.Parse(model[1]), double.Parse(model[3]), model[4]);
+                CompletedTaskLog task = new CompletedTaskLog(id, idEmployee, date, time, comment);
                 //Проверяем полученную модель на null и добавляем в результирующий список
                 if (task != null)
                     result.Add(task);

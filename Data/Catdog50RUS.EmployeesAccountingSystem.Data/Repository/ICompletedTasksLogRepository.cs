@@ -14,7 +14,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository
         /// Асинхронное добавление выполненной задачи
         /// </summary>
         /// <returns></returns>
-        Task<bool> InsertCompletedTaskAsync(CompletedTaskLog task);
+        Task<CompletedTaskLog> InsertCompletedTaskAsync(CompletedTaskLog task);
         /// <summary>
         /// Получить список задач
         /// выполненных конкретным сотрудником

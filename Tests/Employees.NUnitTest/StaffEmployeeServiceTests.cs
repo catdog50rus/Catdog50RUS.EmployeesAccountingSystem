@@ -151,7 +151,7 @@ namespace Employees.NUnitTest
             var task1 = _serviceCompletedTaskLogs.CreateNewTask(DateTime.Now.Date.AddDays(-2), _staff, "Task1", 8);
             _repositoryCompletedTaskLog
                 .Setup(method => method.InsertCompletedTaskAsync(task1))
-                .ReturnsAsync(true)
+                .ReturnsAsync(task1)
                 .Verifiable();
 
             var result = _serviceCompletedTaskLogs.AddNewTaskLog(task1).Result;

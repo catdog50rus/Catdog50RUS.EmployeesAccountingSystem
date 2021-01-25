@@ -44,7 +44,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.txt
                 try
                 {
                     //Преобразуем задачу в строку используя модель
-                    string line = task.ToFile();
+                    string line = task.ToFile(',');
                     //Создаем экземпляр класса StreamWriter, 
                     //передаем в него полное имя файла с данными и разрешаем добавление
                     using StreamWriter sw = new StreamWriter(FileName, true);

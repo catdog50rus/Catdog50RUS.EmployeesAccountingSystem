@@ -69,7 +69,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
                 return null;
 
             //Передаем в результирующий список задач выполненных в заданный период
-            var result = tasksList.Where(d => d.Date >= beginDate && d.Date < lastDate);
+            var result = tasksList.Where(d => d.Date >= beginDate && d.Date <= lastDate);
             //Если список пустой возвращаем null
             if (!result.Any())
                 return null;

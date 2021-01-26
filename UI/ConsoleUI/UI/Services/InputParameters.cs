@@ -19,7 +19,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         {
             ShowText(text);
             var res = Console.ReadLine();
-            while (string.IsNullOrEmpty(res) || string.IsNullOrWhiteSpace(res))
+            while (string.IsNullOrWhiteSpace(res))
             {
                 Console.WriteLine("Некорректный ввод!");
                 Console.WriteLine("Попробуйте еще раз!");
@@ -171,6 +171,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
                     InputDepartment();
                     break;
             }
+            Console.WriteLine();
             return dep;
 
         }
@@ -195,6 +196,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
             switch (key)
             {
                 case '1':
+                    if (!dep.Equals(Departments.Managment))
+                        break;
                     pos = Positions.Director;
                     break;
                 case '2':
@@ -207,6 +210,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
                     InputPosition(dep);
                     break;
             }
+            Console.WriteLine(); 
             return pos;
 
         }

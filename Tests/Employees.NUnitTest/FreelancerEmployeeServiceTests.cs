@@ -95,7 +95,7 @@ namespace Employees.NUnitTest
 
         //Получение сотрудника по имени
         [Test]
-        public void D_GetEmployeeByName_ShouldReturnNewEmployee()
+        public void D_GetEmployeeByName_ShouldReturnNull()
         {
             string name = "Алексей";
             _repositoryEmployee
@@ -106,6 +106,23 @@ namespace Employees.NUnitTest
             var result = _serviceEmployee.GetEmployeeByNameAsync(name).Result;
 
             _repositoryEmployee.Verify(method => method.GetEmployeeByNameAsync(name), Times.Never);
+
+            Assert.IsNull(result);
+        }
+
+        //Получение сотрудника по id
+        [Test]
+        public void DD_GetEmployeeById_ShouldReturnNull()
+        {
+            Guid id = Guid.NewGuid();
+            _repositoryEmployee
+                .Setup(method => method.GetEmployeeByIdAsync(id))
+                .ReturnsAsync(() => new FreeLancerEmployee("Алексей", "Алексеев", Departments.IT, 100_000))
+                .Verifiable();
+
+            var result = _serviceEmployee.GetEmployeeByIdAsync(id).Result;
+
+            _repositoryEmployee.Verify(method => method.GetEmployeeByIdAsync(id), Times.Never);
 
             Assert.IsNull(result);
         }

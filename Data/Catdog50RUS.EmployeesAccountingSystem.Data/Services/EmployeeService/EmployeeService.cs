@@ -91,6 +91,15 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
             return await _employeeRepository.GetEmployeeByNameAsync(name);
         }
 
+        public async Task<BaseEmployee> GetEmployeeByIdAsync(Guid id)
+        {
+            //Проверяем права доступа
+            if (_autorize == null)
+                return null;
+
+            return await _employeeRepository.GetEmployeeByIdAsync(id);
+        }
+
         /// <summary>
         /// Удалить сотрудника
         /// </summary>

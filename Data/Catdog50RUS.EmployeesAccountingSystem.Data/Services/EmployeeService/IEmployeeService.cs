@@ -11,7 +11,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
 
         Task<bool> InsertEmployeeAsync(BaseEmployee employee);
         Task<IEnumerable<BaseEmployee>> GetAllEmployeeAsync();
+        
         Task<BaseEmployee> GetEmployeeByNameAsync(string name);
+        Task<BaseEmployee> GetEmployeeByIdAsync(Guid id);
+        
         Task<bool> DeleteEmployeeAsync(Guid id);
         Task<bool> DeleteEmployeeByNameAsync(string name);
     }

@@ -59,6 +59,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
                    $"{BaseSalary}{dateSeparator}";
         }
 
+        
+
         public abstract decimal CalculateSamary(IEnumerable<CompletedTaskLog> tasksLogList);
 
     }

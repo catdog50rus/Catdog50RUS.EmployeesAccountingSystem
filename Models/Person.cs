@@ -33,10 +33,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
             return $"{IdPerson},{NamePerson},{SurnamePerson},{Department},{Positions},{BaseSalary}";
         }
 
-        public string ToInsert()
-        {
-            return AddCurrency($"Добавлен новый сотрудник: \n {SurnamePerson} {NamePerson} \n в отдел: {Department}, \n на должность: {Positions}, \n с окладом {BaseSalary} рублей ");
-        }
+        
 
         public string ToDelete()
         {

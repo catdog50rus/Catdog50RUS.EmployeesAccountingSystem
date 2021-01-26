@@ -1,9 +1,9 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
-using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
+using Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv;
+using Catdog50RUS.EmployeesAccountingSystem.Data.Services.AutorizeService;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
+using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
@@ -12,65 +12,64 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
     {
         //Поля
 
-        /// <summary>
-        /// Внедрение бизнес логики
-        /// </summary>
-        private readonly IPersons _personsService;
-        private readonly bool _isFirstRun;
+
+        private readonly IAutorize _autorizeService;
+
+
+        //private readonly bool _isFirstRun;
 
         public Authorization()
         {
-            _personsService = new PersonsService();
-            _isFirstRun = _personsService.IsFirstRun;
+            _autorizeService = new AutorizeService(new FileCSVEmployeeRepository());
+            //_isFirstRun = _employeeService.IsFirstRun;
         }
 
-        public bool IsFirstRun() => _isFirstRun;
+       // public bool IsFirstRun() => _isFirstRun;
 
         /// <summary>
         /// Авторизация пользователя
         /// </summary>
         /// <returns></returns>
-        public async Task<Person> AutorezationUser()
+        public async Task<(Autorize, BaseEmployee)> AutorezationUser()
         {
-            var person = await GetPersonByName();
-            if (person != null)
-            {
-                ShowOnConsole.ShowMessage($"Пользователь {person} успешно авторизован!");
-                ShowOnConsole.ShowContinue();
-                return person;
-                
-            }
-            else
-            {
-                return null;
-            }
 
+            //Аутентифицируем пользователя
+            var employee = await GetEmployee();
+
+            if (employee == null)
+                return (null, null);
+
+            //Получаем авторизацию
+            var autorize = _autorizeService.GetAuthorization(employee);
+
+            if (autorize == null)
+                return (null, null);
+
+            ShowOnConsole.ShowMessage($"Пользователь {employee} успешно авторизован!");
+            ShowOnConsole.ShowContinue();
+            return (autorize, employee);
         }
 
-        public async Task<Person> GetPerson()
+        public async Task<BaseEmployee> GetEmployee()
         {
-            return await GetPersonByName();
+            string name = GetEmployeeName();
+            var employee = await _autorizeService.AutentificatedUser(name);
+            return employee;
         }
 
-        private async Task<Person> GetPersonByName()
+        private string GetEmployeeName()
         {
             Console.Clear();
             //Получаем имя сотрудника
             string name = InputParameters.InputStringParameter("Введите имя пользователя");
-            //Получаем из хранилища сотрудника по имени и проверяем, если ли сотрудник с таким именем
-            var person = await _personsService.GetPersonByName(name);
-            if (person == null)
-            {
-                ShowOnConsole.ShowMessage($"Пользователь с именем {name} не найден!");
-                ShowOnConsole.ShowContinue();
-                return null;
 
-            }
-            else
-            {
-                return person;    
-            }
+            return name;
+
         }
+
+
+
+
 
 
     }

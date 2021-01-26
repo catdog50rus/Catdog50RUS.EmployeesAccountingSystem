@@ -1,33 +1,35 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Data.Repository;
 using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
-using Catdog50RUS.EmployeesAccountingSystem.Models;
-using Catdog50RUS.EmployeesAccountingSystem.Reports.SalaryReports;
+using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
+using Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportService;
 using System;
-using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 {
-    static class Reports
+    class Reports
     {
         private readonly static ISettingsRepository Settings = new ReportSettingsService();
-        /// <summary>
-        /// Внедрение сервиса отчетов
-        /// </summary>
-        private static SalaryReportOld Report;
+        private readonly ISalaryReportService _salaryReportService;
 
-
-        public static async Task GetPersonReport(Person person, (DateTime, DateTime) period)
+        public Reports(ISalaryReportService salaryReportService)
         {
-            await InitialReport();
+            _salaryReportService = salaryReportService;
+        }
 
-            if (Report == null) return;
+
+        public void GetEmployeeReport(BaseEmployee employee, (DateTime, DateTime) period)
+        {
+            //await InitialReport();
+
+            //if (Report == null) return;
+
             //Получаем отчет и проверяем его на null и валидность числовых параметров
             //Выводим результат
-            var personReport = await Report.GetPersonReport(person, period);
-            if (personReport != null)
+            var employeeReport = _salaryReportService.GetEmployeeSalaryReport(employee, period);
+            if (employeeReport != null)
             {
-                ShowOnConsole.ShowPersonTasks(period, personReport);
+                ShowOnConsole.ShowPersonTasks(period, employeeReport);
             }
             else
             {
@@ -36,54 +38,54 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             ShowOnConsole.ShowContinue();
         }
 
-        public static async Task GetAllPersonsReport((DateTime, DateTime) period)
-        {
-            await InitialReport();
-            if (Report == null) return;
-            //Получаем отчет и проверяем его на null
-            //Выводим результат
-            var report = await Report.GetAllPersonsReport(period);
-            if(report != null)
-            {
-                ShowOnConsole.ShowAllPersonsTasks(period, report); 
-            }
-            else
-            {
-                ShowError();
-            }
-            ShowOnConsole.ShowContinue();
-        }
+        //public static async Task GetAllPersonsReport((DateTime, DateTime) period)
+        //{
+        //    await InitialReport();
+        //    if (Report == null) return;
+        //    //Получаем отчет и проверяем его на null
+        //    //Выводим результат
+        //    var report = await Report.GetAllPersonsReport(period);
+        //    if(report != null)
+        //    {
+        //        ShowOnConsole.ShowAllPersonsTasks(period, report); 
+        //    }
+        //    else
+        //    {
+        //        ShowError();
+        //    }
+        //    ShowOnConsole.ShowContinue();
+        //}
 
-        public static async Task GetDepartmentsReport((DateTime, DateTime) period)
-        {
-            await InitialReport();
-            if (Report == null) return;
-            //Получаем отчет и проверяем его на null
-            //Выводим результат
-            var report = await Report.GetDepartmentsReport(period);
-            if(report != null)
-                ShowOnConsole.ShowDepartmetsTasks(period, report);
-            else
-            {
-                ShowError();
-            }
+        //public static async Task GetDepartmentsReport((DateTime, DateTime) period)
+        //{
+        //    await InitialReport();
+        //    if (Report == null) return;
+        //    //Получаем отчет и проверяем его на null
+        //    //Выводим результат
+        //    var report = await Report.GetDepartmentsReport(period);
+        //    if(report != null)
+        //        ShowOnConsole.ShowDepartmetsTasks(period, report);
+        //    else
+        //    {
+        //        ShowError();
+        //    }
                 
-            ShowOnConsole.ShowContinue();
-        }
+        //    ShowOnConsole.ShowContinue();
+        //}
 
-        private static async Task InitialReport()
-        {
-            //Получаем настройки отчета
-            var settings = await Settings.GetSettings();
-            if (settings == null)
-            {
-                ShowOnConsole.ShowMessage("Настройки для отчета не найдены. Для получения отчета необходимо установить данные для расчета");
-                ShowOnConsole.ShowContinue();
-                return;
-            }
-            //Передаем в конструктор сервиса Сотрудника и период
-            Report = new SalaryReportOld(settings);
-        }
+        //private static async Task InitialReport()
+        //{
+        //    //Получаем настройки отчета
+        //    var settings = await Settings.GetSettings();
+        //    if (settings == null)
+        //    {
+        //        ShowOnConsole.ShowMessage("Настройки для отчета не найдены. Для получения отчета необходимо установить данные для расчета");
+        //        ShowOnConsole.ShowContinue();
+        //        return;
+        //    }
+        //    //Передаем в конструктор сервиса Сотрудника и период
+        //    Report = new SalaryReportOld(settings);
+        //}
 
         private static void ShowError()
         {

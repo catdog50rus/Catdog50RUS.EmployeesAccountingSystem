@@ -1,4 +1,5 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
+﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.Models;
+using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
 using System;
 
@@ -8,9 +9,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
     /// Компонент UI
     /// Получаем нового сотрудника
     /// </summary>
-    class CreatePerson
-    { 
-        public static Person CreateNewPerson()
+    class CreateNewEmployee
+    {
+        public static Employee CreateNewPerson()
         {
             Console.Clear();
 
@@ -23,7 +24,15 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
             Positions pos = InputParameters.InputPosition(dep);
             decimal baseSalary = InputParameters.InputDecimlParameter("Введите базовую ставку сотрудника");
             //Возвращаем нового сотрудника
-            return new Person(name, surname, dep, pos, baseSalary);
+            return new Employee 
+            {
+                Id = Guid.NewGuid(),
+                NamePerson = name,
+                SurnamePerson = surname,
+                Department = dep,
+                Positions = pos,
+                BaseSalary = baseSalary
+            };
 
         } 
     }

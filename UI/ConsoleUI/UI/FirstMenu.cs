@@ -52,16 +52,18 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             //Создаем экземпляр класса авторизации и получаем авторизованного пользователя 
             var auth = new Authorization();
 
-            if (auth.IsFirstRun())
+            //if (auth.IsFirstRun())
+            //{
+            //    ShowOnConsole.ShowMessage($" Это первый запуск программы! \n Для начала работы необходимо войти под пользователем Admin");
+            //    ShowOnConsole.ShowContinue();
+            //}
+            
+            var autorizeResult = await auth.AutorezationUser();
+            if (autorizeResult.Item1 != null)
             {
-                ShowOnConsole.ShowMessage($" Это первый запуск программы! \n Для начала работы необходимо войти под пользователем Admin");
-                ShowOnConsole.ShowContinue();
-            }
-            var person = await auth.AutorezationUser();
-            if (person != null)
-            {
+                
                 //Переходим в главное меню и передаем в него сотрудника
-                var mainmenu = new MainMenu(person);
+                var mainmenu = new MainMenu(autorizeResult);
                 await mainmenu.Intro();
             }
 

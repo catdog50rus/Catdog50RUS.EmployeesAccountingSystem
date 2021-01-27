@@ -21,14 +21,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
             BaseSalary = baseSalary;
         }
 
-        public BaseEmployee(string name, string surname, Departments dep, Positions pos, decimal baseSalary)
+        public BaseEmployee(string name, string surname, Departments dep, Positions pos, decimal baseSalary):this(name,surname,dep,baseSalary)
         {
-            Id = Guid.NewGuid();
-            NamePerson = name;
-            SurnamePerson = surname;
-            Department = dep;
             Positions = pos;
-            BaseSalary = baseSalary;
         }
 
         public BaseEmployee(Guid id, string name, string surname, Departments dep, decimal baseSalary) : 
@@ -42,6 +37,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
         {
             Id = id;
         }
+
+
 
         public override string ToString() => $"{NamePerson} {SurnamePerson}";
 

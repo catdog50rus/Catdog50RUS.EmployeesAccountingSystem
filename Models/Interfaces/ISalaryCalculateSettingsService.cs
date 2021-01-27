@@ -1,7 +1,6 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.ReportSettings
+namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
     public interface ISalaryCalculateSettingsService
     {

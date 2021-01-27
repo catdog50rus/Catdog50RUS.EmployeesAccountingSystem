@@ -20,7 +20,7 @@ namespace Employees.NUnitTest
         private ICompletedTaskLogsService _serviceCompletedTaskLogs;
         private Mock<IEmployeeRepository> _repositoryEmployee;
         private Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
-        private Autorize _autorize;
+        private readonly Autorize _autorize;
 
         public DirectorEmployeeTests()
         {
@@ -56,7 +56,7 @@ namespace Employees.NUnitTest
         }
 
         [Test]
-        public void _CreateEmployee_ShouldReturnNewEmployee()
+        public void AA_CreateEmployee_ShouldReturnNewEmployee()
         {
             var directorNew = new DirectorEmployee("Александр", "Александров", Departments.Managment, 200_000);
             var directorGet = new DirectorEmployee(Guid.NewGuid(), "Александр", "Александров", Departments.Managment, 200_000);

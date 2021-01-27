@@ -1,7 +1,6 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.Models;
 using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components;
 using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
-using Catdog50RUS.EmployeesAccountingSystem.Data.Repository;
 using Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv;
 using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService;
@@ -18,8 +17,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         //Поля
         
         private readonly Autorize _autorize;
-        private IEmployeeRepository _employeeRepository = new FileCSVEmployeeRepository();
-
 
         /// <summary>
         /// Внедрение сервиса работы с данными сотрудника
@@ -29,36 +26,27 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         /// Внедрение сервиса работы с задачами
         /// </summary>
         private readonly ICompletedTaskLogsService _completedTasksService;
-
-        private readonly ISalaryReportService _salaryReportService;
-
-
-        // private ISettingsRepository Settings { get; } = new ReportSettingsService();
-
         /// <summary>
         /// Внедрение сервиса отчетов
         /// </summary>
-        //private SalaryReport Report { get; set; }
-        /// <summary>
-        /// Поле сотрудник
-        /// </summary>
-        //private readonly BaseEmployee _employee;
-
-        public Employee Employee { get; }
+        private readonly ISalaryReportService _salaryReportService;
+        private readonly Employee _employee;
 
         /// <summary>
         /// Конструктор
         /// Принимает сотрудника
         /// </summary>
         /// <param name="person"></param>
-        public MainMenu((Autorize, BaseEmployee) autorize)
+        public MainMenu((Autorize, BaseEmployee) inputParameters)
         {
-            _autorize = autorize.Item1;
+            _autorize = inputParameters.Item1;
+
             _completedTasksService = new CompletedTasksLogsService(new FileCSVCompletedTasksLogRepository(), _autorize);
-            _employeeService = new EmployeeService(_employeeRepository, _autorize);
+            _employeeService = new EmployeeService(new FileCSVEmployeeRepository(), _autorize);
+            
             _salaryReportService = new SalaryReportService(_completedTasksService);
             
-            Employee = MapToEmploeeModel(autorize.Item2);
+            _employee = MapToEmploeeModel(inputParameters.Item2);
         }
 
         /// <summary>
@@ -87,7 +75,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
                 //Проверяем какая клавиша нажата
                 switch (key)
-                { 
+                {
                     case '1':
                         //Добавляем задачу в хранилище
                         await AddNewTask();
@@ -95,7 +83,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                     case '2':
                         //Получаем отчет по сотруднику за период
                         await GetPersonReport();
-                        break; 
+                        break;
                     case '3':
                         //Получаем отчет по сотруднику за месяц
                         await GetReportByPerson();
@@ -135,8 +123,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
         }
 
-        
-
+       
         #region Реализация
 
         //private async Task ShowAdmin()
@@ -190,8 +177,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                 Console.WriteLine("6 - Вывести на экран список сотрудников");
                 Console.WriteLine("7 - Добавить сотрудника");
                 Console.WriteLine("8 - Удалить сотрудника");
-                Console.WriteLine(new string('-', 70));
-                Console.WriteLine("s - Ввести данные для расчета");
+                //Console.WriteLine(new string('-', 70));
+                //Console.WriteLine("s - Ввести данные для расчета");
             }
             Console.WriteLine(new string('-', 70));
             Console.WriteLine("0 - Выйти из профиля");
@@ -208,7 +195,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             
             //Создаем новую задачу в отдельном компоненте UI
             //И проверяем результат на null
-            var employee = MapToBaseEmployee(Employee);
+            var employee = MapToBaseEmployee(_employee);
             //Проверяем, если пользователь - Директор, то он может загрузить данные для любого сотрудника
             if (_autorize.UserRole.Equals(Role.Director))
             {
@@ -247,7 +234,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         {
             //Получаем период
             var period = InputParameters.GetPeriod();
-            var employee = MapToBaseEmployee(Employee);
+            var employee = MapToBaseEmployee(_employee);
             //Проверяем, если пользователь - Директор, то он может загрузить данные для любого сотрудника
             if (_autorize.UserRole.Equals(Role.Director))
             {
@@ -268,7 +255,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         {
             //Получаем период
             var period = InputParameters.GetMonth();
-            var employee = MapToBaseEmployee(Employee);
+            var employee = MapToBaseEmployee(_employee);
             //Проверяем, если пользователь - Директор, то он может загрузить данные для любого сотрудника
             if (_autorize.UserRole.Equals(Role.Director))
             {
@@ -404,7 +391,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         /// <returns></returns>
         private bool Exit()
         {
-            Console.WriteLine($"{Employee} До свидания!");
+            Console.WriteLine($"{_employee} До свидания!");
             ShowOnConsole.ShowContinue();
             return true;
         }

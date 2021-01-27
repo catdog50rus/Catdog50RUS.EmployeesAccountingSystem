@@ -1,10 +1,9 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
-using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
+﻿using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
+namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
     public interface ICompletedTaskLogsService
     {

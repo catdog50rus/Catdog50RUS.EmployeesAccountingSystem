@@ -10,12 +10,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// </summary>
         private static readonly string _filename = FileCSVSettings.REPORTSETTINGS;
 
-        public FileCSVSalaryCalculateSettingsRepository() : base(_filename)
-        {
-        }
+        public FileCSVSalaryCalculateSettingsRepository() : base(_filename) { }
 
 
-        public async Task<ReportSettings> GetSettings()
+
+        public async Task<SalaryCalculatingSettings> GetSettings()
         {
             //Считываем все строки из файла в текстовый массив
             string[] dataLines = await base.ReadAsync();
@@ -25,13 +24,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             double.TryParse(model[1], out double numberWorkingDaysPerMonth);
             double.TryParse(model[2], out double numberWorkingHoursPerDay);
             decimal.TryParse(model[3], out decimal bonusDirector);
-            decimal.TryParse(model[4], out decimal bonusCoefficient);
+            double.TryParse(model[4], out double bonusCoefficient);
 
-            return new ReportSettings(numberWorkingHoursPerMonth, numberWorkingDaysPerMonth, numberWorkingHoursPerDay, bonusDirector, bonusCoefficient);
+            return new SalaryCalculatingSettings(numberWorkingHoursPerMonth, numberWorkingDaysPerMonth, numberWorkingHoursPerDay, bonusDirector, bonusCoefficient);
             
         }
 
-        public async Task<bool> SaveSettings(ReportSettings settings)
+        public async Task<bool> SaveSettings(SalaryCalculatingSettings settings)
         {
             if (settings == null)
                 return false;

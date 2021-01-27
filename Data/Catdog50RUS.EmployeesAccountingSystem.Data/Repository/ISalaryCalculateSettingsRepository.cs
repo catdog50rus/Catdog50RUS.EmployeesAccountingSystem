@@ -5,7 +5,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository
 {
     public interface ISalaryCalculateSettingsRepository
     {
-        Task<ReportSettings> GetSettings();
-        Task<bool> SaveSettings(ReportSettings settings);
+        Task<SalaryCalculatingSettings> GetSettings();
+        Task<bool> SaveSettings(SalaryCalculatingSettings settings);
     }
 }

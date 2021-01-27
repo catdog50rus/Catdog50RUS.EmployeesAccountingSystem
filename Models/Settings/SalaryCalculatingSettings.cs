@@ -1,15 +1,15 @@
 ﻿namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
-    public class ReportSettings
+    public class SalaryCalculatingSettings
     {
         public double NumberWorkingHoursPerMonth { get; }
         public double NumberWorkingDaysPerMonth { get; }
         public double NumberWoringHoursPerDay { get; }
         public decimal BonusDirector { get; }
-        public decimal BonusCoefficient { get; }
+        public double BonusCoefficient { get; }
 
-        public ReportSettings(double numberWorkingHoursPerMonth, double numberWorkingDaysPerMonth, 
-                              double numberWoringHoursPerDay, decimal bonusDirector, decimal bonusCoefficient)
+        public SalaryCalculatingSettings(double numberWorkingHoursPerMonth, double numberWorkingDaysPerMonth, 
+                              double numberWoringHoursPerDay, decimal bonusDirector, double bonusCoefficient)
         {
             NumberWorkingHoursPerMonth = numberWorkingHoursPerMonth;
             NumberWorkingDaysPerMonth = numberWorkingDaysPerMonth;

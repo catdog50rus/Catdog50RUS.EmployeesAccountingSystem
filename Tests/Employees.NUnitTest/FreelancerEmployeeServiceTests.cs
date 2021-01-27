@@ -3,7 +3,6 @@ using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
 using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
-
 using Moq;
 using NUnit.Framework;
 using System;
@@ -19,7 +18,7 @@ namespace Employees.NUnitTest
         private ICompletedTaskLogsService _serviceCompletedTaskLogs;
         private Mock<IEmployeeRepository> _repositoryEmployee;
         private Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
-        private Autorize _autorize;
+        private readonly Autorize _autorize;
 
         public FreelancerEmployeeServiceTests()
         {

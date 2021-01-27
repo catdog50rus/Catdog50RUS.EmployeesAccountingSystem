@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
-{
+namespace Catdog50RUS.EmployeesAccountingSystem.Models 
+{ 
     public interface IEmployeeService
     {
         public bool IsFirstRun { get; }

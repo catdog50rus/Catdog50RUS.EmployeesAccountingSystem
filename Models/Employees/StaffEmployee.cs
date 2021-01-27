@@ -40,7 +40,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
             //Всего заработано
             var totalSalary = 0M;
             //Ставка за час работы
-            var salaryInHour = BaseSalary / NUMBER_WORKING_HOURS_PER_MONTH;
+            var salaryInHour = BaseSalary / (decimal)NumberWorkingHoursPerMonth;
             //Получаем список логов сгруппированный по дням 
             var tasksLogGroupByDays = tasksLog.GroupBy(d => d.Date.ToShortDateString());
             //Запускаем цикл подсчета общей зарплаты
@@ -49,11 +49,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
                 //Суммируем общее рабочее время в день
                 var totalTimePerDay = log.Sum(t => t.Time);
                 //Считаем была ли переработка
-                var overtime = totalTimePerDay - NUMBER_WORKING_HOURS_PER_DAY;
+                var overtime = totalTimePerDay - NumberWoringHoursPerDay;
                 //Если переработка была, считаем результат как (стандартный рабочий день + удовоенное время переработки)* часовую ставку
                 //Иначе просто перемножаем рабочее время на часовую ставку
                 if (overtime > 0)
-                    totalSalary += (decimal)(NUMBER_WORKING_HOURS_PER_DAY + overtime * BONUS_COEFFICIENT) * salaryInHour;
+                    totalSalary += (decimal)(NumberWoringHoursPerDay + overtime * BonusCoefficient) * salaryInHour;
                 else
                     totalSalary += (decimal)(totalTimePerDay) * salaryInHour;
             }

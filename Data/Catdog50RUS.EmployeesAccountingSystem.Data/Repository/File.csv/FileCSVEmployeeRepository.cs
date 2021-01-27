@@ -33,12 +33,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             List<BaseEmployee> result = new List<BaseEmployee>();
 
             //Считываем все строки из файла в текстовый массив
-            string[] dataLines = await base.ReadAsync(_filename);
+            string[] dataLines = await base.ReadAsync();
 
             foreach (var line in dataLines)
             {
                 //Получаем модель сотрудника в виде текстового массива
-                string[] model = line.Split(FileCSVSettings.DATA_SEPARATOR);
+                string[] model = line.Split(DataSearator);
                 //Преобразуем данные массива
                 Guid.TryParse(model[0], out Guid id);
                 string name = model[1];
@@ -144,24 +144,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             if (employee == null)
                 return null;
 
-            try
-            {
-                //Преобразуем сотрудника в строку используя модель
-                string line = employee.ToFile(FileCSVSettings.DATA_SEPARATOR);
+            //Преобразуем сотрудника в строку используя модель
+            string line = employee.ToFile(DataSearator);
 
-                //Создаем экземпляр класса StreamWriter, 
-                //передаем в него полное имя файла с данными и разрешаем добавление
-                using StreamWriter sw = new StreamWriter(FileName, true);
-                //Записываем в файл строку
-                await sw.WriteLineAsync(line);
-
+            var writingResult = await base.WriteAsync(line);
+            if (writingResult)
                 return employee;
-            }
-            catch (Exception)
-            {
-                //TODO Дописать обработчик исключений
-                throw new Exception($"Ошибка блока FileCSVEmployeeRepository, метод InsertEmployeeAsync");
-            }
+            else
+                return null;
         }
 
         /// <summary>

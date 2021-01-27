@@ -5,7 +5,7 @@
     {
         public const string EMPLOYEES_LIST_FILENAME = "persons.csv";
         public const string TASKSLOGS_FILENAME = "completedtaskslogs.csv";
-        public const string REPORTSETTINGS = "reportsettings.csv";
+        public const string REPORTSETTINGS = "salaryreportsettings.csv";
         public const char DATA_SEPARATOR = ',';
         public const char STRING_SEPARATOR = '\n';
     }

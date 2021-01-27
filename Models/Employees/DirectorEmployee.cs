@@ -32,9 +32,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
             //Всего заработано
             var totalSalary = 0M;
             //Ставка за час работы
-            var salaryInHour = BaseSalary / SalaryReportSettings.NUMBER_WORKING_HOURS_PER_MONTH;
+            var salaryInHour = BaseSalary / SalaryCalculateSettings.NUMBER_WORKING_HOURS_PER_MONTH;
             //Бонус за рабочий день
-            var bonusPerDay = Bonus / SalaryReportSettings.NUMBER_WORKING_DAYS_PER_MONTH;
+            var bonusPerDay = Bonus / SalaryCalculateSettings.NUMBER_WORKING_DAYS_PER_MONTH;
 
             //Получаем список логов сгруппированный по дням 
             var tasksLogGroupByDays = tasksLog.GroupBy(d => d.Date.ToShortDateString());
@@ -46,7 +46,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
                 var totalTimePerDay = log.Sum(t => t.Time);
 
                 //Считаем была ли переработка
-                var overtime = totalTimePerDay - SalaryReportSettings.NUMBER_WORKING_HOURS_PER_DAY;
+                var overtime = totalTimePerDay - SalaryCalculateSettings.NUMBER_WORKING_HOURS_PER_DAY;
 
                 //Если переработка была, считаем результат как рабочее время * на часовую ставку + бонус, 
                 //рассчитанный как месячный бонус / количество рабочих дней

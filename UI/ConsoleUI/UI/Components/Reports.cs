@@ -1,6 +1,4 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
-using Catdog50RUS.EmployeesAccountingSystem.Data.Repository;
-using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportService;
 using System;
@@ -9,7 +7,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 {
     class Reports
     {
-        private readonly static ISettingsRepository Settings = new ReportSettingsService();
+        //private readonly static IReportSettingsRepository Settings = new ReportSettingsService();
         private readonly ISalaryReportService _salaryReportService;
 
         public Reports(ISalaryReportService salaryReportService)

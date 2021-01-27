@@ -1,8 +1,6 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
-using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,10 +9,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
     public class FileCSVCompletedTasksLogRepository : FileCSVBase, ICompletedTasksLogRepository
     {
         private static readonly string _filename = FileCSVSettings.TASKSLOGS_FILENAME;
-        /// <summary>
-        /// Внедряем репозиторий с данными сотрудников через интерфейс
-        /// </summary>
-        private IEmployeeRepository _employeeRepository { get; } = new FileCSVEmployeeRepository();
 
         public FileCSVCompletedTasksLogRepository() : base(_filename) { }
 
@@ -29,24 +23,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             //Проверяем входные данные на null
             if (taskLog == null)
                 return null;
-            try
-            {
-                //Преобразуем задачу в строку используя модель
-                string line = taskLog.ToFile(FileCSVSettings.DATA_SEPARATOR);
-                //Создаем экземпляр класса StreamWriter, 
-                //передаем в него полное имя файла с данными и разрешаем добавление
-                using StreamWriter sw = new StreamWriter(FileName, true);
-                //Записываем в файл строку
-                await sw.WriteLineAsync(line);
+            //Преобразуем задачу в строку используя модель
+            string line = taskLog.ToFile(DataSearator);
+            var writingResult = await base.WriteAsync(line);
+
+            if (writingResult)
                 return taskLog;
-            }
-            catch (Exception)
-            {
-                //TODO Дописать обработчик исключений
+            else
                 return null;
-                throw;
-                
-            }
         }
 
         /// <summary>
@@ -115,14 +99,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// <returns></returns>
         private async Task<IEnumerable<CompletedTaskLog>> GetCompletedTasksListAsync()
         {
-            var dataLines = await ReadAsync(FileName);
+            var dataLines = await ReadAsync();
 
             //Создаем новый список выполненных задач
             List<CompletedTaskLog> result = new List<CompletedTaskLog>();
 
             foreach (var line in dataLines)
             {
-                var model = line.Split(FileCSVSettings.DATA_SEPARATOR);
+                var model = line.Split(DataSearator);
                 //Получаем компонент модели
                 Guid.TryParse(model[0],out Guid id);
                 DateTime.TryParse(model[1], out DateTime date);

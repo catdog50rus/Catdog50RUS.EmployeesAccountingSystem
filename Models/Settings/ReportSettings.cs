@@ -6,11 +6,6 @@
         public decimal BonusDirector { get; }
         public decimal BonusCoefficient { get; }
 
-        public ReportSettings()
-        {
-
-        }
-
         public ReportSettings(int normTimeInMonth, decimal bonusDirector, decimal bonusCoefficient)
         {
             NormTimeInMonth = normTimeInMonth;
@@ -19,9 +14,11 @@
         }
         
 
-        public string ToFile()
+        public string ToFile(char dataSeparator)
         {
-            return $"{NormTimeInMonth};{BonusDirector};{BonusCoefficient}";
+            return $"{NormTimeInMonth}{dataSeparator} " +
+                   $"{BonusDirector}{dataSeparator} " +
+                   $"{BonusCoefficient}{dataSeparator}";
         }
     }
 }

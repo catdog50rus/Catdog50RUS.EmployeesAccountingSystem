@@ -1,6 +1,4 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Repository;
-using Catdog50RUS.EmployeesAccountingSystem.Data.Services.AutorizeService;
-using Catdog50RUS.EmployeesAccountingSystem.Models;
+﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
 using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using Moq;
 using NUnit.Framework;

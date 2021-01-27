@@ -1,9 +1,7 @@
-﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Repository;
-using Catdog50RUS.EmployeesAccountingSystem.Models;
-using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
+﻿using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using System.Threading.Tasks;
 
-namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.AutorizeService
+namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
     public class AutorizeService : IAutorize
     {

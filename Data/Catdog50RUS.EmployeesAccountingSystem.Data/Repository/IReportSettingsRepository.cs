@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository
 {
-    public interface ISettingsRepository
+    public interface IReportSettingsRepository
     {
         Task<ReportSettings> GetSettings();
         Task<bool> SaveSettings(ReportSettings settings);

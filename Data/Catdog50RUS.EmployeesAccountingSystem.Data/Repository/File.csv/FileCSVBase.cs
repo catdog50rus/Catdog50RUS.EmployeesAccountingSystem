@@ -11,6 +11,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
     /// </summary>
     public class FileCSVBase
     {
+        protected static char DataSearator { get; } = FileCSVSettings.DATA_SEPARATOR;
+        protected static char StringSearator { get; } = FileCSVSettings.STRING_SEPARATOR;
+
         /// <summary>
         /// Путь к файлу с данными
         /// </summary>
@@ -67,13 +70,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         }
 
 
-        public async Task<string[]> ReadAsync(string filename)
+        public async Task<string[]> ReadAsync()
         {
             try
             {
                 //Создаем экземпляр класса StreamReader, 
                 //передаем в него полное имя файла с данными
-                using StreamReader sr = new StreamReader(filename);
+                using StreamReader sr = new StreamReader(FileName);
                 string[] dataLines = null;
 
                 //Считываем данные из файла
@@ -82,14 +85,34 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
                 //Объявляем строковый массив и передаем в него строку с данными
                 //Массив заполняется данными, каждый элемент массива разделяется знаком "новой строкой"
                 //Исходя из структуры данных преобразуем string в элементы модели
-                return dataLines = data.Split(new char[] { FileCSVSettings.STRING_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries);
+                return dataLines = data.Split(new char[] { StringSearator }, StringSplitOptions.RemoveEmptyEntries);
             }
             catch (Exception)
             {
-
-                throw;
+                return null;
+                throw new Exception($"Ошибка блока FileCSVRepository, метод Чтения из файла");
             }
 
+        }
+
+        public async Task<bool> WriteAsync(string data, bool isAppending = true)
+        {
+            try
+            {
+                //Создаем экземпляр класса StreamWriter, 
+                //передаем в него полное имя файла с данными и разрешаем добавление
+                using StreamWriter sw = new StreamWriter(FileName, isAppending);
+                //Записываем в файл строку
+                await sw.WriteLineAsync(data);
+                
+            }
+            catch (Exception)
+            {
+                return false;
+                throw new Exception($"Ошибка блока FileCSVRepository, метод Записи в файл");
+            }
+
+            return true;
         }
     }
 }

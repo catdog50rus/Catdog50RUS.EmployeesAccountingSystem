@@ -2,23 +2,39 @@
 {
     public class ReportSettings
     {
-        public int NormTimeInMonth { get; }
+        public double NumberWorkingHoursPerMonth { get; }
+        public double NumberWorkingDaysPerMonth { get; }
+        public double NumberWoringHoursPerDay { get; }
         public decimal BonusDirector { get; }
         public decimal BonusCoefficient { get; }
 
-        public ReportSettings(int normTimeInMonth, decimal bonusDirector, decimal bonusCoefficient)
+        public ReportSettings(double numberWorkingHoursPerMonth, double numberWorkingDaysPerMonth, 
+                              double numberWoringHoursPerDay, decimal bonusDirector, decimal bonusCoefficient)
         {
-            NormTimeInMonth = normTimeInMonth;
+            NumberWorkingHoursPerMonth = numberWorkingHoursPerMonth;
+            NumberWorkingDaysPerMonth = numberWorkingDaysPerMonth;
+            NumberWoringHoursPerDay = numberWoringHoursPerDay;
             BonusDirector = bonusDirector;
             BonusCoefficient = bonusCoefficient;
         }
-        
 
         public string ToFile(char dataSeparator)
         {
-            return $"{NormTimeInMonth}{dataSeparator} " +
+            return $"{NumberWorkingHoursPerMonth}{dataSeparator} " +
+                   $"{NumberWorkingDaysPerMonth}{dataSeparator} " +
+                   $"{NumberWoringHoursPerDay}{dataSeparator} " +
                    $"{BonusDirector}{dataSeparator} " +
                    $"{BonusCoefficient}{dataSeparator}";
         }
+
+        public override string ToString() => $"{NumberWorkingHoursPerMonth}, " +
+                                             $"{NumberWorkingDaysPerMonth}, " +
+                                             $"{NumberWoringHoursPerDay}, " +
+                                             $"{BonusCoefficient}, " +
+                                             $"{BonusDirector}";
+
+        public override bool Equals(object obj) => ToString().Equals(obj.ToString());
+
+        public override int GetHashCode() =>base.GetHashCode();
     }
 }

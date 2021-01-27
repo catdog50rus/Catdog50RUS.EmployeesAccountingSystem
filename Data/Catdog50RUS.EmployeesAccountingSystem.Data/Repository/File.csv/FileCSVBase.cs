@@ -1,4 +1,5 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
+using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -52,19 +53,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             new FileInfo(file).Create().Close();
             if (file.Contains(FileCSVSettings.EMPLOYEES_LIST_FILENAME))
             {
-                var admin = new Person()
-                {
-                    NamePerson = "Admin",
-                    Department = Departments.Managment,
-                    Positions = Positions.Director
-                };
-                //Преобразуем сотрудника в строку используя модель
-                string line = admin.ToFile();
+                var admin = new DirectorEmployee(Guid.Empty, "Admin", null, Departments.Managment, 0);
 
-                //Создаем экземпляр класса StreamWriter, 
-                //передаем в него полное имя файла с данными и разрешаем добавление
-                using StreamWriter sw = new StreamWriter(file, true);
-                sw.WriteLine(line);
+                //Преобразуем сотрудника в строку используя модель
+                string line = admin.ToFile(DataSearator);
+                _ = WriteAsync(line).Result;
             }
 
         }

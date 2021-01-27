@@ -29,6 +29,7 @@ namespace ReportService.NUnitTests
             double expactedTotalTime = 20;
 
             #region TestSetup
+
             //Настройка MOCK депозитария
             ICompletedTaskLogsService _serviceCompletedTaskLogs;
             ISalaryReportService _salaryReportService;

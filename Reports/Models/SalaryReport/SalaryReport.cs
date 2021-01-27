@@ -3,7 +3,6 @@ using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Models.SalaryReport
 {

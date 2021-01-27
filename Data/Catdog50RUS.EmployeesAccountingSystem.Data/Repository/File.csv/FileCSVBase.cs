@@ -29,7 +29,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         public FileCSVBase(string fileName)
         {
             //Получаем директорию приложения
-            var directory = new DirectoryInfo(Directory.GetCurrentDirectory()).FullName;
+            var directory = Directory.GetCurrentDirectory();
             //Получаем полное имя файла с данными
             var fn = Path.Combine(directory, fileName);
             //Проверяем, есть файл на диске
@@ -40,7 +40,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             }
             else
             {
-                //throw new FileNotFoundException($"Файл {fileName} не найден!");
                 FileNotFound(fn);
                 FileName = fn;
                 IsFirstRun = true;

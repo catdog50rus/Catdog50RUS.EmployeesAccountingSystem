@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
 {
-    public class FileCSVSalaryReportSettingsRepository : FileCSVBase, IReportSettingsRepository
+    public class FileCSVSalaryCalculateSettingsRepository : FileCSVBase, ISalaryCalculateSettingsRepository
     {
         /// <summary>
         /// Хранилище данных о сотрудниках
         /// </summary>
         private static readonly string _filename = FileCSVSettings.REPORTSETTINGS;
 
-        public FileCSVSalaryReportSettingsRepository() : base(_filename)
+        public FileCSVSalaryCalculateSettingsRepository() : base(_filename)
         {
         }
 
@@ -21,11 +21,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             string[] dataLines = await base.ReadAsync();
             var model = dataLines[0].Split(FileCSVSettings.DATA_SEPARATOR);
 
-            int.TryParse(model[0], out int normTimeInMonth);
-            decimal.TryParse(model[1], out decimal bonusDirector);
-            decimal.TryParse(model[2], out decimal bonusCoefficient);
+            double.TryParse(model[0], out double numberWorkingHoursPerMonth);
+            double.TryParse(model[1], out double numberWorkingDaysPerMonth);
+            double.TryParse(model[2], out double numberWorkingHoursPerDay);
+            decimal.TryParse(model[3], out decimal bonusDirector);
+            decimal.TryParse(model[4], out decimal bonusCoefficient);
 
-            return new ReportSettings(normTimeInMonth, bonusDirector, bonusCoefficient);
+            return new ReportSettings(numberWorkingHoursPerMonth, numberWorkingDaysPerMonth, numberWorkingHoursPerDay, bonusDirector, bonusCoefficient);
             
         }
 

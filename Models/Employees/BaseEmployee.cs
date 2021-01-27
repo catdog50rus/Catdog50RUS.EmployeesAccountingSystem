@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
 {
-    public abstract class BaseEmployee
+    public abstract class BaseEmployee : SalaryCalculateSettings
     {
         public Guid Id { get; set; }
         public string NamePerson { get; set; }

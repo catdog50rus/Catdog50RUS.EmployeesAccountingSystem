@@ -21,13 +21,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
         /// Конструктор
         /// </summary>
         /// <param name="taskLogsService"></param>
-        public SalaryReportService(ICompletedTaskLogsService taskLogsService)
+        public SalaryReportService(ICompletedTaskLogsService taskLogsService, IEmployeeService employeeService)
         {
             _taskLogsService = taskLogsService ?? throw new ArgumentNullException(nameof(taskLogsService));
-        }
-
-        public SalaryReportService(ICompletedTaskLogsService taskLogsService, IEmployeeService employeeService) : this(taskLogsService)
-        {
             _employeeService = employeeService;
         }
 
@@ -41,11 +37,15 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
         /// <param name="employee">Сотрудник</param>
         /// <param name="period">Период</param>
         /// <returns>Возвращает отчет</returns>
-        public async Task<SalaryReport> GetEmployeeSalaryReport(BaseEmployee employee, (DateTime firstDate, DateTime lastDate) period)
+        public async Task<SalaryReport> GetEmployeeSalaryReport(Guid id, (DateTime firstDate, DateTime lastDate) period)
         {
             //Получаем список логов
-            var employeeTasksLogList = await _taskLogsService.GetEmployeeTaskLogs(employee.Id, period.firstDate, period.lastDate);
+            var employeeTasksLogList = await _taskLogsService.GetEmployeeTaskLogs(id, period.firstDate, period.lastDate);
             if (employeeTasksLogList == null)
+                return null;
+
+            var employee = await _employeeService.GetEmployeeByIdAsync(id);
+            if (employee == null)
                 return null;
 
             //Result
@@ -57,23 +57,35 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
             return salaryReport;
         }
 
-        public async Task<SalaryReportPerAllEmployees> GetAllEmployeesSalaryReport((DateTime firstDate, DateTime lastDate) period)
+        /// <summary>
+        /// Получить расширенный отчет по всем сотрудникам
+        /// </summary>
+        /// <param name="period"></param>
+        /// <returns></returns>
+        public async Task<ExtendedSalaryReportAllEmployees> GetAllEmployeesSalaryReport((DateTime firstDate, DateTime lastDate) period)
         {
+            //Получаем логи времени и проверяем на null
             var timesLogs = await _taskLogsService.GetCompletedTaskLogs(period.firstDate, period.lastDate);
             if (timesLogs == null)
                 return null;
 
+            //Группируем логи по сотруднику
             var employeesTimeLogs = timesLogs.GroupBy(e => e.IdEmployee);
 
-            
+            //Создаем список отчетов по сотруднику
             List<SalaryReport> employeeSalaryReport = new List<SalaryReport>();
             foreach (var log in employeesTimeLogs)
             {
+                //Получаем сотрудника по id, проверяем на null
                 var employeeId = log.Key;
                 var employee = await _employeeService.GetEmployeeByIdAsync(employeeId);
                 if (employee == null)
                     break;
+
+                //Получаем список логов сотрудника
                 var employeeTimeLogs = log.ToList();
+
+                //Создаем отчет по сотруднику и добавляем его в список
                 var salaryReport = new SalaryReport(period.firstDate, period.lastDate, employee, employeeTimeLogs)
                 {
                     Header = $"Cотрудника: {employee}\n ",
@@ -81,10 +93,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
                 };
                 employeeSalaryReport.Add(salaryReport);
             }
+            //Проверяем, что список отчетов по сотрудникам не пустой
             if (employeeSalaryReport.Count == 0)
                 return null;
 
-            var result = new SalaryReportPerAllEmployees(employeeSalaryReport)
+            //Создаем расширенный отчет по сотрудникам и возвращаем результат
+            var result = new ExtendedSalaryReportAllEmployees(employeeSalaryReport)
             {
                 Header = $"Отчет по Заработной плате сотрудников \nВ период с {period.firstDate:dd.MM.yyyy} по {period.lastDate:dd.MM.yyyy}\n"
             };
@@ -92,10 +106,102 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
             return result;
         }
 
-        public IEnumerable<SalaryReport> GetDepartmensSalaryReport(Departments department, (DateTime firstDate, DateTime lastDate) period)
+        /// <summary>
+        /// Получить расширенный отчет по отделам
+        /// </summary>
+        /// <param name="department"></param>
+        /// <param name="period"></param>
+        /// <returns></returns>
+        public async Task<ExtendedSalaryReportAllDepatments> GetAllDepatmentsSalaryReport((DateTime firstDate, DateTime lastDate) period)
         {
-            throw new NotImplementedException();
+
+            var allEmployeeReport = await GetAllEmployeesSalaryReport(period);
+            var res = allEmployeeReport.EmployeeSalaryReports;
+            var depatmentsReport = res.GroupBy(x => x.Employee.Department);
+
+
+            List<ExtendedSalaryReportAllEmployees> depatmentSalaryReport = new List<ExtendedSalaryReportAllEmployees>();
+            foreach (var item in depatmentsReport)
+            {
+                //Получаем сотрудника по id, проверяем на null и фильтруем по принадлежности к необходимому отделу
+                var depatment = item.Key;
+
+                //Получаем список отчетов по сотрудникам отдела
+                var employeeSalaryReport = item.ToList();
+
+
+                //Создаем расширенный отчет по сотрудникам и возвращаем результат
+                var depatmentEmployeesReport = new ExtendedSalaryReportAllEmployees(employeeSalaryReport)
+                {
+                    Header = $"По отделу {depatment}:\n"
+                };
+
+
+
+                depatmentSalaryReport.Add(depatmentEmployeesReport);
+            }
+            //Проверяем, что список отчетов по сотрудникам не пустой
+            if (depatmentSalaryReport.Count == 0)
+                return null;
+
+            //Создаем расширенный отчет по отделу и возвращаем результат
+            var result = new ExtendedSalaryReportAllDepatments(depatmentSalaryReport)
+            {
+                Header = $"Отчет по Заработной плате сотрудников \nВ период с {period.firstDate:dd.MM.yyyy} по {period.lastDate:dd.MM.yyyy} :\n "
+            };
+
+            return result;
         }
+
+        ///// <summary>
+        ///// Получить расширенный отчет по отделу
+        ///// </summary>
+        ///// <param name="department"></param>
+        ///// <param name="period"></param>
+        ///// <returns></returns>
+        //public async Task<ExtendedSalaryReportAllEmployees> GetDepartmensSalaryReport(Departments department, (DateTime firstDate, DateTime lastDate) period)
+        //{
+        //    //Получаем логи времени и проверяем на null
+        //    var timesLogs = await _taskLogsService.GetCompletedTaskLogs(period.firstDate, period.lastDate);
+        //    if (timesLogs == null)
+        //        return null;
+
+        //    //Группируем логи по сотруднику
+        //    var employeesTimeLogs = timesLogs.GroupBy(d => d.IdEmployee);
+
+        //    //Создаем список отчетов по сотруднику
+        //    List<SalaryReport> depatmentSalaryReport = new List<SalaryReport>();
+        //    foreach (var log in employeesTimeLogs)
+        //    {
+        //        //Получаем сотрудника по id, проверяем на null и фильтруем по принадлежности к необходимому отделу
+        //        var employeeId = log.Key;
+        //        var employee = await _employeeService.GetEmployeeByIdAsync(employeeId);
+        //        if (employee == null || !employee.Department.Equals(department))
+        //            break;
+
+        //        //Получаем список логов сотрудника нужного отдела
+        //        var employeeTimeLogs = log.ToList();
+
+        //        //Создаем отчет по сотруднику и добавляем его в список
+        //        var salaryReport = new SalaryReport(period.firstDate, period.lastDate, employee, employeeTimeLogs)
+        //        {
+        //            Header = $"Cотрудника: {employee}\n ",
+        //            TotalSalary = employee.CalculateSamary(employeeTimeLogs)
+        //        };
+        //        depatmentSalaryReport.Add(salaryReport);
+        //    }
+        //    //Проверяем, что список отчетов по сотрудникам не пустой
+        //    if (depatmentSalaryReport.Count == 0)
+        //        return null;
+
+        //    //Создаем расширенный отчет по отделу и возвращаем результат
+        //    var result = new ExtendedSalaryReportAllEmployees(depatmentSalaryReport)
+        //    {
+        //        Header = $"Отчет по Заработной плате сотрудников отдела {department} \nВ период с {period.firstDate:dd.MM.yyyy} по {period.lastDate:dd.MM.yyyy} :\n "
+        //    };
+
+        //    return result;
+        //}
 
         #endregion
 

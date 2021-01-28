@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Models.SalaryReport
 {
-    public class SalaryReportPerAllEmployees
+    public class ExtendedSalaryReportAllEmployees
     {
         public string Header { get; set; }
         public IEnumerable<SalaryReport> EmployeeSalaryReports { get; }
@@ -13,11 +13,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Models.SalaryReport
         public decimal TotalSalary { get;}
 
 
-        public SalaryReportPerAllEmployees(IEnumerable<SalaryReport> employeeSalaryReports)
+        public ExtendedSalaryReportAllEmployees(IEnumerable<SalaryReport> employeeSalaryReports)
         {
             EmployeeSalaryReports = employeeSalaryReports;
             TotalTime = employeeSalaryReports.Sum(x => x.TotalTime);
             TotalSalary = employeeSalaryReports.Sum(x => x.TotalSalary);
         }
+
+
     }
 }

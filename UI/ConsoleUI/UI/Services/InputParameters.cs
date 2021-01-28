@@ -143,7 +143,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
                 month = InputIntegerParameter("Введите номер месяца (например: 5)");
             }
             var date = $"01.{month}.{DateTime.Today.Year}";
-            DateTime.TryParse(date, out DateTime res);    
+            DateTime.TryParse(date, out DateTime res);
+            Console.Clear();
             return (res, res.AddMonths(1));
         }
         /// <summary>

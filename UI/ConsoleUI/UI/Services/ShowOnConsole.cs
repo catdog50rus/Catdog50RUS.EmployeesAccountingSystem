@@ -4,7 +4,6 @@ using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using Catdog50RUS.EmployeesAccountingSystem.Reports.Models.SalaryReport;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
@@ -36,23 +35,22 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         /// <param name="person"></param>
         /// <param name="period"></param>
         /// <param name="report"></param>
-        public static void ShowPersonTasks((DateTime, DateTime) period, SalaryReport report)
+        public static void ShowPersonTasks(SalaryReport report)
         {
             Console.Clear();
-            Console.WriteLine($"Отчет по Сотруднику: {report.Employee} \nВ период с {period.Item1:dd.MM.yyyy} по {period.Item2:dd.MM.yyyy}: ");
+            Console.WriteLine($"Отчет по Сотруднику: {report.Employee} \nВ период с {report.FirstDate:dd.MM.yyyy} по {report.LastDate:dd.MM.yyyy}: ");
             Console.WriteLine();
             ShowTasks(report);
-            
+
         }
-        
+
         /// <summary>
         /// Вывод отчета по всем сотрудникам
         /// </summary>
         /// <param name="period"></param>
         /// <param name="report"></param>
-        public static void ShowAllPersonsTasks(SalaryReportPerAllEmployees report)
+        public static void ShowAllPersonsReport(ExtendedSalaryReportAllEmployees report)
         {
-            Console.Clear();
             Console.WriteLine(report.Header);
             ShowPersonsReport(report.EmployeeSalaryReports.ToList());
             Console.WriteLine($"Итого: отработано: {report.TotalTime} часов, к выплате: {report.TotalSalary} рублей.");
@@ -63,23 +61,19 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         /// </summary>
         /// <param name="period"></param>
         /// <param name="report"></param>
-        public static void ShowDepartmetsTasks((DateTime, DateTime) period, List<(Departments, List<SalaryReport>)> report)
+        public static void ShowDepartmetsReport(ExtendedSalaryReportAllDepatments report)
         {
-            Console.Clear();
-            Console.WriteLine($"Отчет по отделам за {CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(period.Item1.Month)} месяц {period.Item1.Year} года");
-            Console.WriteLine();
-            foreach (var depatment in report)
+            Console.WriteLine(report.Header);
+
+            foreach (var item in report.EmployeeSalaryReports)
             {
-                Console.WriteLine($"Отдел {depatment.Item1}:");
-                Console.WriteLine();
-                ShowPersonsReport(depatment.Item2);
-                Console.WriteLine($"Итого по отделу {depatment.Item1}:  отработано: {depatment.Item2.Sum(t => t.TotalTime)} часов, " +
-                                  $"к выплате: { depatment.Item2.Sum(t => t.TotalSalary)} рублей.");
+                ShowAllPersonsReport(item);
+
                 Console.WriteLine(new string('-', 100));
                 Console.WriteLine();
             }
-            Console.WriteLine($"Всего по организации:  отработано: {report.Sum(t=>t.Item2.Sum(s=>s.TotalTime))} часов, " +
-                              $"к выплате: {report.Sum(t => t.Item2.Sum(s => s.TotalSalary))} рублей.");
+            Console.WriteLine($"Всего по организации:  отработано: {report.TotalTime} часов, " +
+                              $"к выплате: {report.TotalSalary} рублей.");
             Console.WriteLine(new string('-', 100));
         }
 

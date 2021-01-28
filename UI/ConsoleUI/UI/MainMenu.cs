@@ -94,7 +94,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                         break;
                     case '5':
                         //Получаем отчет по отделам за месяц
-                        //GetReportByDepatments();
+                        await GetReportByDepatments();
                         break;
                     case '6':
                         //Получаем список сотрудников
@@ -190,9 +190,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         /// </summary>
         /// <returns></returns>
         private async Task AddNewTask()
-        {
-           
-            
+        {         
             //Создаем новую задачу в отдельном компоненте UI
             //И проверяем результат на null
             var employee = MapToBaseEmployee(_employee);
@@ -234,19 +232,19 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         {
             //Получаем период
             var period = InputParameters.GetPeriod();
-            var employee = MapToBaseEmployee(_employee);
+            var id =_employee.Id;
             //Проверяем, если пользователь - Директор, то он может загрузить данные для любого сотрудника
             if (_autorize.UserRole.Equals(Role.Director))
             {
                 ShowSelectUserMenu();
                 var newperson = await SelectPerson();
                 if (newperson != null)
-                    employee = newperson;
+                    id = newperson.Id;
                 Console.Clear();
 
             }
 
-            await new Reports(_salaryReportService).GetEmployeeReport(employee, period);
+            await new Reports(_salaryReportService).GetEmployeeReport(id, period);
         }
 
 
@@ -255,19 +253,19 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         {
             //Получаем период
             var period = InputParameters.GetMonth();
-            var employee = MapToBaseEmployee(_employee);
+            var id = _employee.Id;
             //Проверяем, если пользователь - Директор, то он может загрузить данные для любого сотрудника
             if (_autorize.UserRole.Equals(Role.Director))
             {
                 ShowSelectUserMenu();
                 var newperson = await SelectPerson();
                 if (newperson != null)
-                    employee = newperson;
+                    id = newperson.Id;
                 Console.Clear();
 
             }
 
-            await new Reports(_salaryReportService).GetEmployeeReport(employee,period);
+            await new Reports(_salaryReportService).GetEmployeeReport(id, period);
 
         }
 
@@ -282,14 +280,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
         }
 
-        ////5
-        //private void GetReportByDepatments()
-        //{
-        //    //Получаем период
-        //    var month = InputParameters.GetMonth();
-        //    //await Reports.GetDepartmentsReport(month);
+        //5
+        private async Task GetReportByDepatments()
+        {
+            //Получаем период
+            var month = InputParameters.GetMonth();
+            await new Reports(_salaryReportService).GetAllDepartmentsReport(month);
 
-        //}
+        }
 
 
         //6

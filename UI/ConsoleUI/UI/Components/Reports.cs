@@ -18,14 +18,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         }
 
 
-        public async Task GetEmployeeReport(BaseEmployee employee, (DateTime, DateTime) period)
+        public async Task GetEmployeeReport(Guid id, (DateTime, DateTime) period)
         {
             //Получаем отчет и проверяем его на null и валидность числовых параметров
             //Выводим результат
-            var employeeReport = await _salaryReportService.GetEmployeeSalaryReport(employee, period);
+            var employeeReport = await _salaryReportService.GetEmployeeSalaryReport(id, period);
             if (employeeReport != null)
             {
-                ShowOnConsole.ShowPersonTasks(period, employeeReport);
+                ShowOnConsole.ShowPersonTasks(employeeReport);
             }
             else
             {
@@ -42,7 +42,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             var report = await _salaryReportService.GetAllEmployeesSalaryReport(period);
             if (report != null)
             {
-                ShowOnConsole.ShowAllPersonsTasks(report);
+                ShowOnConsole.ShowAllPersonsReport(report);
             }
             else
             {
@@ -51,22 +51,20 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             ShowOnConsole.ShowContinue();
         }
 
-        //public static async Task GetDepartmentsReport((DateTime, DateTime) period)
-        //{
-        //    await InitialReport();
-        //    if (Report == null) return;
-        //    //Получаем отчет и проверяем его на null
-        //    //Выводим результат
-        //    var report = await Report.GetDepartmentsReport(period);
-        //    if(report != null)
-        //        ShowOnConsole.ShowDepartmetsTasks(period, report);
-        //    else
-        //    {
-        //        ShowError();
-        //    }
+        public async Task GetAllDepartmentsReport((DateTime, DateTime) period)
+        {
+            //Получаем отчет и проверяем его на null
+            //Выводим результат
+            var report = await _salaryReportService.GetAllDepatmentsSalaryReport(period);
+            if(report != null)
+                ShowOnConsole.ShowDepartmetsReport(report);
+            else
+            {
+                ShowError();
+            }
 
-        //    ShowOnConsole.ShowContinue();
-        //}
+            ShowOnConsole.ShowContinue();
+        }
 
         //private static async Task InitialReport()
         //{

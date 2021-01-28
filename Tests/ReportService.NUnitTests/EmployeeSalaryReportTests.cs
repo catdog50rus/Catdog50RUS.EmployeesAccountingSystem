@@ -185,11 +185,10 @@ namespace ReportService.NUnitTests
         }
 
         //Получение разработчиком отчета по зарплате сотрудника
-        [TestCase("345f97a8-284c-4533-b976-b13d3c75188f", "Петр", "Петров", Departments.Managment, 200_000, Positions.Director, 24_750)]
-        [TestCase("345f97a8-288c-4533-b976-b13d3c75188f", "Сидор", "Сидоров", Departments.IT, 1_000, Positions.Freelance, 20_000)]
+        [TestCase("345f97a8-284c-4533-b976-b13d3c75188f", "Петр", "Петров", Departments.Managment, 200_000, Positions.Director)]
+        [TestCase("345f97a8-288c-4533-b976-b13d3c75188f", "Сидор", "Сидоров", Departments.IT, 1_000, Positions.Freelance)]
         public void C_GetEmployeeReportByStaffEmployee_ReturnNull(string _id, string name, string surname,
-                                                                    Departments department, decimal baseSalary, Positions position,
-                                                                    decimal expactedTotalSalary)
+                                                                    Departments department, decimal baseSalary, Positions position)
         {
             var staffID = Guid.Parse("345f97a8-287c-4533-b976-b13d3c75188f");
             var id = Guid.Parse(_id);
@@ -349,11 +348,10 @@ namespace ReportService.NUnitTests
         }
 
         //Получение фрилансером отчета по зарплате других сотрудников
-        [TestCase("345f97a8-284c-4533-b976-b13d3c75188f", "Петр", "Петров", Departments.Managment, 200_000, Positions.Director, 24_750)]
-        [TestCase("345f97a8-287c-4533-b976-b13d3c75188f", "Иван", "Иванов", Departments.IT, 160_000, Positions.Developer, 21_000)]
+        [TestCase("345f97a8-284c-4533-b976-b13d3c75188f", "Петр", "Петров", Departments.Managment, 200_000, Positions.Director)]
+        [TestCase("345f97a8-287c-4533-b976-b13d3c75188f", "Иван", "Иванов", Departments.IT, 160_000, Positions.Developer)]
         public void E_GetEmployeeReportByStaffEmployee_ReturnNull(string _id, string name, string surname,
-                                                                    Departments department, decimal baseSalary, Positions position,
-                                                                    decimal expactedTotalSalary)
+                                                                    Departments department, decimal baseSalary, Positions position)
         {
             var freelancerID = Guid.Parse("345f97a8-288c-4533-b976-b13d3c75188f");
             var id = Guid.Parse(_id);

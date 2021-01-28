@@ -15,11 +15,10 @@ namespace ReportService.NUnitTests
     {
 
         //Получение директором отчета по зарплате сотрудников
-        [TestCase("345f97a8-284c-4533-b976-b13d3c75188f", "Петр", "Петров", Departments.Managment, 200_000, Positions.Director, 24_750, 20)]
+        [TestCase("345f97a8-284c-4533-b976-b13d3c75188f", "Петр", "Петров", Departments.Managment, 200_000)]
         
         public void A_GetEmployeeReportByDircetor_ReturnReport(string _id, string name, string surname,
-                                                               Departments department, decimal baseSalary, Positions position,
-                                                               decimal expactedTotalSalary, double expactedTotalTime)
+                                                               Departments department, decimal baseSalary)
         {
             var directorID = Guid.Parse("345f97a8-284c-4533-b976-b13d3c75188f");
             var id = Guid.Parse(_id);
@@ -101,11 +100,10 @@ namespace ReportService.NUnitTests
         }
 
         //Получение директором отчета по зарплате сотрудников, результат null вне диапазона дат
-        [TestCase("345f97a8-284c-4533-b976-b13d3c75188f", "Петр", "Петров", Departments.Managment, 200_000, Positions.Director, 24_750, 20)]
+        [TestCase("345f97a8-284c-4533-b976-b13d3c75188f", "Петр", "Петров", Departments.Managment, 200_000)]
 
         public void B_GetEmployeeReportByDircetor_ReturnNull(string _id, string name, string surname,
-                                                               Departments department, decimal baseSalary, Positions position,
-                                                               decimal expactedTotalSalary, double expactedTotalTime)
+                                                               Departments department, decimal baseSalary)
         {
             var directorID = Guid.Parse("345f97a8-284c-4533-b976-b13d3c75188f");
             var id = Guid.Parse(_id);
@@ -183,10 +181,9 @@ namespace ReportService.NUnitTests
         
         
         //Получение директором отчета по зарплате сотрудников, данных об одном сотруднике нет
-        [TestCase("345f97a8-284c-4533-b976-b13d3c75188f", "Петр", "Петров", Departments.Managment, 200_000, Positions.Director, 24_750, 20)]
+        [TestCase("345f97a8-284c-4533-b976-b13d3c75188f", "Петр", "Петров", Departments.Managment, 200_000)]
         public void C_GetEmployeeReportByDircetor_ReturnReport(string _id, string name, string surname,
-                                                               Departments department, decimal baseSalary, Positions position,
-                                                               decimal expactedTotalSalary, double expactedTotalTime)
+                                                               Departments department, decimal baseSalary)
         {
             var directorID = Guid.Parse("345f97a8-284c-4533-b976-b13d3c75188f");
             var id = Guid.Parse(_id);

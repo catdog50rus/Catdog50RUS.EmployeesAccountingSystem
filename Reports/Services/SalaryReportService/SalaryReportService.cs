@@ -41,10 +41,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
         /// <param name="employee">Сотрудник</param>
         /// <param name="period">Период</param>
         /// <returns>Возвращает отчет</returns>
-        public SalaryReport GetEmployeeSalaryReport(BaseEmployee employee, (DateTime firstDate, DateTime lastDate) period)
+        public async Task<SalaryReport> GetEmployeeSalaryReport(BaseEmployee employee, (DateTime firstDate, DateTime lastDate) period)
         {
             //Получаем список логов
-            var employeeTasksLogList = _taskLogsService.GetEmployeeTaskLogs(employee.Id, period.firstDate, period.lastDate).Result;
+            var employeeTasksLogList = await _taskLogsService.GetEmployeeTaskLogs(employee.Id, period.firstDate, period.lastDate);
             if (employeeTasksLogList == null)
                 return null;
 

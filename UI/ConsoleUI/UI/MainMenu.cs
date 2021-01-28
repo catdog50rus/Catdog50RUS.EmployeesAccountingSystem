@@ -44,7 +44,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             _completedTasksService = new CompletedTasksLogsService(new FileCSVCompletedTasksLogRepository(), _autorize);
             _employeeService = new EmployeeService(new FileCSVEmployeeRepository(), _autorize);
             
-            _salaryReportService = new SalaryReportService(_completedTasksService);
+            _salaryReportService = new SalaryReportService(_completedTasksService, _employeeService);
             
             _employee = MapToEmploeeModel(inputParameters.Item2);
         }
@@ -90,7 +90,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                         break;
                     case '4':
                         //Получаем отчет по всем сотрудникам за месяц
-                        //await GetReportByAllPersons();
+                        await GetReportByAllPersons();
                         break;
                     case '5':
                         //Получаем отчет по отделам за месяц
@@ -246,7 +246,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
             }
 
-            new Reports(_salaryReportService).GetEmployeeReport(employee, period);
+            await new Reports(_salaryReportService).GetEmployeeReport(employee, period);
         }
 
 
@@ -267,22 +267,22 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
             }
 
-            new Reports(_salaryReportService).GetEmployeeReport(employee,period);
+            await new Reports(_salaryReportService).GetEmployeeReport(employee,period);
 
         }
 
 
 
         //4
-        //private async Task GetReportByAllPersons()
-        //{
-        //    //Получаем период
-        //    var month = InputParameters.GetMonth();
-        //    await Reports.GetAllPersonsReport(month);
+        private async Task GetReportByAllPersons()
+        {
+            //Получаем период
+            var month = InputParameters.GetMonth();
+            await new Reports(_salaryReportService).GetAllPersonsReport(month);
 
-        //}
+        }
 
-        //5
+        ////5
         //private void GetReportByDepatments()
         //{
         //    //Получаем период

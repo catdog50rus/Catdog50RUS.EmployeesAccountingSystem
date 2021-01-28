@@ -1,7 +1,9 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
+using Catdog50RUS.EmployeesAccountingSystem.Models;
 using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportService;
 using System;
+using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 {
@@ -16,15 +18,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         }
 
 
-        public void GetEmployeeReport(BaseEmployee employee, (DateTime, DateTime) period)
+        public async Task GetEmployeeReport(BaseEmployee employee, (DateTime, DateTime) period)
         {
-            //await InitialReport();
-
-            //if (Report == null) return;
-
             //Получаем отчет и проверяем его на null и валидность числовых параметров
             //Выводим результат
-            var employeeReport = _salaryReportService.GetEmployeeSalaryReport(employee, period);
+            var employeeReport = await _salaryReportService.GetEmployeeSalaryReport(employee, period);
             if (employeeReport != null)
             {
                 ShowOnConsole.ShowPersonTasks(period, employeeReport);
@@ -36,23 +34,22 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             ShowOnConsole.ShowContinue();
         }
 
-        //public static async Task GetAllPersonsReport((DateTime, DateTime) period)
-        //{
-        //    await InitialReport();
-        //    if (Report == null) return;
-        //    //Получаем отчет и проверяем его на null
-        //    //Выводим результат
-        //    var report = await Report.GetAllPersonsReport(period);
-        //    if(report != null)
-        //    {
-        //        ShowOnConsole.ShowAllPersonsTasks(period, report); 
-        //    }
-        //    else
-        //    {
-        //        ShowError();
-        //    }
-        //    ShowOnConsole.ShowContinue();
-        //}
+        public async Task GetAllPersonsReport((DateTime, DateTime) period)
+        {
+            //Получаем отчет и проверяем его на null
+            //Выводим результат
+
+            var report = await _salaryReportService.GetAllEmployeesSalaryReport(period);
+            if (report != null)
+            {
+                ShowOnConsole.ShowAllPersonsTasks(report);
+            }
+            else
+            {
+                ShowError();
+            }
+            ShowOnConsole.ShowContinue();
+        }
 
         //public static async Task GetDepartmentsReport((DateTime, DateTime) period)
         //{
@@ -67,7 +64,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         //    {
         //        ShowError();
         //    }
-                
+
         //    ShowOnConsole.ShowContinue();
         //}
 

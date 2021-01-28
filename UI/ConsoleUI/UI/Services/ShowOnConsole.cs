@@ -50,13 +50,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         /// </summary>
         /// <param name="period"></param>
         /// <param name="report"></param>
-        public static void ShowAllPersonsTasks((DateTime, DateTime) period, List<SalaryReport> report)
+        public static void ShowAllPersonsTasks(SalaryReportPerAllEmployees report)
         {
             Console.Clear();
-            Console.WriteLine($"Отчет по сотрудникам за {CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(period.Item1.Month)} месяц {period.Item1.Year} года");
-            Console.WriteLine();
-            ShowPersonsReport(report);
-            Console.WriteLine($"Итого: отработано: {report.Sum(t => t.TotalTime)} часов, к выплате: {report.Sum(t => t.TotalSalary)} рублей.");
+            Console.WriteLine(report.Header);
+            ShowPersonsReport(report.EmployeeSalaryReports.ToList());
+            Console.WriteLine($"Итого: отработано: {report.TotalTime} часов, к выплате: {report.TotalSalary} рублей.");
         }
 
         /// <summary>

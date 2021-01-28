@@ -15,9 +15,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
     class MainMenu
     {
         //Поля
-        
+        /// <summary>
+        /// Авторизация
+        /// </summary>
         private readonly Autorize _autorize;
-
         /// <summary>
         /// Внедрение сервиса работы с данными сотрудника
         /// </summary>
@@ -30,6 +31,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         /// Внедрение сервиса отчетов
         /// </summary>
         private readonly ISalaryReportService _salaryReportService;
+        /// <summary>
+        /// DTO
+        /// </summary>
         private readonly Employee _employee;
 
         /// <summary>
@@ -232,44 +236,41 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         {
             //Получаем период
             var period = InputParameters.GetPeriod();
-            var id =_employee.Id;
+            var employee =MapToBaseEmployee(_employee);
             //Проверяем, если пользователь - Директор, то он может загрузить данные для любого сотрудника
             if (_autorize.UserRole.Equals(Role.Director))
             {
                 ShowSelectUserMenu();
                 var newperson = await SelectPerson();
                 if (newperson != null)
-                    id = newperson.Id;
+                    employee = newperson;
                 Console.Clear();
 
             }
 
-            await new Reports(_salaryReportService).GetEmployeeReport(id, period);
+            await new Reports(_salaryReportService).GetEmployeeReport(employee, period);
         }
-
 
         //3
         private async Task GetReportByPerson()
         {
             //Получаем период
             var period = InputParameters.GetMonth();
-            var id = _employee.Id;
+            var employee = MapToBaseEmployee(_employee);
             //Проверяем, если пользователь - Директор, то он может загрузить данные для любого сотрудника
             if (_autorize.UserRole.Equals(Role.Director))
             {
                 ShowSelectUserMenu();
                 var newperson = await SelectPerson();
                 if (newperson != null)
-                    id = newperson.Id;
+                    employee = newperson;
                 Console.Clear();
 
             }
 
-            await new Reports(_salaryReportService).GetEmployeeReport(id, period);
+            await new Reports(_salaryReportService).GetEmployeeReport(employee, period);
 
         }
-
-
 
         //4
         private async Task GetReportByAllPersons()
@@ -288,7 +289,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             await new Reports(_salaryReportService).GetAllDepartmentsReport(month);
 
         }
-
 
         //6
         /// <summary>
@@ -366,21 +366,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         }
 
         //s
-        //private async Task SetSettings()
-        //{
-        //    var settings = SetNewSettings.CreateNewSettings();
-        //    if(settings != null)
-        //    {
-        //        var res = await Settings.SaveSettings(settings);
-        //        if (res) 
-        //            ShowOnConsole.ShowMessage("Настройки обновлены!");
-        //        else
-        //            ShowOnConsole.ShowMessage("Ошибка обновления настроек!");
-        //    }
-        //    else
-        //        ShowOnConsole.ShowMessage("Ошибка обновления настроек!");
-        //    ShowOnConsole.ShowContinue();
-        //}
+        
 
         //0
         /// <summary>

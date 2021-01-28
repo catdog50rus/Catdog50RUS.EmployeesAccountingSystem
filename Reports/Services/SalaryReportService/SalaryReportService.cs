@@ -16,7 +16,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
         private readonly ICompletedTaskLogsService _taskLogsService;
         private readonly IEmployeeService _employeeService;
 
-
         /// <summary>
         /// Конструктор
         /// </summary>
@@ -25,9 +24,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
         {
             _taskLogsService = taskLogsService ?? throw new ArgumentNullException(nameof(taskLogsService));
             _employeeService = employeeService;
-        }
-
-        
+        }      
 
         #region Интерфейс
 
@@ -37,15 +34,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
         /// <param name="employee">Сотрудник</param>
         /// <param name="period">Период</param>
         /// <returns>Возвращает отчет</returns>
-        public async Task<SalaryReport> GetEmployeeSalaryReport(Guid id, (DateTime firstDate, DateTime lastDate) period)
+        public async Task<SalaryReport> GetEmployeeSalaryReport(BaseEmployee employee, (DateTime firstDate, DateTime lastDate) period)
         {
             //Получаем список логов
-            var employeeTasksLogList = await _taskLogsService.GetEmployeeTaskLogs(id, period.firstDate, period.lastDate);
+            var employeeTasksLogList = await _taskLogsService.GetEmployeeTaskLogs(employee.Id, period.firstDate, period.lastDate);
             if (employeeTasksLogList == null)
-                return null;
-
-            var employee = await _employeeService.GetEmployeeByIdAsync(id);
-            if (employee == null)
                 return null;
 
             //Result
@@ -116,8 +109,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
         {
 
             var allEmployeeReport = await GetAllEmployeesSalaryReport(period);
-            var res = allEmployeeReport.EmployeeSalaryReports;
-            var depatmentsReport = res.GroupBy(x => x.Employee.Department);
+            if (allEmployeeReport == null)
+                return null;
+
+            var depatmentsReport = allEmployeeReport.EmployeeSalaryReports.GroupBy(x => x.Employee.Department);
 
 
             List<ExtendedSalaryReportAllEmployees> depatmentSalaryReport = new List<ExtendedSalaryReportAllEmployees>();

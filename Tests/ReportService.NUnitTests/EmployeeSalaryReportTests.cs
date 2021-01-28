@@ -1,5 +1,6 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Data.Repository;
 using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
+using Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
 using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportService;
@@ -33,6 +34,8 @@ namespace ReportService.NUnitTests
             //Настройка MOCK депозитария
             ICompletedTaskLogsService _serviceCompletedTaskLogs;
             ISalaryReportService _salaryReportService;
+            IEmployeeService _employeeService;
+
             Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
             _repositoryCompletedTaskLog = new Mock<ICompletedTasksLogRepository>();
             _repositoryCompletedTaskLog
@@ -48,9 +51,19 @@ namespace ReportService.NUnitTests
                                                                                 DateTime.Now.Date.AddDays(-2), 3, "TestTask6"),})
                 .Verifiable();
 
+            var idEmp1 = Guid.Parse("345f97a8-287c-4533-b976-b13d3c75188f");
+
+            Mock<IEmployeeRepository> _repositoryEmployee;
+            _repositoryEmployee = new Mock<IEmployeeRepository>();
+            _repositoryEmployee
+                .Setup(method => method.GetEmployeeByIdAsync(idEmp1))
+                .ReturnsAsync(new DirectorEmployee(idEmp1, name, surname, department, baseSalary));
+
+
             //Настройка сервисов
             _serviceCompletedTaskLogs = new CompletedTasksLogsService(_repositoryCompletedTaskLog.Object, _autorize);
-            _salaryReportService = new SalaryReportService(_serviceCompletedTaskLogs);
+            _employeeService = new EmployeeService(_repositoryEmployee.Object, _autorize);
+            _salaryReportService = new SalaryReportService(_serviceCompletedTaskLogs, _employeeService);
 
             //Настройка сотрудника
             BaseEmployee employee = null;
@@ -79,7 +92,7 @@ namespace ReportService.NUnitTests
             DateTime lastDay = DateTime.Now.Date;
 
 
-            var result = _salaryReportService.GetEmployeeSalaryReport(employee, (firstDay, lastDay));
+            var result = _salaryReportService.GetEmployeeSalaryReport(employee, (firstDay, lastDay)).Result;
 
             Assert.IsNotNull(result);
             Assert.AreEqual(expactedTotalSalary, result.TotalSalary);
@@ -104,6 +117,9 @@ namespace ReportService.NUnitTests
             //Настройка MOCK депозитария
             ICompletedTaskLogsService _serviceCompletedTaskLogs;
             ISalaryReportService _salaryReportService;
+            IEmployeeService _employeeService;
+
+
             Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
             _repositoryCompletedTaskLog = new Mock<ICompletedTasksLogRepository>();
             _repositoryCompletedTaskLog
@@ -119,9 +135,19 @@ namespace ReportService.NUnitTests
                                                                                 DateTime.Now.Date.AddDays(-2), 3, "TestTask6"),})
                 .Verifiable();
 
+            var idEmp1 = Guid.Parse("345f97a8-287c-4533-b976-b13d3c75188f");
+
+            Mock<IEmployeeRepository> _repositoryEmployee;
+            _repositoryEmployee = new Mock<IEmployeeRepository>();
+            _repositoryEmployee
+                .Setup(method => method.GetEmployeeByIdAsync(idEmp1))
+                .ReturnsAsync(new DirectorEmployee(idEmp1, name, surname, department, baseSalary));
+
+
             //Настройка сервисов
             _serviceCompletedTaskLogs = new CompletedTasksLogsService(_repositoryCompletedTaskLog.Object, _autorize);
-            _salaryReportService = new SalaryReportService(_serviceCompletedTaskLogs);
+            _employeeService = new EmployeeService(_repositoryEmployee.Object, _autorize);
+            _salaryReportService = new SalaryReportService(_serviceCompletedTaskLogs, _employeeService);
 
             //Настройка сотрудника
             BaseEmployee employee = null;
@@ -150,7 +176,7 @@ namespace ReportService.NUnitTests
             DateTime lastDay = DateTime.Now.Date;
 
 
-            var result = _salaryReportService.GetEmployeeSalaryReport(employee, (firstDay, lastDay));
+            var result = _salaryReportService.GetEmployeeSalaryReport(employee, (firstDay, lastDay)).Result;
 
             Assert.IsNotNull(result);
             Assert.AreEqual(expactedTotalSalary, result.TotalSalary);
@@ -173,6 +199,9 @@ namespace ReportService.NUnitTests
             //Настройка MOCK депозитария
             ICompletedTaskLogsService _serviceCompletedTaskLogs;
             ISalaryReportService _salaryReportService;
+            IEmployeeService _employeeService;
+
+
             Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
             _repositoryCompletedTaskLog = new Mock<ICompletedTasksLogRepository>();
             _repositoryCompletedTaskLog
@@ -188,9 +217,19 @@ namespace ReportService.NUnitTests
                                                                                 DateTime.Now.Date.AddDays(-2), 3, "TestTask6"),})
                 .Verifiable();
 
+            var idEmp1 = Guid.Parse("345f97a8-287c-4533-b976-b13d3c75188f");
+
+            Mock<IEmployeeRepository> _repositoryEmployee;
+            _repositoryEmployee = new Mock<IEmployeeRepository>();
+            _repositoryEmployee
+                .Setup(method => method.GetEmployeeByIdAsync(idEmp1))
+                .ReturnsAsync(new DirectorEmployee(idEmp1, name, surname, department, baseSalary));
+
+
             //Настройка сервисов
             _serviceCompletedTaskLogs = new CompletedTasksLogsService(_repositoryCompletedTaskLog.Object, _autorize);
-            _salaryReportService = new SalaryReportService(_serviceCompletedTaskLogs);
+            _employeeService = new EmployeeService(_repositoryEmployee.Object, _autorize);
+            _salaryReportService = new SalaryReportService(_serviceCompletedTaskLogs, _employeeService);
 
             //Настройка сотрудника
             BaseEmployee employee = null;
@@ -219,7 +258,7 @@ namespace ReportService.NUnitTests
             DateTime lastDay = DateTime.Now.Date;
 
 
-            var result = _salaryReportService.GetEmployeeSalaryReport(employee, (firstDay, lastDay));
+            var result = _salaryReportService.GetEmployeeSalaryReport(employee, (firstDay, lastDay)).Result;
 
             Assert.IsNull(result);
 
@@ -242,6 +281,9 @@ namespace ReportService.NUnitTests
             //Настройка MOCK депозитария
             ICompletedTaskLogsService _serviceCompletedTaskLogs;
             ISalaryReportService _salaryReportService;
+            IEmployeeService _employeeService;
+
+
             Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
             _repositoryCompletedTaskLog = new Mock<ICompletedTasksLogRepository>();
             _repositoryCompletedTaskLog
@@ -257,9 +299,19 @@ namespace ReportService.NUnitTests
                                                                                 DateTime.Now.Date.AddDays(-2), 3, "TestTask6"),})
                 .Verifiable();
 
+            var idEmp1 = Guid.Parse("345f97a8-287c-4533-b976-b13d3c75188f");
+
+            Mock<IEmployeeRepository> _repositoryEmployee;
+            _repositoryEmployee = new Mock<IEmployeeRepository>();
+            _repositoryEmployee
+                .Setup(method => method.GetEmployeeByIdAsync(idEmp1))
+                .ReturnsAsync(new DirectorEmployee(idEmp1, name, surname, department, baseSalary));
+
+
             //Настройка сервисов
             _serviceCompletedTaskLogs = new CompletedTasksLogsService(_repositoryCompletedTaskLog.Object, _autorize);
-            _salaryReportService = new SalaryReportService(_serviceCompletedTaskLogs);
+            _employeeService = new EmployeeService(_repositoryEmployee.Object, _autorize);
+            _salaryReportService = new SalaryReportService(_serviceCompletedTaskLogs, _employeeService);
 
             //Настройка сотрудника
             BaseEmployee employee = null;
@@ -288,7 +340,7 @@ namespace ReportService.NUnitTests
             DateTime lastDay = DateTime.Now.Date;
 
 
-            var result = _salaryReportService.GetEmployeeSalaryReport(employee, (firstDay, lastDay));
+            var result = _salaryReportService.GetEmployeeSalaryReport(employee, (firstDay, lastDay)).Result;
 
             Assert.IsNotNull(result);
             Assert.AreEqual(expactedTotalSalary, result.TotalSalary);
@@ -311,6 +363,9 @@ namespace ReportService.NUnitTests
             //Настройка MOCK депозитария
             ICompletedTaskLogsService _serviceCompletedTaskLogs;
             ISalaryReportService _salaryReportService;
+            IEmployeeService _employeeService;
+
+
             Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
             _repositoryCompletedTaskLog = new Mock<ICompletedTasksLogRepository>();
             _repositoryCompletedTaskLog
@@ -326,9 +381,20 @@ namespace ReportService.NUnitTests
                                                                                 DateTime.Now.Date.AddDays(-2), 3, "TestTask6"),})
                 .Verifiable();
 
+            var idEmp1 = Guid.Parse("345f97a8-287c-4533-b976-b13d3c75188f");
+
+            Mock<IEmployeeRepository> _repositoryEmployee;
+            _repositoryEmployee = new Mock<IEmployeeRepository>();
+            _repositoryEmployee
+                .Setup(method => method.GetEmployeeByIdAsync(idEmp1))
+                .ReturnsAsync(new DirectorEmployee(idEmp1, name, surname, department, baseSalary));
+
+
+
             //Настройка сервисов
             _serviceCompletedTaskLogs = new CompletedTasksLogsService(_repositoryCompletedTaskLog.Object, _autorize);
-            _salaryReportService = new SalaryReportService(_serviceCompletedTaskLogs);
+            _employeeService = new EmployeeService(_repositoryEmployee.Object, _autorize);
+            _salaryReportService = new SalaryReportService(_serviceCompletedTaskLogs, _employeeService);
 
             //Настройка сотрудника
             BaseEmployee employee = null;
@@ -357,7 +423,7 @@ namespace ReportService.NUnitTests
             DateTime lastDay = DateTime.Now.Date;
 
 
-            var result = _salaryReportService.GetEmployeeSalaryReport(employee, (firstDay, lastDay));
+            var result = _salaryReportService.GetEmployeeSalaryReport(employee, (firstDay, lastDay)).Result;
 
             Assert.IsNull(result);
 

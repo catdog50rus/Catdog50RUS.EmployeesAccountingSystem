@@ -18,11 +18,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         }
 
 
-        public async Task GetEmployeeReport(Guid id, (DateTime, DateTime) period)
+        public async Task GetEmployeeReport(BaseEmployee employee, (DateTime, DateTime) period)
         {
             //Получаем отчет и проверяем его на null и валидность числовых параметров
             //Выводим результат
-            var employeeReport = await _salaryReportService.GetEmployeeSalaryReport(id, period);
+            var employeeReport = await _salaryReportService.GetEmployeeSalaryReport(employee, period);
             if (employeeReport != null)
             {
                 ShowOnConsole.ShowPersonTasks(employeeReport);

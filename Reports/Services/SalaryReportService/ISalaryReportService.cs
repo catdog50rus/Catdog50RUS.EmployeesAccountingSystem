@@ -9,7 +9,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
     public interface ISalaryReportService
     {
         
-        Task<SalaryReport> GetEmployeeSalaryReport(Guid id, (DateTime firstDate, DateTime lastDate) period);
+        Task<SalaryReport> GetEmployeeSalaryReport(BaseEmployee employee, (DateTime firstDate, DateTime lastDate) period);
         Task<ExtendedSalaryReportAllEmployees> GetAllEmployeesSalaryReport((DateTime firstDate, DateTime lastDate) period);
         //Task<ExtendedSalaryReportAllEmployees> GetDepartmensSalaryReport(Departments department, (DateTime firstDate, DateTime lastDate) period);
         Task<ExtendedSalaryReportAllDepatments> GetAllDepatmentsSalaryReport((DateTime firstDate, DateTime lastDate) period);

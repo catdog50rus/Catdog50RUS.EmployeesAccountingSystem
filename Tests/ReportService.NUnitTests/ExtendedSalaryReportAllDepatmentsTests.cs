@@ -11,13 +11,13 @@ using System.Collections.Generic;
 namespace ReportService.NUnitTests
 {
     [TestFixture]
-    class AllEmployeesSalaryReportTests
+    class ExtendedSalaryReportAllDepartmentsTests
     {
 
-        //Получение директором отчета по зарплате сотрудников
+        //Получение директором отчета по зарплате сотрудников по отделам
         [TestCase("345f97a8-284c-4533-b976-b13d3c75188f", "Петр", "Петров", Departments.Managment, 200_000, Positions.Director, 24_750, 20)]
-        
-        public void A_GetEmployeeReportByDircetor_ReturnReport(string _id, string name, string surname,
+
+        public void A_GetDepatmentsReportByDircetor_ReturnReport(string _id, string name, string surname,
                                                                Departments department, decimal baseSalary, Positions position,
                                                                decimal expactedTotalSalary, double expactedTotalTime)
         {
@@ -82,8 +82,8 @@ namespace ReportService.NUnitTests
             _serviceCompletedTaskLogs = new CompletedTasksLogsService(_repositoryCompletedTaskLog.Object, _autorize);
             _employeeService = new EmployeeService(_repositoryEmployee.Object, _autorize);
             _salaryReportService = new SalaryReportService(_serviceCompletedTaskLogs, _employeeService);
-            
-            
+
+
 
             #endregion
 
@@ -92,7 +92,7 @@ namespace ReportService.NUnitTests
             DateTime lastDay = DateTime.Now.Date;
 
 
-            var result = _salaryReportService.GetAllEmployeesSalaryReport((firstDay, lastDay)).Result;
+            var result = _salaryReportService.GetAllDepatmentsSalaryReport((firstDay, lastDay)).Result;
 
             Assert.IsNotNull(result);
             Assert.AreEqual(expactedAllTotalSalary, result.TotalSalary);
@@ -100,10 +100,10 @@ namespace ReportService.NUnitTests
 
         }
 
-        //Получение директором отчета по зарплате сотрудников, результат null вне диапазона дат
+        //Получение директором отчета по зарплате сотрудников по отделам, результат null вне диапазона дат
         [TestCase("345f97a8-284c-4533-b976-b13d3c75188f", "Петр", "Петров", Departments.Managment, 200_000, Positions.Director, 24_750, 20)]
 
-        public void B_GetEmployeeReportByDircetor_ReturnNull(string _id, string name, string surname,
+        public void B_GetDepatmentsReportByDircetor_ReturnNull(string _id, string name, string surname,
                                                                Departments department, decimal baseSalary, Positions position,
                                                                decimal expactedTotalSalary, double expactedTotalTime)
         {
@@ -176,15 +176,15 @@ namespace ReportService.NUnitTests
             DateTime lastDay = DateTime.Now.Date.AddDays(-7);
 
 
-            var result = _salaryReportService.GetAllEmployeesSalaryReport((firstDay, lastDay)).Result;
+            var result = _salaryReportService.GetAllDepatmentsSalaryReport((firstDay, lastDay)).Result;
 
             Assert.IsNull(result);
         }
-        
-        
-        //Получение директором отчета по зарплате сотрудников, данных об одном сотруднике нет
+
+
+        //Получение директором отчета по зарплате сотрудников по отделам, данных об одном сотруднике нет
         [TestCase("345f97a8-284c-4533-b976-b13d3c75188f", "Петр", "Петров", Departments.Managment, 200_000, Positions.Director, 24_750, 20)]
-        public void C_GetEmployeeReportByDircetor_ReturnReport(string _id, string name, string surname,
+        public void C_GetDepatmentsReportByDircetor_ReturnReport(string _id, string name, string surname,
                                                                Departments department, decimal baseSalary, Positions position,
                                                                decimal expactedTotalSalary, double expactedTotalTime)
         {
@@ -242,7 +242,7 @@ namespace ReportService.NUnitTests
 
             _repositoryEmployee
                 .Setup(method => method.GetEmployeeByIdAsync(idEmp3))
-                .ReturnsAsync(()=>null);
+                .ReturnsAsync(() => null);
 
 
             //Настройка сервисов
@@ -259,7 +259,7 @@ namespace ReportService.NUnitTests
             DateTime lastDay = DateTime.Now.Date;
 
 
-            var result = _salaryReportService.GetAllEmployeesSalaryReport((firstDay, lastDay)).Result;
+            var result = _salaryReportService.GetAllDepatmentsSalaryReport((firstDay, lastDay)).Result;
 
             Assert.IsNotNull(result);
             Assert.AreEqual(expactedAllTotalSalary, result.TotalSalary);

@@ -6,6 +6,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
     {
         public Role UserRole { get; }
         public Guid UserId { get; }
+        public bool IsFirstRun { get; set; } = default;
 
         public Autorize(Role role, Guid id)
         {

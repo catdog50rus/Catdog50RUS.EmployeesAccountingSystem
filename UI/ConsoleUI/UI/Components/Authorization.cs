@@ -11,19 +11,17 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
     {
         //Поля
 
-
         private readonly IAutorize _autorizeService;
 
-
-        //private readonly bool _isFirstRun;
+        private readonly bool _isFirstRun;
 
         public Authorization()
         {
             _autorizeService = new AutorizeService(new FileCSVEmployeeRepository());
-            //_isFirstRun = _employeeService.IsFirstRun;
+            _isFirstRun = _autorizeService.IsFirstRun;
         }
 
-       // public bool IsFirstRun() => _isFirstRun;
+        public bool IsFirstRun() => _isFirstRun;
 
         /// <summary>
         /// Авторизация пользователя

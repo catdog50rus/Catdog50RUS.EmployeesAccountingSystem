@@ -20,6 +20,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// </summary>
         public FileCSVEmployeeRepository() : base(_filename) { }
 
+        public bool IsFirstRun() => _isFirstRun;
 
         #region Interface
 

@@ -16,8 +16,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
         private readonly IEmployeeRepository _employeeRepository;
         private readonly Autorize _autorize;
 
-        public bool IsFirstRun { get; }
-
         /// <summary>
         /// Конструктор
         /// </summary>

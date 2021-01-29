@@ -14,7 +14,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 {
     class MainMenu
     {
-        //Поля
+        #region Fields & Constructors
+
         /// <summary>
         /// Авторизация
         /// </summary>
@@ -47,11 +48,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
             _completedTasksService = new CompletedTasksLogsService(new FileCSVCompletedTasksLogRepository(), _autorize);
             _employeeService = new EmployeeService(new FileCSVEmployeeRepository(), _autorize);
-            
+
             _salaryReportService = new SalaryReportService(_completedTasksService, _employeeService);
-            
+
             _employee = MapToEmploeeModel(inputParameters.Item2);
         }
+
+        #endregion
+
 
         /// <summary>
         /// Отображение главного меню
@@ -62,11 +66,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             //Флаг выхода из главного меню
             bool exit = default;
 
-            //if (Person.NamePerson.Equals("Admin"))
-            //{
-            //    await ShowAdmin();
-            //    return;
-            //}
+            if (_employee.NamePerson.Equals("Admin"))
+            {
+                await ShowAdmin();
+                return;
+            }
 
             //Запускаем цикл ожидающий выбора элементов меню
             while (!exit)
@@ -127,39 +131,39 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
         }
 
-       
+
         #region Реализация
 
-        //private async Task ShowAdmin()
-        //{
-        //    Console.Clear();
-        //    Console.WriteLine();
-        //    Console.WriteLine("Вы вошли под пользователем Admin!");
-        //    Console.WriteLine("Для продолжения работы программы необходимо зарегистрировать в системе пользователя - Руководителя");
-        //    Console.WriteLine();
-        //    Console.WriteLine("Выберите дальнейшие действия:");
-        //    Console.WriteLine("1 - Зарегистрировать Руководителя");
-        //    Console.WriteLine("0 - Выйти из профиля");
+        private async Task ShowAdmin()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("Вы вошли под пользователем Admin!");
+            Console.WriteLine("Для продолжения работы программы необходимо зарегистрировать в системе пользователя - Руководителя");
+            Console.WriteLine();
+            Console.WriteLine("Выберите дальнейшие действия:");
+            Console.WriteLine("1 - Зарегистрировать Руководителя");
+            Console.WriteLine("0 - Выйти из профиля");
 
-        //    bool exit = default;
-        //    while (!exit)
-        //    {
-        //        var key = Console.ReadKey().KeyChar;
-        //        switch (key)
-        //        {
-        //            case '1':
-        //                await InsertNewPerson();
-        //                await _employeeService.DeleteEmployeeAsync(_employee.Id);
-        //                exit = true;
-        //                break;
-        //            case '0':
-        //                exit = true;
-        //                break;
-        //            default:
-        //                break;
-        //        }
-        //    }
-        //}
+            bool exit = default;
+            while (!exit)
+            {
+                var key = Console.ReadKey().KeyChar;
+                switch (key)
+                {
+                    case '1':
+                        await InsertNewPerson();
+                        await _employeeService.DeleteEmployeeAsync(_employee.Id);
+                        exit = true;
+                        break;
+                    case '0':
+                        exit = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
         //Отображение элементов меню
         private void ShowText(Role role)
@@ -383,6 +387,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
         #endregion
 
+        #region Mapping
+
+        /// <summary>
+        /// Конвертация DTO в модель
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         private BaseEmployee MapToBaseEmployee(Employee e)
         {
             var position = e.Positions;
@@ -406,7 +417,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             }
             return employee;
         }
-
+        /// <summary>
+        /// Конвертация модели в DTO
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         private Employee MapToEmploeeModel(BaseEmployee e)
         {
             return new Employee
@@ -419,12 +434,24 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                 BaseSalary = e.BaseSalary
             };
         }
-
+        /// <summary>
+        /// Конвертация DTO в модель
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         private CompletedTaskLog MapToCompletedTaskLog(TaskLog log)
         {
             return new CompletedTaskLog(log.IdEmployee, log.Date, log.Time, log.TaskName);
         }
 
+        #endregion
+
+        #region Select another employee
+
+        /// <summary>
+        /// Выбрать сотрудника для получения информации
+        /// </summary>
+        /// <returns></returns>
         private async Task<BaseEmployee> SelectPerson()
         {
             Console.WriteLine();
@@ -440,7 +467,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             }
             return employee;
         }
-
+        /// <summary>
+        /// Показать меню выбора интересующего сотрудника
+        /// </summary>
         private void ShowSelectUserMenu()
         {
             Console.WriteLine("Выберете сотрудника для ввода выполненной задачи:");
@@ -448,6 +477,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             Console.WriteLine("1 - Выбрать другого сотрудника");
             Console.WriteLine("Любая клавиши - продолжить");
         }
+
+        #endregion
 
     }
 }

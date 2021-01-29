@@ -7,9 +7,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
     {
         private readonly IEmployeeRepository _employeesRepository;
 
+        public bool IsFirstRun { get; }
+
         public AutorizeService(IEmployeeRepository employeeRepository)
         {
             _employeesRepository = employeeRepository;
+            IsFirstRun = employeeRepository.IsFirstRun();
         }
 
 

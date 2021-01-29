@@ -19,6 +19,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             //Запускаем цикл ожидающий выбора элементов меню
             while (!exit)
             {
+                Console.Clear();
                 //Отображение элементов меню
                 ShowText();
                 //Получаем символ нажатой клавиши
@@ -52,12 +53,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             //Создаем экземпляр класса авторизации и получаем авторизованного пользователя 
             var auth = new Authorization();
 
-            //if (auth.IsFirstRun())
-            //{
-            //    ShowOnConsole.ShowMessage($" Это первый запуск программы! \n Для начала работы необходимо войти под пользователем Admin");
-            //    ShowOnConsole.ShowContinue();
-            //}
-            
+            if (auth.IsFirstRun())
+            {
+                ShowOnConsole.ShowMessage($" Это первый запуск программы! \n Для начала работы необходимо войти под пользователем Admin");
+                ShowOnConsole.ShowContinue();
+            }
+
             var autorizeResult = await auth.AutorezationUser();
             if (autorizeResult.Item1 != null)
             {

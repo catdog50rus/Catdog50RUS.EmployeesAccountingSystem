@@ -7,8 +7,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
 { 
     public interface IEmployeeService
     {
-        public bool IsFirstRun { get; }
-
         Task<bool> InsertEmployeeAsync(BaseEmployee employee);
         Task<IEnumerable<BaseEmployee>> GetAllEmployeeAsync();
         

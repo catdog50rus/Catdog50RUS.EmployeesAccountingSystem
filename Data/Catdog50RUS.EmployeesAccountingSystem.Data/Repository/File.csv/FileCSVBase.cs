@@ -20,7 +20,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// </summary>
         protected string FileName { get; } = "";
 
-        public bool IsFirstRun { get; }
+        protected readonly bool _isFirstRun;
 
         /// <summary>
         /// Конструктор базового класса
@@ -36,13 +36,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             if(new FileInfo(fn).Exists)
             {
                 FileName = fn;
-                IsFirstRun = false;
+                _isFirstRun = false;
             }
             else
             {
-                FileNotFound(fn);
                 FileName = fn;
-                IsFirstRun = true;
+                FileNotFound(fn);
+                _isFirstRun = true;
             }
 
         }
@@ -106,5 +106,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
 
             return true;
         }
+
+        
     }
 }

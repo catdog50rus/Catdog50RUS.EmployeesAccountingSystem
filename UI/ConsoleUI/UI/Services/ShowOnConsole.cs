@@ -32,7 +32,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         /// Вывод отчета по сотруднику
         /// </summary>
         /// <param name="report"></param>
-        public static void ShowEmployeeSalaryReport(this SalaryReport report)
+        public static void ShowEmployeeSalaryReport(this EmployeeSalaryReport report)
         {
             Console.WriteLine(new string('-', 75));
             Console.WriteLine(report.Header);

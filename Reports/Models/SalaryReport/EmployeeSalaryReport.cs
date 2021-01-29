@@ -6,7 +6,10 @@ using System.Linq;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Models.SalaryReport
 {
-    public class SalaryReport
+    /// <summary>
+    /// Реализация модели отчета по сотруднику
+    /// </summary>
+    public class EmployeeSalaryReport
     {
         public string Header { get; set; }
         public DateTime FirstDate { get; }
@@ -16,7 +19,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Models.SalaryReport
         public double TotalTime { get; }
         public decimal TotalSalary { get; set; }
 
-        public SalaryReport(DateTime firstDate, DateTime lastDate, BaseEmployee employee,
+        public EmployeeSalaryReport(DateTime firstDate, DateTime lastDate, BaseEmployee employee,
                             IEnumerable<CompletedTaskLog> tasksLoagList)
         {
             if (employee is null)

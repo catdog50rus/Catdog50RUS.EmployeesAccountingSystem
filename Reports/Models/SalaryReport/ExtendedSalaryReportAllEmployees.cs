@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Models.SalaryReport
 {
+    /// <summary>
+    /// Реализация модели отчета по всем сотрудникам
+    /// </summary>
     public class ExtendedSalaryReportAllEmployees
     {
         public string Header { get; set; }
-        public IEnumerable<SalaryReport> EmployeeSalaryReports { get; }
+        public IEnumerable<EmployeeSalaryReport> EmployeeSalaryReports { get; }
         public double TotalTime { get; }
         public decimal TotalSalary { get;}
 
-
-        public ExtendedSalaryReportAllEmployees(IEnumerable<SalaryReport> employeeSalaryReports)
+        public ExtendedSalaryReportAllEmployees(IEnumerable<EmployeeSalaryReport> employeeSalaryReports)
         {
             EmployeeSalaryReports = employeeSalaryReports;
             TotalTime = employeeSalaryReports.Sum(x => x.TotalTime);
             TotalSalary = employeeSalaryReports.Sum(x => x.TotalSalary);
         }
-
-
     }
 }

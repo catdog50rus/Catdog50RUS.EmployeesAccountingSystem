@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Models.SalaryReport
 {
+    /// <summary>
+    /// Реализация модели отчета по отделам
+    /// </summary>
     public class ExtendedSalaryReportAllDepatments
     {
         public string Header { get; set; }

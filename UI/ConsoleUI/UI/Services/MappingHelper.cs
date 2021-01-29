@@ -22,7 +22,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
                 NamePerson = e.NamePerson,
                 SurnamePerson = e.SurnamePerson,
                 Department = e.Department,
-                Positions = e.Positions,
+                Positions = e.Position,
                 BaseSalary = e.BaseSalary
             };
         }

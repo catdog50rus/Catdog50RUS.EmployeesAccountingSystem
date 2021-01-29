@@ -4,18 +4,21 @@ using System.Linq;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
 {
+    /// <summary>
+    /// Реализация модели фрилансера
+    /// </summary>
     public class FreeLancerEmployee : BaseEmployee
     {
+        //Конструкторы
         public FreeLancerEmployee(string name, string surname, Departments dep, decimal baseSalary) 
                            : base(name, surname, dep, baseSalary)
         {
-            Positions = Positions.Freelance;
+            Position = Positions.Freelance;
         }
-
         public FreeLancerEmployee(Guid id, string name, string surname, Departments dep, decimal baseSalary) 
                            : base(id, name, surname, dep,  baseSalary)
         {
-            Positions = Positions.Freelance;
+            Position = Positions.Freelance;
         }
 
         /// <summary>

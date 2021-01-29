@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.ReportSettings
 {
+    //Класс не используется
     public class SalaryCalculatingSettingsService : ISalaryCalculateSettingsService
     {
         private readonly ISalaryCalculateSettingsRepository _salaryCalculateSettingsRepository;

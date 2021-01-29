@@ -12,14 +12,21 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
     /// </summary>
     public class FileCSVBase
     {
+        /// <summary>
+        /// Внедрение разделителя данных
+        /// </summary>
         protected static char DataSearator { get; } = FileCSVSettings.DATA_SEPARATOR;
+        /// <summary>
+        /// Внедрение разделителя строк
+        /// </summary>
         protected static char StringSearator { get; } = FileCSVSettings.STRING_SEPARATOR;
-
         /// <summary>
         /// Путь к файлу с данными
         /// </summary>
         protected string FileName { get; } = "";
-
+        /// <summary>
+        /// Флаг первого запуска приложения
+        /// </summary>
         protected readonly bool _isFirstRun;
 
         /// <summary>
@@ -47,21 +54,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
 
         }
 
-        private void FileNotFound(string file)
-        {
-            new FileInfo(file).Create().Close();
-            if (file.Contains(FileCSVSettings.EMPLOYEES_LIST_FILENAME))
-            {
-                var admin = new DirectorEmployee(Guid.Empty, "Admin", null, Departments.Managment, 0);
-
-                //Преобразуем сотрудника в строку используя модель
-                string line = admin.ToFile(DataSearator);
-                _ = WriteAsync(line).Result;
-            }
-
-        }
-
-
+        /// <summary>
+        /// Чтение данных из файла
+        /// </summary>
+        /// <returns></returns>
         public async Task<string[]> ReadAsync()
         {
             try
@@ -86,7 +82,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             }
 
         }
-
+        /// <summary>
+        /// Запись данных в файл
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="isAppending"></param>
+        /// <returns></returns>
         public async Task<bool> WriteAsync(string data, bool isAppending = true)
         {
             try
@@ -96,7 +97,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
                 using StreamWriter sw = new StreamWriter(FileName, isAppending);
                 //Записываем в файл строку
                 await sw.WriteLineAsync(data);
-                
             }
             catch (Exception)
             {
@@ -107,6 +107,26 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             return true;
         }
 
-        
+        /// <summary>
+        /// При первом запуске приложения
+        /// Создаем пустые файлы данных
+        /// В файл сотрудников записываем сотрудника Admin
+        /// </summary>
+        /// <param name="file"></param>
+        private void FileNotFound(string file)
+        {
+            //Создаем пустой файл
+            new FileInfo(file).Create().Close();
+            //Проверяем, если создается файл с сотрудниками, записываем в него учетную запись Admin
+            if (file.Contains(FileCSVSettings.EMPLOYEES_LIST_FILENAME))
+            {
+                var admin = new DirectorEmployee(Guid.Empty, "Admin", null, Departments.Managment, 0);
+
+                //Преобразуем сотрудника в строку используя модель
+                string line = admin.ToFile(DataSearator);
+                _ = WriteAsync(line).Result;
+            }
+
+        }
     }
 }

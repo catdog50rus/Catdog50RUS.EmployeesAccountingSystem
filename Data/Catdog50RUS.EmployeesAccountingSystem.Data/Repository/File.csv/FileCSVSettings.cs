@@ -1,6 +1,8 @@
 ﻿namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
-
 {
+    /// <summary>
+    /// Класс с настройками
+    /// </summary>
     public static class FileCSVSettings
     {
         public const string EMPLOYEES_LIST_FILENAME = "persons.csv";

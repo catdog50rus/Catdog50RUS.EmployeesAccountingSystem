@@ -4,19 +4,21 @@ using System.Linq;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
 {
+    /// <summary>
+    /// Реализация модели руководителя
+    /// </summary>
     public class DirectorEmployee : BaseEmployee
     {
-
+        //Конструкторы
         public DirectorEmployee(string name, string surname, Departments dep, decimal baseSalary) 
                          : base(name, surname, dep, baseSalary)
         {
-            Positions = Positions.Director;
+            Position = Positions.Director;
         }
-
         public DirectorEmployee(Guid id, string name, string surname, Departments dep, decimal baseSalary) 
                          : base(id, name, surname, dep, baseSalary)
         {
-            Positions = Positions.Director;
+            Position = Positions.Director;
         }
 
         /// <summary>

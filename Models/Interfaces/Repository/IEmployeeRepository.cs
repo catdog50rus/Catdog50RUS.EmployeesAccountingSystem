@@ -7,8 +7,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
     public interface IEmployeeRepository
     {
+        /// <summary>
+        /// Получить флаг первого запуска приложения
+        /// </summary>
+        /// <returns></returns>
         public bool IsFirstRun();
-
         /// <summary>
         /// Получить асинхронно список всех сотрудников
         /// </summary>

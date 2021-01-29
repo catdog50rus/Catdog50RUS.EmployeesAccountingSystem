@@ -43,7 +43,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
         /// Авторизация пользователя
         /// </summary>
         /// <returns></returns>
-        public async Task<(Autorize, BaseEmployee)> AutorezationUser()
+        public async Task<(AutorizeToken, BaseEmployee)> AutorezationUser()
         {
             //Аутентифицируем пользователя и проверяем результат
             var employee = await GetEmployee();

@@ -17,12 +17,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
         /// Внедрение зависимости через интерфейс
         /// </summary>
         private readonly ICompletedTasksLogRepository _tasksRepository;
-        private readonly Autorize _autorize;
-
+        /// <summary>
+        /// Внедрение авторизации
+        /// </summary>
+        private readonly AutorizeToken _autorize;
         /// <summary>
         /// Конструктор
         /// </summary>
-        public CompletedTasksLogsService(ICompletedTasksLogRepository repository, Autorize autorize)
+        public CompletedTasksLogsService(ICompletedTasksLogRepository repository, AutorizeToken autorize)
         {
             _tasksRepository = repository;
             if (autorize != null)
@@ -73,7 +75,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
 
             return new CompletedTaskLog(Guid.NewGuid(), employee.Id, date,time,taskname);
         }
-
         /// <summary>
         /// Добавить новую задачу
         /// </summary>
@@ -94,7 +95,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
                 return false;
 
         }
-
         /// <summary>
         /// Получить выполненные задачи пользователя
         /// за определенный период
@@ -141,7 +141,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
                 return null;
 
         }
-        
         /// <summary>
         /// Получение логов всех пользователей
         /// </summary>
@@ -203,7 +202,5 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services
             
             return true;
         }
-
-
     }
 }

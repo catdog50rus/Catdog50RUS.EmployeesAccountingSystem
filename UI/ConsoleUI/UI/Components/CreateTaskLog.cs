@@ -14,12 +14,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
         /// <summary>
         /// Внедрение авторизации
         /// </summary>
-        private readonly Autorize _autorize;
+        private readonly AutorizeToken _autorize;
         /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="autorize"></param>
-        public CreateTaskLog(Autorize autorize)
+        public CreateTaskLog(AutorizeToken autorize)
         {
             _autorize = autorize;
         }

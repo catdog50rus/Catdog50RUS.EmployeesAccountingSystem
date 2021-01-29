@@ -22,7 +22,7 @@ namespace ReportService.NUnitTests
         {
             var directorID = Guid.Parse("345f97a8-284c-4533-b976-b13d3c75188f");
             var id = Guid.Parse(_id);
-            var _autorize = new Autorize(Role.Director, directorID);
+            var _autorize = new AutorizeToken(Role.Director, directorID);
 
             double expactedAllTotalTime = 35;
             decimal expactedAllTotalSalary = 39_750;
@@ -107,7 +107,7 @@ namespace ReportService.NUnitTests
         {
             var directorID = Guid.Parse("345f97a8-284c-4533-b976-b13d3c75188f");
             var id = Guid.Parse(_id);
-            var _autorize = new Autorize(Role.Director, directorID);
+            var _autorize = new AutorizeToken(Role.Director, directorID);
 
 
             #region TestSetup
@@ -187,7 +187,7 @@ namespace ReportService.NUnitTests
         {
             var directorID = Guid.Parse("345f97a8-284c-4533-b976-b13d3c75188f");
             var id = Guid.Parse(_id);
-            var _autorize = new Autorize(Role.Director, directorID);
+            var _autorize = new AutorizeToken(Role.Director, directorID);
 
             double expactedAllTotalTime = 29;
             decimal expactedAllTotalSalary = 33_750;

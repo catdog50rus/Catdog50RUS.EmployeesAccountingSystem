@@ -2,6 +2,9 @@
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
+    /// <summary>
+    /// Модель тайм логов
+    /// </summary>
     public class CompletedTaskLog
     {
         public Guid IdTask { get; set; }
@@ -10,9 +13,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
         public double Time { get; set; }
         public string TaskName { get; set; }
 
-        //Временное решение
-        //public CompletedTask() { }
-
         public CompletedTaskLog(DateTime date, double time, string task)
         {
             IdTask = Guid.NewGuid();
@@ -20,22 +20,21 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
             Time = time;
             TaskName = task;
         }
-
         public CompletedTaskLog(Guid idEmployee, DateTime date, double time, string task) : this(date, time, task)
         {
             IdEmployee = idEmployee;
         }
-
         public CompletedTaskLog(Guid id, Guid idEmployee, DateTime date, double time, string task) : this(idEmployee, date, time, task)
         {
             IdTask = id;
             
         }
 
-
-
-
-
+        /// <summary>
+        /// Преобразование модели для записи в файл
+        /// </summary>
+        /// <param name="dataSeparator"></param>
+        /// <returns></returns>
         public string ToFile(char dataSeparator)
         {
             return $"{IdTask}{dataSeparator}" +
@@ -44,8 +43,5 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Models
                    $"{Time}{dataSeparator}" +
                    $"{TaskName}{dataSeparator}";
         }
-
-        
-
     }
 }

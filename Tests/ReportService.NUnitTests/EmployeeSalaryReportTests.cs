@@ -24,7 +24,7 @@ namespace ReportService.NUnitTests
         {
             var directorID = Guid.Parse("345f97a8-284c-4533-b976-b13d3c75188f");
             var id = Guid.Parse(_id);
-            var _autorize = new Autorize(Role.Director, directorID);
+            var _autorize = new AutorizeToken(Role.Director, directorID);
            
 
             double expactedTotalTime = 20;
@@ -108,7 +108,7 @@ namespace ReportService.NUnitTests
         {
             var staffID = Guid.Parse("345f97a8-287c-4533-b976-b13d3c75188f");
             var id = Guid.Parse(_id);
-            var _autorize = new Autorize(Role.Developer, staffID);
+            var _autorize = new AutorizeToken(Role.Developer, staffID);
 
 
             double expactedTotalTime = 20;
@@ -192,7 +192,7 @@ namespace ReportService.NUnitTests
         {
             var staffID = Guid.Parse("345f97a8-287c-4533-b976-b13d3c75188f");
             var id = Guid.Parse(_id);
-            var _autorize = new Autorize(Role.Developer, staffID);
+            var _autorize = new AutorizeToken(Role.Developer, staffID);
 
             #region TestSetup
             //Настройка MOCK депозитария
@@ -271,7 +271,7 @@ namespace ReportService.NUnitTests
         {
             var freelancerID = Guid.Parse("345f97a8-288c-4533-b976-b13d3c75188f");
             var id = Guid.Parse(_id);
-            var _autorize = new Autorize(Role.Freelancer, freelancerID);
+            var _autorize = new AutorizeToken(Role.Freelancer, freelancerID);
 
 
             double expactedTotalTime = 20;
@@ -355,7 +355,7 @@ namespace ReportService.NUnitTests
         {
             var freelancerID = Guid.Parse("345f97a8-288c-4533-b976-b13d3c75188f");
             var id = Guid.Parse(_id);
-            var _autorize = new Autorize(Role.Freelancer, freelancerID);
+            var _autorize = new AutorizeToken(Role.Freelancer, freelancerID);
 
             #region TestSetup
             //Настройка MOCK депозитария

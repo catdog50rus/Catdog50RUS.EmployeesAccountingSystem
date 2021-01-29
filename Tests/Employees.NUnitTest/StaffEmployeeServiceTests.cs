@@ -18,13 +18,13 @@ namespace Employees.NUnitTest
         private ICompletedTaskLogsService _serviceCompletedTaskLogs;
         private Mock<IEmployeeRepository> _repositoryEmployee;
         private Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
-        private Autorize _autorize;
+        private AutorizeToken _autorize;
 
         public StaffEmployeeServiceTests()
         {
             var id = Guid.NewGuid();
             _staff = new StaffEmployee(id, "Петр", "Петров", Departments.IT, 200_000);
-            _autorize = new Autorize(Role.Developer, id);
+            _autorize = new AutorizeToken(Role.Developer, id);
         }
 
         [SetUp]

@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
 {
+    /// <summary>
+    /// Реализация репозитория сотрудников
+    /// </summary>
     public class FileCSVEmployeeRepository : FileCSVBase, IEmployeeRepository
     {
         /// <summary>
@@ -20,10 +23,13 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// </summary>
         public FileCSVEmployeeRepository() : base(_filename) { }
 
-        public bool IsFirstRun() => _isFirstRun;
-
         #region Interface
 
+        /// <summary>
+        /// Получить флаг первого запуска программы
+        /// </summary>
+        /// <returns></returns>
+        public bool IsFirstRun() => _isFirstRun;
         /// <summary>
         /// Получить асинхронно список всех сотрудников
         /// </summary>
@@ -78,7 +84,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
 
             return result;
         }
-
         /// <summary>
         /// Удаление сотрудника из файла данных
         /// </summary>
@@ -95,7 +100,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             var result = await DeleteEmployeeAsync(employeesList, deleteEmployee);
             return result;
         }
-
         /// <summary>
         /// Удаление сотрудника из файла данных по имени
         /// </summary>
@@ -115,7 +119,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             var result = await DeleteEmployeeAsync(employeesList, deleteEmployee);
             return result;
         }        
-
         /// <summary>
         /// Получить сотрудника по имени
         /// </summary>
@@ -133,7 +136,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             //Возвращаем результат    
             return list.FirstOrDefault(p => p.NamePerson == name);
         }
-
         /// <summary>
         /// Добавить сотрудника
         /// </summary>
@@ -148,28 +150,35 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
             //Преобразуем сотрудника в строку используя модель
             string line = employee.ToFile(DataSearator);
 
+            //Записываем данные в файл, получаем результат
             var writingResult = await base.WriteAsync(line);
             if (writingResult)
                 return employee;
             else
                 return null;
         }
-
         /// <summary>
         /// Получить сотрудника по id
         /// </summary>
         /// <returns></returns>
         public async Task<BaseEmployee> GetEmployeeByIdAsync(Guid id)
         {
+            //Получаем список сотрудников и проверяем его
             var list = await GetEmployeesListAsync();
-            if (list != null)
-                return list.FirstOrDefault(p => p.Id == id);
-            else
+            if (list == null || list.Count() == 0)
                 return null;
+                
+            return list.FirstOrDefault(p => p.Id == id);
          }
 
         #endregion
 
+        /// <summary>
+        /// Реализация удаления сотрудника
+        /// </summary>
+        /// <param name="employeesList"></param>
+        /// <param name="deleteEmployee"></param>
+        /// <returns></returns>
         private async Task<BaseEmployee> DeleteEmployeeAsync(IEnumerable<BaseEmployee> employeesList, BaseEmployee deleteEmployee)
         {
             //Создаем результирующий список и удаляем из него сотрудника

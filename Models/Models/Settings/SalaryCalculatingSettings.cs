@@ -1,5 +1,6 @@
 ﻿namespace Catdog50RUS.EmployeesAccountingSystem.Models
 {
+    //Класс не используется
     public class SalaryCalculatingSettings
     {
         public double NumberWorkingHoursPerMonth { get; }

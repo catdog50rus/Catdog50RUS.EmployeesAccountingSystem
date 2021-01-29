@@ -19,7 +19,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         /// <summary>
         /// Авторизация
         /// </summary>
-        private readonly Autorize _autorize;
+        private readonly AutorizeToken _autorize;
         /// <summary>
         /// Внедрение сервиса работы с данными сотрудника
         /// </summary>
@@ -42,7 +42,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         /// Принимает сотрудника
         /// </summary>
         /// <param name="person"></param>
-        public MainMenu((Autorize, BaseEmployee) inputParameters)
+        public MainMenu((AutorizeToken, BaseEmployee) inputParameters)
         {
             _autorize = inputParameters.Item1;
 

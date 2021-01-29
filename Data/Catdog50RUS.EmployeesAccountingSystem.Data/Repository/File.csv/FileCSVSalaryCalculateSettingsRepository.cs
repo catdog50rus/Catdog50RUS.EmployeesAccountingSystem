@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
 {
+    //класс написан на будущее, сейчас не используется
     public class FileCSVSalaryCalculateSettingsRepository : FileCSVBase, ISalaryCalculateSettingsRepository
     {
         /// <summary>
@@ -11,8 +12,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         private static readonly string _filename = FileCSVSettings.REPORTSETTINGS;
 
         public FileCSVSalaryCalculateSettingsRepository() : base(_filename) { }
-
-
 
         public async Task<SalaryCalculatingSettings> GetSettings()
         {

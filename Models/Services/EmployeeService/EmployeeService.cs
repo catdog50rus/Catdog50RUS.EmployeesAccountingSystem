@@ -7,19 +7,24 @@ using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
 {
-
+    /// <summary>
+    /// Реализация сервиса сотрудников
+    /// </summary>
     public class EmployeeService : IEmployeeService
     {
         /// <summary>
         /// Внедрение зависимости через интерфейс
         /// </summary>
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly Autorize _autorize;
+        /// <summary>
+        /// Внедрение авторизации
+        /// </summary>
+        private readonly AutorizeToken _autorize;
 
         /// <summary>
         /// Конструктор
         /// </summary>
-        public EmployeeService(IEmployeeRepository repository, Autorize autorize)
+        public EmployeeService(IEmployeeRepository repository, AutorizeToken autorize)
         {
             _employeeRepository = repository;
 
@@ -58,7 +63,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
 
 
         }
-
         /// <summary>
         /// Получить всех сотрудников
         /// </summary>
@@ -70,7 +74,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
                 return null;
             return await _employeeRepository.GetEmployeesListAsync();
         }
-
         /// <summary>
         /// Получить сотрудника по имени
         /// </summary>
@@ -87,7 +90,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
 
             return await _employeeRepository.GetEmployeeByNameAsync(name);
         }
-
+        /// <summary>
+        /// Получить сотрудника по Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<BaseEmployee> GetEmployeeByIdAsync(Guid id)
         {
             //Проверяем права доступа
@@ -96,7 +103,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Services.EmployeeService
 
             return await _employeeRepository.GetEmployeeByIdAsync(id);
         }
-
         /// <summary>
         /// Удалить сотрудника
         /// </summary>

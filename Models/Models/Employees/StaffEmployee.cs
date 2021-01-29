@@ -4,26 +4,27 @@ using System.Linq;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.Models.Employees
 {
+    /// <summary>
+    /// Реализация модели штатного сотрудника
+    /// </summary>
     public class StaffEmployee : BaseEmployee
     {
+        //Конструкторы
         public StaffEmployee(string name, string surname, Departments department, decimal baseSalary)
                             : base(name, surname, department, baseSalary)
         {
-            Positions = Positions.Developer;
+            Position = Positions.Developer;
         }
-
         public StaffEmployee(Guid id, string name, string surname, Departments department,  decimal baseSalary) 
                             : base(id, name, surname, department, baseSalary)
         {
-            Positions = Positions.Developer;
+            Position = Positions.Developer;
         }
-
         public StaffEmployee(string name, string surname, Departments department, Positions pos, decimal baseSalary)
                             : base(name, surname, department, pos, baseSalary)
         {
             
         }
-
         public StaffEmployee(Guid id, string name, string surname, Departments department, Positions pos, decimal baseSalary)
                             : base(id, name, surname, department, pos, baseSalary)
         {

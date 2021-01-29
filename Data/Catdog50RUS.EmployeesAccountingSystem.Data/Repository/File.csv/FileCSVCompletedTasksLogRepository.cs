@@ -8,6 +8,9 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
 {
     public class FileCSVCompletedTasksLogRepository : FileCSVBase, ICompletedTasksLogRepository
     {
+        /// <summary>
+        /// Внедрение имени файла
+        /// </summary>
         private static readonly string _filename = FileCSVSettings.TASKSLOGS_FILENAME;
 
         public FileCSVCompletedTasksLogRepository() : base(_filename) { }
@@ -25,8 +28,8 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
                 return null;
             //Преобразуем задачу в строку используя модель
             string line = taskLog.ToFile(DataSearator);
+            //Записываем данные в файл и проверяем результат
             var writingResult = await base.WriteAsync(line);
-
             if (writingResult)
                 return taskLog;
             else
@@ -99,6 +102,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Data.Repository.File.csv
         /// <returns></returns>
         private async Task<IEnumerable<CompletedTaskLog>> GetCompletedTasksListAsync()
         {
+            //Считываем данные из файла
             var dataLines = await ReadAsync();
 
             //Создаем новый список выполненных задач

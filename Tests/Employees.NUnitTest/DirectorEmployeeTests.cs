@@ -20,13 +20,13 @@ namespace Employees.NUnitTest
         private ICompletedTaskLogsService _serviceCompletedTaskLogs;
         private Mock<IEmployeeRepository> _repositoryEmployee;
         private Mock<ICompletedTasksLogRepository> _repositoryCompletedTaskLog;
-        private readonly Autorize _autorize;
+        private readonly AutorizeToken _autorize;
 
         public DirectorEmployeeTests()
         {
             var id = Guid.NewGuid();
             _director = new DirectorEmployee(id, "Петр", "Петров", Departments.Managment, 200_000);
-            _autorize = new Autorize(Role.Director, id);
+            _autorize = new AutorizeToken(Role.Director, id);
 
             _staff = new StaffEmployee(id, "Иван", "Иванов", Departments.IT, 100_000);
             _freelancer = new FreeLancerEmployee(id, "Василий", "Васин", Departments.IT, 1_000);
@@ -70,23 +70,23 @@ namespace Employees.NUnitTest
             var freelancerNew = new FreeLancerEmployee("Николай", "Николаев", Departments.IT, 1_000);
             var freelancerGet = new FreeLancerEmployee(Guid.NewGuid(), "Николай", "Николаев", Departments.IT, 1_000);
 
-            Assert.AreEqual(Positions.Director, directorNew.Positions);
-            Assert.AreEqual(Positions.Director, directorGet.Positions);
+            Assert.AreEqual(Positions.Director, directorNew.Position);
+            Assert.AreEqual(Positions.Director, directorGet.Position);
             Assert.AreEqual(typeof(DirectorEmployee), directorNew.GetType());
             Assert.AreEqual(typeof(DirectorEmployee), directorGet.GetType());
 
-            Assert.AreEqual(Positions.Developer, staffNew.Positions);
-            Assert.AreEqual(Positions.Developer, staffGet.Positions);
+            Assert.AreEqual(Positions.Developer, staffNew.Position);
+            Assert.AreEqual(Positions.Developer, staffGet.Position);
             Assert.AreEqual(typeof(StaffEmployee), staffGet.GetType());
             Assert.AreEqual(typeof(StaffEmployee), staffNew.GetType());
 
-            Assert.AreEqual(Positions.None, staffNewNotIT.Positions);
-            Assert.AreEqual(Positions.None, staffGetNotIT.Positions);
+            Assert.AreEqual(Positions.None, staffNewNotIT.Position);
+            Assert.AreEqual(Positions.None, staffGetNotIT.Position);
             Assert.AreEqual(typeof(StaffEmployee), staffGetNotIT.GetType());
             Assert.AreEqual(typeof(StaffEmployee), staffNewNotIT.GetType());
 
-            Assert.AreEqual(Positions.Freelance, freelancerNew.Positions);
-            Assert.AreEqual(Positions.Freelance, freelancerGet.Positions);
+            Assert.AreEqual(Positions.Freelance, freelancerNew.Position);
+            Assert.AreEqual(Positions.Freelance, freelancerGet.Position);
             Assert.AreEqual(typeof(FreeLancerEmployee), freelancerNew.GetType());
             Assert.AreEqual(typeof(FreeLancerEmployee), freelancerGet.GetType());
 

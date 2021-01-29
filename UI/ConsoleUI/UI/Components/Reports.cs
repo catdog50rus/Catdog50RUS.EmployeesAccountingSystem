@@ -1,5 +1,4 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
-using Catdog50RUS.EmployeesAccountingSystem.Models;
 using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportService;
 using System;
@@ -7,79 +6,81 @@ using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 {
+    /// <summary>
+    /// Получить отчеты
+    /// </summary>
     class Reports
     {
-        //private readonly static IReportSettingsRepository Settings = new ReportSettingsService();
-        private readonly ISalaryReportService _salaryReportService;
+        #region Field & Constructors
 
+        /// <summary>
+        /// Внедрения сервиса отчетов
+        /// </summary>
+        private readonly ISalaryReportService _salaryReportService;
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="salaryReportService"></param>
         public Reports(ISalaryReportService salaryReportService)
         {
             _salaryReportService = salaryReportService;
         }
 
+        #endregion
 
+        /// <summary>
+        /// Получить отчет по сотруднику
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <param name="period"></param>
+        /// <returns></returns>
         public async Task GetEmployeeReport(BaseEmployee employee, (DateTime, DateTime) period)
         {
-            //Получаем отчет и проверяем его на null и валидность числовых параметров
-            //Выводим результат
-            var employeeReport = await _salaryReportService.GetEmployeeSalaryReport(employee, period);
-            if (employeeReport != null)
-            {
-                ShowOnConsole.ShowPersonTasks(employeeReport);
-            }
-            else
-            {
+            //Получаем отчет и проверяем его на null
+            var report = await _salaryReportService.GetEmployeeSalaryReport(employee, period);
+            if(report == null)
                 ShowError();
-            }
+           
+            //Вывод отчета на консоль
+            report.ShowEmployeeSalaryReport();
             ShowOnConsole.ShowContinue();
         }
-
+        /// <summary>
+        /// Получить отчет по всем сотрудникам
+        /// </summary>
+        /// <param name="period"></param>
+        /// <returns></returns>
         public async Task GetAllPersonsReport((DateTime, DateTime) period)
         {
             //Получаем отчет и проверяем его на null
-            //Выводим результат
-
             var report = await _salaryReportService.GetAllEmployeesSalaryReport(period);
-            if (report != null)
-            {
-                ShowOnConsole.ShowAllPersonsReport(report);
-            }
-            else
-            {
+            if(report==null)
                 ShowError();
-            }
+
+            //Выводим результат на консоль
+            report.ShowAllEmployeeSalaryReport();
             ShowOnConsole.ShowContinue();
         }
-
+        /// <summary>
+        /// Получить отчет по отделам
+        /// </summary>
+        /// <param name="period"></param>
+        /// <returns></returns>
         public async Task GetAllDepartmentsReport((DateTime, DateTime) period)
         {
             //Получаем отчет и проверяем его на null
-            //Выводим результат
             var report = await _salaryReportService.GetAllDepatmentsSalaryReport(period);
-            if(report != null)
-                ShowOnConsole.ShowDepartmetsReport(report);
-            else
-            {
+            if(report == null)
                 ShowError();
-            }
-
+            
+            //Вывести отчет на консоль
+            report.ShowDepartmetsSalaryReport();
             ShowOnConsole.ShowContinue();
         }
 
-        //private static async Task InitialReport()
-        //{
-        //    //Получаем настройки отчета
-        //    var settings = await Settings.GetSettings();
-        //    if (settings == null)
-        //    {
-        //        ShowOnConsole.ShowMessage("Настройки для отчета не найдены. Для получения отчета необходимо установить данные для расчета");
-        //        ShowOnConsole.ShowContinue();
-        //        return;
-        //    }
-        //    //Передаем в конструктор сервиса Сотрудника и период
-        //    Report = new SalaryReportOld(settings);
-        //}
-
+        /// <summary>
+        /// Вывести на консоль сообщение об ошибке
+        /// </summary>
         private static void ShowError()
         {
             ShowOnConsole.ShowMessage("Ошибка получения отчета!");

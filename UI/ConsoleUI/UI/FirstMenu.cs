@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 {
-    internal class FirstMenu
+    /// <summary>
+    /// Первичное меню
+    /// </summary>
+    class FirstMenu
     {
-        
         /// <summary>
-        /// Отображение начального меню
+        /// Вывод на консоль элементов первичного меню
         /// </summary>
         /// <returns></returns>
         public async Task Intro()
@@ -48,21 +50,26 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
         #region Реализация
 
+        /// <summary>
+        /// Авторизовать сотрудника
+        /// </summary>
+        /// <returns></returns>
         private async Task AuthorizeUser()
         {
             //Создаем экземпляр класса авторизации и получаем авторизованного пользователя 
             var auth = new Authorization();
 
+            //Проверяем, был ли это первый запуск программы
             if (auth.IsFirstRun())
             {
                 ShowOnConsole.ShowMessage($" Это первый запуск программы! \n Для начала работы необходимо войти под пользователем Admin");
                 ShowOnConsole.ShowContinue();
             }
 
+            //Получение авторизации и сотрудника
             var autorizeResult = await auth.AutorezationUser();
             if (autorizeResult.Item1 != null)
-            {
-                
+            {  
                 //Переходим в главное меню и передаем в него сотрудника
                 var mainmenu = new MainMenu(autorizeResult);
                 await mainmenu.Intro();

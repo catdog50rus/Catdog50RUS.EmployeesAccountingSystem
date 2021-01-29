@@ -51,11 +51,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
 
             _salaryReportService = new SalaryReportService(_completedTasksService, _employeeService);
 
-            _employee = MapToEmploeeModel(inputParameters.Item2);
+            _employee = inputParameters.Item2.ToEmployeeModel();
         }
 
         #endregion
-
 
         /// <summary>
         /// Отображение главного меню
@@ -66,8 +65,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             //Флаг выхода из главного меню
             bool exit = default;
 
+            //Проверяем не является ли сотрудник админом (учетная запись для первого запуска программы)
             if (_employee.NamePerson.Equals("Admin"))
             {
+                //Вывод на консооль главного меню для первого запуска программы
                 await ShowAdmin();
                 return;
             }
@@ -128,12 +129,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                         break;
                 };
             }
-
         }
-
 
         #region Реализация
 
+        /// <summary>
+        /// Вывести главное меню для первого запуска программы
+        /// </summary>
+        /// <returns></returns>
         private async Task ShowAdmin()
         {
             Console.Clear();
@@ -185,8 +188,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                 Console.WriteLine("6 - Вывести на экран список сотрудников");
                 Console.WriteLine("7 - Добавить сотрудника");
                 Console.WriteLine("8 - Удалить сотрудника");
-                //Console.WriteLine(new string('-', 70));
-                //Console.WriteLine("s - Ввести данные для расчета");
             }
             Console.WriteLine(new string('-', 70));
             Console.WriteLine("0 - Выйти из профиля");
@@ -199,35 +200,31 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         /// <returns></returns>
         private async Task AddNewTask()
         {         
-            //Создаем новую задачу в отдельном компоненте UI
-            //И проверяем результат на null
-            var employee = MapToBaseEmployee(_employee);
+            //Получаем id
+            var id = _employee.Id;
             //Проверяем, если пользователь - Директор, то он может загрузить данные для любого сотрудника
             if (_autorize.UserRole.Equals(Role.Director))
             {
                 ShowSelectUserMenu();
                 var newperson = await SelectPerson();
                 if (newperson != null)
-                    employee = newperson;
+                    id = newperson.Id;
                 Console.Clear();
-
             }
 
-            var task = new CreateTaskLog(_completedTasksService, _autorize).CreatNewTask(employee);
-            if(task != null)
-            {
-                //Добавляем задачу в хранилище и проверяем результат операции
-                var taskLog = MapToCompletedTaskLog(task);
-                var result = await _completedTasksService.AddNewTaskLog(taskLog);
-                if (result)
-                {
-                    ShowOnConsole.ShowNewTask(task);
-                }
-            }
+            //Создаем новую задачу в отдельном компоненте UI, передаем авторизацию и id сотрудника
+            var task = new CreateTaskLog(_autorize).CreatNewTask(id);
+            if (task == null)
+                ShowOnConsole.ShowMessage($"Ошибка создания задачи");
+
+            //Получаем TaskLog из DTO и добавляем задачу в хранилище и проверяем результат
+            var taskLog = task.ToCompletedTaskLog();
+            var result = await _completedTasksService.AddNewTaskLog(taskLog);
+            if (result)
+                ShowOnConsole.ShowInsertNewTaskMessage(task);
             else
-            {
                 ShowOnConsole.ShowMessage($"Ошибка добавления задачи");
-            }
+
             ShowOnConsole.ShowContinue();
         }
 
@@ -240,7 +237,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         {
             //Получаем период
             var period = InputParameters.GetPeriod();
-            var employee =MapToBaseEmployee(_employee);
+            var employee = _employee.ToBaseEmployee();
             //Проверяем, если пользователь - Директор, то он может загрузить данные для любого сотрудника
             if (_autorize.UserRole.Equals(Role.Director))
             {
@@ -249,7 +246,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                 if (newperson != null)
                     employee = newperson;
                 Console.Clear();
-
             }
 
             await new Reports(_salaryReportService).GetEmployeeReport(employee, period);
@@ -260,7 +256,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
         {
             //Получаем период
             var period = InputParameters.GetMonth();
-            var employee = MapToBaseEmployee(_employee);
+            var employee = _employee.ToBaseEmployee();
             //Проверяем, если пользователь - Директор, то он может загрузить данные для любого сотрудника
             if (_autorize.UserRole.Equals(Role.Director))
             {
@@ -269,7 +265,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
                 if (newperson != null)
                     employee = newperson;
                 Console.Clear();
-
             }
 
             await new Reports(_salaryReportService).GetEmployeeReport(employee, period);
@@ -304,7 +299,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             //Получаем список сотрудников и проверяем результат на Null
             var personsList = await _employeeService.GetAllEmployeeAsync();
             if (personsList != null)
-                ShowOnConsole.ShowPersons(personsList);
+                ShowOnConsole.ShowEmployeesList(personsList);
             else
                 ShowOnConsole.ShowMessage("Не удалось сформировать список сотрудников!");
             ShowOnConsole.ShowContinue();
@@ -323,12 +318,12 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             if (newPerson != null)
             {
                 //Добавляем сотрудника в хранилище и проверяем результат операции
-                var employee = MapToBaseEmployee(newPerson);
+                var employee = newPerson.ToBaseEmployee();
 
                 var result = await _employeeService.InsertEmployeeAsync(employee);
                 if (result)
                 {
-                    ShowOnConsole.ShowNewPerson(newPerson);
+                    ShowOnConsole.ShowInsertNewEmployeeMessage(newPerson);
                 }
             }
             else
@@ -347,30 +342,24 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             Console.Clear();
             //Получаем имя удаляемого сотрудника
             var name = InputParameters.InputStringParameter("Введите имя удаляемого сотрудника");
+            
             //Получаем сотрудника по имени
             //И проверяем результат
             BaseEmployee employee = await _employeeService.GetEmployeeByNameAsync(name);
             if (employee != null)
             {
-                var employeeModel = MapToEmploeeModel(employee);
+                var employeeModel = employee.ToEmployeeModel();
                 //Удаляем сотрудника из хранилища и проверяем результат операции
                 var result = await _employeeService.DeleteEmployeeByNameAsync(employeeModel.NamePerson);
                 if (result)
-                {
-                    ShowOnConsole.ShowDeletePerson(employeeModel);
-                }
+                    ShowOnConsole.ShowDeleteEmployeeMessage(employeeModel);
                 else
-                {
                     ShowOnConsole.ShowMessage($"Ошибка удаления сотрудника: {employeeModel}");
-                }
             }
             else
                 ShowOnConsole.ShowMessage($"Сотрудник с именем {name} не найден!");
             ShowOnConsole.ShowContinue(); ;
         }
-
-        //s
-        
 
         //0
         /// <summary>
@@ -384,65 +373,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI
             return true;
         }
 
-
-        #endregion
-
-        #region Mapping
-
-        /// <summary>
-        /// Конвертация DTO в модель
-        /// </summary>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        private BaseEmployee MapToBaseEmployee(Employee e)
-        {
-            var position = e.Positions;
-            BaseEmployee employee = default;
-
-            switch (position)
-            {
-                case Positions.None:
-                    break;
-                case Positions.Director:
-                    employee = new DirectorEmployee(e.Id, e.NamePerson, e.SurnamePerson, e.Department, e.BaseSalary);
-                    break;
-                case Positions.Developer:
-                    employee = new StaffEmployee(e.Id, e.NamePerson, e.SurnamePerson, e.Department, e.BaseSalary);
-                    break;
-                case Positions.Freelance:
-                    employee = new FreeLancerEmployee(e.Id, e.NamePerson, e.SurnamePerson, e.Department, e.BaseSalary);
-                    break;
-                default:
-                    break;
-            }
-            return employee;
-        }
-        /// <summary>
-        /// Конвертация модели в DTO
-        /// </summary>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        private Employee MapToEmploeeModel(BaseEmployee e)
-        {
-            return new Employee
-            {
-                Id = e.Id,
-                NamePerson = e.NamePerson,
-                SurnamePerson = e.SurnamePerson,
-                Department = e.Department,
-                Positions = e.Positions,
-                BaseSalary = e.BaseSalary
-            };
-        }
-        /// <summary>
-        /// Конвертация DTO в модель
-        /// </summary>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        private CompletedTaskLog MapToCompletedTaskLog(TaskLog log)
-        {
-            return new CompletedTaskLog(log.IdEmployee, log.Date, log.Time, log.TaskName);
-        }
 
         #endregion
 

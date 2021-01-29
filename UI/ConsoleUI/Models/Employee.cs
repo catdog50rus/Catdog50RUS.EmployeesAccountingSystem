@@ -1,10 +1,11 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.Models
 {
+    /// <summary>
+    /// DTO сотрудник
+    /// </summary>
     public class Employee
     {
         public Guid Id { get; set; }
@@ -26,13 +27,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.Models
         {
             return $"Удален сотрудник: \n {SurnamePerson} {NamePerson} \n из отдела: {Department}, \n с должности: {Positions}";
         }
-
         public string ToDisplay()
         {
             return AddCurrency($"Сотрудник: {SurnamePerson} {NamePerson}, Отдел: {Department}, Должность: {Positions}, " +
                                $"Оклад: {BaseSalary} рублей ");
         }
-
         private string AddCurrency(string text)
         {
             if (Positions.Equals(Positions.Freelance))

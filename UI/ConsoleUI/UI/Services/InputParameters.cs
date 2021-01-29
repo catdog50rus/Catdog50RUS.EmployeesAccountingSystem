@@ -17,8 +17,10 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         /// <returns></returns>
         public static string InputStringParameter(string text)
         {
+            //Выводим на консоль запрос ввода
             ShowText(text);
             var res = Console.ReadLine();
+            //Проверяем введенные данные
             while (string.IsNullOrWhiteSpace(res))
             {
                 Console.WriteLine("Некорректный ввод!");
@@ -34,16 +36,17 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         /// <returns></returns>
         public static double InputDoubleParameter(string text)
         {
+            //Выводим на консоль запрос ввода
             ShowText(text);
             double res = 0;
+
             while (res <= 0)
             {
                 var input = Console.ReadLine();
-                if(!double.TryParse(input, out res))
+                //Проверяем введенные данные
+                if (!double.TryParse(input, out res))
                 {
-                    Console.WriteLine("Некорректный ввод!");
-                    Console.WriteLine("Попробуйте еще раз!");
-                    Console.WriteLine();
+                    ShowUncorrectDataMessage();
                 }
             }
             return res;
@@ -55,20 +58,20 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         /// <returns></returns>
         public static int InputIntegerParameter(string text)
         {
+            //Выводим на консоль запрос ввода
             ShowText(text);
             int res = 0;
             while (res <= 0)
             {
                 var input = Console.ReadLine();
+                //Проверяем введенные данные
                 if (!int.TryParse(input, out res))
                 {
-                    Console.WriteLine("Некорректный ввод!");
-                    Console.WriteLine("Попробуйте еще раз!");
-                    Console.WriteLine();
+                    ShowUncorrectDataMessage();
                 }
             }
             return res;
-        }
+        }      
         /// <summary>
         /// Получение параметра Decimal
         /// </summary>
@@ -76,16 +79,16 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         /// <returns></returns>
         public static decimal InputDecimlParameter(string text)
         {
+            //Выводим на консоль запрос ввода
             ShowText(text);
             decimal res = 0;
             while (res <= 0)
             {
                 var input = Console.ReadLine();
+                //Проверяем введенные данные
                 if (!decimal.TryParse(input, out res))
                 {
-                    Console.WriteLine("Некорректный ввод!");
-                    Console.WriteLine("Попробуйте еще раз!");
-                    Console.WriteLine();
+                    ShowUncorrectDataMessage();
                 }
             }
             return res;
@@ -97,18 +100,19 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         /// <returns></returns>
         public static DateTime InputDateParameter(string text)
         {
+            //Выводим на консоль запрос ввода
             ShowText(text);
             DateTime date = default;
-            bool exitWhile = false;
-            while(!exitWhile)
+            bool exitFromWhile = false;
+            while(!exitFromWhile)
             {
                 var res = Console.ReadLine();
-                exitWhile = DateTime.TryParseExact(res, "dd.MM.yyyy", CultureInfo.CurrentCulture, DateTimeStyles.None, out date);
-                if(!exitWhile)
+                exitFromWhile = DateTime.TryParseExact(res, "dd.MM.yyyy", CultureInfo.CurrentCulture, 
+                                                   DateTimeStyles.None, out date);
+                //Проверяем введенные данные
+                if (!exitFromWhile)
                 {
-                    Console.WriteLine("Некорректный ввод!");
-                    Console.WriteLine("Попробуйте еще раз!");
-                    Console.WriteLine();
+                    ShowUncorrectDataMessage();
                 }
 
             }
@@ -123,12 +127,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
             DateTime start, end = default;
             Console.Clear();
             start = InputDateParameter("Введите начальную дату");
-
-            while(end <= start)
+            //Проверяем введенные данные
+            while (end <= start)
             {
                 end = InputDateParameter($"Введите конечную дату (дата должна быть старше чем {start:dd.MM.yyyy})");
             }
-
             return (start, end);
         }
         /// <summary>
@@ -224,6 +227,15 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
         {
             Console.WriteLine();
             Console.WriteLine(text);
+            Console.WriteLine();
+        }
+        /// <summary>
+        /// Вывод сообщения о вводе некорректных данных
+        /// </summary>
+        private static void ShowUncorrectDataMessage()
+        {
+            Console.WriteLine("Некорректный ввод!");
+            Console.WriteLine("Попробуйте еще раз!");
             Console.WriteLine();
         }
     }

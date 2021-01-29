@@ -44,7 +44,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
             //Result
             var salaryReport = new SalaryReport(period.firstDate, period.lastDate, employee, employeeTasksLogList)
             {
-                Header = $"Отчет по Заработной плате cотрудника: {employee}\nВ период с {period.firstDate:dd.MM.yyyy} по {period.lastDate:dd.MM.yyyy}\n",
+                Header = $"Отчет по Заработной плате cотрудника: {employee}\nВ период с {period.firstDate:dd.MM.yyyy} по {period.lastDate:dd.MM.yyyy}:\n",
                 TotalSalary = employee.CalculateSamary(employeeTasksLogList)
             };
             return salaryReport;
@@ -81,7 +81,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
                 //Создаем отчет по сотруднику и добавляем его в список
                 var salaryReport = new SalaryReport(period.firstDate, period.lastDate, employee, employeeTimeLogs)
                 {
-                    Header = $"Cотрудника: {employee}\n ",
+                    Header = $"\nСотрудник: {employee}",
                     TotalSalary = employee.CalculateSamary(employeeTimeLogs)
                 };
                 employeeSalaryReport.Add(salaryReport);
@@ -93,7 +93,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
             //Создаем расширенный отчет по сотрудникам и возвращаем результат
             var result = new ExtendedSalaryReportAllEmployees(employeeSalaryReport)
             {
-                Header = $"Отчет по Заработной плате сотрудников \nВ период с {period.firstDate:dd.MM.yyyy} по {period.lastDate:dd.MM.yyyy}\n"
+                Header = $"Отчет по Заработной плате сотрудников \nВ период с {period.firstDate:dd.MM.yyyy} по {period.lastDate:dd.MM.yyyy}:"
             };
 
             return result;
@@ -107,13 +107,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
         /// <returns></returns>
         public async Task<ExtendedSalaryReportAllDepatments> GetAllDepatmentsSalaryReport((DateTime firstDate, DateTime lastDate) period)
         {
-
             var allEmployeeReport = await GetAllEmployeesSalaryReport(period);
             if (allEmployeeReport == null)
                 return null;
 
             var depatmentsReport = allEmployeeReport.EmployeeSalaryReports.GroupBy(x => x.Employee.Department);
-
 
             List<ExtendedSalaryReportAllEmployees> depatmentSalaryReport = new List<ExtendedSalaryReportAllEmployees>();
             foreach (var item in depatmentsReport)
@@ -124,14 +122,11 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
                 //Получаем список отчетов по сотрудникам отдела
                 var employeeSalaryReport = item.ToList();
 
-
                 //Создаем расширенный отчет по сотрудникам и возвращаем результат
                 var depatmentEmployeesReport = new ExtendedSalaryReportAllEmployees(employeeSalaryReport)
                 {
-                    Header = $"По отделу {depatment}:\n"
+                    Header = $"По отделу {depatment}:"
                 };
-
-
 
                 depatmentSalaryReport.Add(depatmentEmployeesReport);
             }
@@ -142,7 +137,7 @@ namespace Catdog50RUS.EmployeesAccountingSystem.Reports.Services.SalaryReportSer
             //Создаем расширенный отчет по отделу и возвращаем результат
             var result = new ExtendedSalaryReportAllDepatments(depatmentSalaryReport)
             {
-                Header = $"Отчет по Заработной плате сотрудников \nВ период с {period.firstDate:dd.MM.yyyy} по {period.lastDate:dd.MM.yyyy} :\n "
+                Header = $"Отчет по Заработной плате сотрудников \nВ период с {period.firstDate:dd.MM.yyyy} по {period.lastDate:dd.MM.yyyy}:\n"
             };
 
             return result;

@@ -11,19 +11,24 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
     /// </summary>
     class CreateNewEmployee
     {
+        /// <summary>
+        /// Создать нового сотрудника
+        /// </summary>
+        /// <returns></returns>
         public static Employee CreateNewPerson()
         {
             Console.Clear();
-
             Console.WriteLine("Добавление нового пользователя");
             Console.WriteLine();
+
             //Получаем данные от пользователя используя компоненты UI
             string name = InputParameters.InputStringParameter("Введите имя сотрудника");
             string surname = InputParameters.InputStringParameter("Введите фамилию сотрудника");
             Departments dep = InputParameters.InputDepartment();
             Positions pos = InputParameters.InputPosition(dep);
             decimal baseSalary = InputParameters.InputDecimlParameter("Введите базовую ставку сотрудника");
-            //Возвращаем нового сотрудника
+
+            //Возвращаем нового сотрудника DTO
             return new Employee 
             {
                 Id = Guid.NewGuid(),
@@ -33,7 +38,6 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
                 Positions = pos,
                 BaseSalary = baseSalary
             };
-
         } 
     }
 }

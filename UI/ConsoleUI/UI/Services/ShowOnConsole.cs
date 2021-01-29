@@ -4,101 +4,126 @@ using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using Catdog50RUS.EmployeesAccountingSystem.Reports.Models.SalaryReport;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
 {
     /// <summary>
     /// Реализация вывода данных на консоль
     /// </summary>
-    class ShowOnConsole
+    static class ShowOnConsole
     {
         /// <summary>
         /// Вывод списка сотрудников
         /// </summary>
-        /// <param name="collection"></param>
-        public static void ShowPersons(IEnumerable<BaseEmployee> collection)
+        /// <param name="employeesList"></param>
+        public static void ShowEmployeesList(IEnumerable<BaseEmployee> employeesList)
         {
-            Console.Clear();
-            Console.WriteLine("Список сотрудников: ");
+            ShowMessage("Список сотрудников: ");
             Console.WriteLine();
-            foreach (var item in collection)
+            foreach (var item in employeesList)
             {
-                var emploee = MapToEmployeeModel(item);
-                ShowPerson(emploee);
+                var employee = item.ToEmployeeModel();
+                Console.WriteLine(employee.ToDisplay());
             }
         }
 
+        //Вывод отчетов
         /// <summary>
         /// Вывод отчета по сотруднику
         /// </summary>
-        /// <param name="person"></param>
-        /// <param name="period"></param>
         /// <param name="report"></param>
-        public static void ShowPersonTasks(SalaryReport report)
+        public static void ShowEmployeeSalaryReport(this SalaryReport report)
         {
-            Console.Clear();
-            Console.WriteLine($"Отчет по Сотруднику: {report.Employee} \nВ период с {report.FirstDate:dd.MM.yyyy} по {report.LastDate:dd.MM.yyyy}: ");
-            Console.WriteLine();
-            ShowTasks(report);
-
+            Console.WriteLine(new string('-', 75));
+            Console.WriteLine(report.Header);
+            ShowTaskLogsInReport(report.TasksLogList);
+            Console.WriteLine(new string('-', 75));
+            Console.WriteLine($"Всего сотрудником {report.Employee} отработано: {report.TotalTime} часов, к выплате: {report.TotalSalary} рублей.");
         }
-
         /// <summary>
         /// Вывод отчета по всем сотрудникам
         /// </summary>
         /// <param name="period"></param>
         /// <param name="report"></param>
-        public static void ShowAllPersonsReport(ExtendedSalaryReportAllEmployees report)
+        public static void ShowAllEmployeeSalaryReport(this ExtendedSalaryReportAllEmployees report)
         {
             Console.WriteLine(report.Header);
-            ShowPersonsReport(report.EmployeeSalaryReports.ToList());
-            Console.WriteLine($"Итого: отработано: {report.TotalTime} часов, к выплате: {report.TotalSalary} рублей.");
+            foreach (var item in report.EmployeeSalaryReports)
+            {
+                ShowEmployeeSalaryReport(item);
+            }
+            Console.WriteLine(new string('-', 75));
+            Console.WriteLine($"Итого сотрудниками отработано: {report.TotalTime} часов, к выплате: {report.TotalSalary} рублей.");
+            Console.WriteLine();
         }
-
         /// <summary>
         /// Вывод отчета по отделам
         /// </summary>
         /// <param name="period"></param>
         /// <param name="report"></param>
-        public static void ShowDepartmetsReport(ExtendedSalaryReportAllDepatments report)
+        public static void ShowDepartmetsSalaryReport(this ExtendedSalaryReportAllDepatments report)
         {
             Console.WriteLine(report.Header);
 
             foreach (var item in report.EmployeeSalaryReports)
             {
-                ShowAllPersonsReport(item);
-
-                Console.WriteLine(new string('-', 100));
-                Console.WriteLine();
+                ShowAllEmployeeSalaryReport(item);
+                Console.WriteLine(new string('-', 75));
             }
             Console.WriteLine($"Всего по организации:  отработано: {report.TotalTime} часов, " +
                               $"к выплате: {report.TotalSalary} рублей.");
-            Console.WriteLine(new string('-', 100));
+            Console.WriteLine(new string('-', 75));
+        }
+        /// <summary>
+        /// Вывод списка выполненных задач сотрудником
+        /// </summary>
+        /// <param name="task"></param>
+        private static void ShowTaskLogsInReport(this IEnumerable<CompletedTaskLog> taskLogsList)
+        {
+            foreach (var task in taskLogsList)
+            {
+                var log = task.ToTaskLogModel();
+                Console.WriteLine(log.ToDisplay());
+            }
         }
 
+        //Вывод сообщений
         /// <summary>
         /// Вывод подтверждения о добавлении сотрудника
         /// </summary>
         /// <param name="employee"></param>
-        public static void ShowNewPerson(Employee employee)
+        public static void ShowInsertNewEmployeeMessage(Employee employee)
         {
-            Console.Clear();
-            Console.WriteLine(employee.ToInsert());
+            ShowMessage(employee.ToInsert());
             Console.WriteLine();
-        }
-        
+        }      
         /// <summary>
         /// Вывод подтверждения об удалении сотрудника
         /// </summary>
         /// <param name="employee"></param>
-        public static void ShowDeletePerson(Employee employee)
+        public static void ShowDeleteEmployeeMessage(Employee employee)
         {
-            Console.Clear();
-            Console.WriteLine(employee.ToDelete());
+            ShowMessage(employee.ToDelete());
             Console.WriteLine();
         }
-        
+        /// <summary>
+        /// Вывод подтверждения о добавлении задачи
+        /// </summary>
+        /// <param name="task"></param>
+        public static void ShowInsertNewTaskMessage(TaskLog task)
+        {
+            ShowMessage(task.ToInsert());
+            Console.WriteLine();
+        }
+        /// <summary>
+        /// Вывод сообщения
+        /// </summary>
+        /// <param name="mes"></param>
+        public static void ShowMessage(string mes)
+        {
+            Console.Clear();
+            Console.WriteLine(mes);
+        }
         /// <summary>
         /// Вывод уведомления о нажатии клавиши для продолжения
         /// </summary>
@@ -109,88 +134,5 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services
             Console.ReadKey();
         }
         
-        /// <summary>
-        /// Вывод сообщения
-        /// </summary>
-        /// <param name="mes"></param>
-        public static void ShowMessage(string mes)
-        {
-            Console.Clear();
-            Console.WriteLine(mes);
-        }
-        
-        /// <summary>
-        /// Вывод подтверждения о добавлении задачи
-        /// </summary>
-        /// <param name="task"></param>
-        public static void ShowNewTask(TaskLog task)
-        {
-            Console.Clear();
-            Console.WriteLine(task.ToInsert());
-            Console.WriteLine();
-        }
-        
-
-
-        /// <summary>
-        /// Вывод строки списка сотрудников
-        /// </summary>
-        /// <param name="employee"></param>
-        private static void ShowPerson(Employee employee)
-        {
-            Console.WriteLine(employee.ToDisplay());
-        }
-        /// <summary>
-        /// Вывод списка выполненных задач сотрудником
-        /// </summary>
-        /// <param name="task"></param>
-        private static void ShowTasks(SalaryReport report)
-        {
-            foreach (var task in report.TasksLogList)
-            {
-                var log = MapToTaskLogModel(task);
-                Console.WriteLine(log.ToDisplay());
-            }
-            Console.WriteLine($"Всего отработано: {report.TotalTime} часов, к выплате: {report.TotalSalary} рублей.");
-
-        }
-        /// <summary>
-        /// Вывод списка выполненных задач сотрудниками
-        /// </summary>
-        /// <param name="report"></param>
-        private static void ShowPersonsReport(List<SalaryReport> report)
-        {
-            foreach (var item in report)
-            {
-                var employee = MapToEmployeeModel(item.Employee);
-                Console.WriteLine(employee.ToDisplay());
-                ShowTasks(item);
-                Console.WriteLine();
-            }           
-        }
-
-        private static Employee MapToEmployeeModel(BaseEmployee e)
-        {
-            return new Employee
-            {
-                Id = e.Id,
-                NamePerson = e.NamePerson,
-                SurnamePerson = e.SurnamePerson,
-                Department = e.Department,
-                Positions = e.Positions,
-                BaseSalary = e.BaseSalary
-            };
-        }
-
-        private static TaskLog MapToTaskLogModel(CompletedTaskLog log)
-        {
-            return new TaskLog
-            {
-                Date = log.Date,
-                IdEmployee = log.IdEmployee,
-                TaskName = log.TaskName,
-                Time = log.Time
-            };
-        }
     }
 }

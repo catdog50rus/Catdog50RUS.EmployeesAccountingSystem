@@ -1,8 +1,6 @@
 ﻿using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.Models;
 using Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Services;
-using Catdog50RUS.EmployeesAccountingSystem.Data.Services;
 using Catdog50RUS.EmployeesAccountingSystem.Models;
-using Catdog50RUS.EmployeesAccountingSystem.Models.Employees;
 using System;
 
 namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
@@ -13,16 +11,24 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
     /// </summary>
     class CreateTaskLog
     {
-        private readonly ICompletedTaskLogsService _taskLogsService;
+        /// <summary>
+        /// Внедрение авторизации
+        /// </summary>
         private readonly Autorize _autorize;
-
-        public CreateTaskLog(ICompletedTaskLogsService taskLogsService, Autorize autorize)
+        /// <summary>
+        /// Конструктор
+        /// </summary>
+        /// <param name="autorize"></param>
+        public CreateTaskLog(Autorize autorize)
         {
-            _taskLogsService = taskLogsService;
             _autorize = autorize;
         }
-
-        public TaskLog CreatNewTask(BaseEmployee employee)
+        /// <summary>
+        /// Создать DTO TaskLog
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public TaskLog CreatNewTask(Guid id)
         {
             Console.Clear();
             var role = _autorize.UserRole;
@@ -48,16 +54,14 @@ namespace Catdog50RUS.EmployeesAccountingSystem.ConsoleUI.UI.Components
 
             string taskName = InputParameters.InputStringParameter("Введите наименование задачи");
             double time = InputParameters.InputDoubleParameter("Введите затраченное время в часах (например: 3,5)");
-            //Возвращаем задачу
+            //Возвращаем новую задачу DTO
             return new TaskLog
             {
                 Date = date,
-                IdEmployee = employee.Id,
+                IdEmployee = id,
                 TaskName = taskName,
                 Time = time
             }; 
         }
-
-        
     }
 }
